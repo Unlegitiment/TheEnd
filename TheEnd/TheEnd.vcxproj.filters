@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="script.cpp" />
+    <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="SHVNative\types.cpp" />
+    <ClCompile Include="MissionVisuals\MarkerInfo.cpp" />
+    <ClCompile Include="Textures\CTXD.cpp" />
+    <ClCompile Include="Marker\CMarker.cpp" />
+    <ClCompile Include="Marker\CMissionMarker.cpp" />
+    <ClCompile Include="MarkerLauncher\VisualMarker.cpp" />
+    <ClCompile Include="MissionVisuals\MarkerHandler.cpp" />
+    <ClCompile Include="ScaleformHelper\CScaleform.cpp" />
+    <ClCompile Include="UIEditor\BoxDraw\CBoxUI.cpp" />
+    <ClCompile Include="UIEditor\ButtonDraw\CButtonController.cpp" />
+    <ClCompile Include="UIEditor\ButtonDraw\CButtonUI.cpp" />
+    <ClCompile Include="UIEditor\TextDraw\Text.cpp" />
+    <ClCompile Include="UIEditor\TextDraw\TextDropshadow.cpp" />
+    <ClCompile Include="UIEditor\TextDraw\TextJustify.cpp" />
+    <ClCompile Include="MissionScript\TheEnd.cpp" />
+    <ClCompile Include="PauseMenuItems\PauseInterface.cpp" />
+    <ClCompile Include="PauseMenuItems\Generic\MenuPage.cpp" />
+    <ClCompile Include="PauseMenuItems\Generic\MenuPaginator.h" />
+    <ClCompile Include="PauseMenuItems\Generic\MenuPaginator.cpp" />
+    <ClCompile Include="PauseMenuItems\Generic\PauseMenuHeader.cpp" />
+    <ClCompile Include="PauseMenuItems\UIBase.cpp" />
+    <ClCompile Include="PauseMenuItems\UITypes\List.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="script.h" />
+    <ClInclude Include="keyboard.h" />
+    <ClInclude Include="SHVNative\enums.h" />
+    <ClInclude Include="SHVNative\main.h" />
+    <ClInclude Include="SHVNative\nativeCaller.h" />
+    <ClInclude Include="SHVNative\natives.h" />
+    <ClInclude Include="SHVNative\OGnatives.h" />
+    <ClInclude Include="SHVNative\types.h" />
+    <ClInclude Include="MissionVisuals\MarkerInfo.h" />
+    <ClInclude Include="MissionVisuals\MarkerHandler.h" />
+    <ClInclude Include="Marker\CMarker.h" />
+    <ClInclude Include="Textures\CTXD.h" />
+    <ClInclude Include="Marker\CMissionMarker.h" />
+    <ClInclude Include="MarkerLauncher\VisualMarker.h" />
+    <ClInclude Include="ScaleformHelper\CScaleform.h" />
+    <ClInclude Include="UIEditor\BoxDraw\CBoxUI.h" />
+    <ClInclude Include="UIEditor\ButtonDraw\CButtonController.h" />
+    <ClInclude Include="UIEditor\ButtonDraw\CButtonUI.h" />
+    <ClInclude Include="UIEditor\TextDraw\Text.h" />
+    <ClInclude Include="UIEditor\TextDraw\TextDropshadow.h" />
+    <ClInclude Include="UIEditor\TextDraw\TextJustify.h" />
+    <ClInclude Include="MissionScript\TheEnd.h" />
+    <ClInclude Include="PauseMenuItems\Generic\PauseMenu.h" />
+    <ClInclude Include="PauseMenuItems\PauseMenuMgr.h" />
+    <ClInclude Include="PauseMenuItems\Generic\MenuPage.h" />
+    <ClInclude Include="PauseMenuItems\PauseInterface.h" />
+    <ClInclude Include="PauseMenuItems\Generic\PauseMenuHeader.h" />
+    <ClInclude Include="PauseMenuItems\Generic\MenuNavBtn.h" />
+    <ClInclude Include="PauseMenuItems\UIBase.h" />
+    <ClInclude Include="PauseMenuItems\UITypes\List.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{fe82bd4a-2d14-486a-8be5-8bf6b50a2414}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="SHVNative\ScriptHookV.lib" />
+  </ItemGroup>
+</Project>

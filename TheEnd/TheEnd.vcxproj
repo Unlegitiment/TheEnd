@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MarkerLauncher\VisualMarker.cpp" />
+    <ClCompile Include="Marker\CMarker.cpp" />
+    <ClCompile Include="Marker\CMissionMarker.cpp" />
+    <ClCompile Include="MissionScript\TheEnd.cpp" />
+    <ClCompile Include="MissionVisuals\MarkerHandler.cpp" />
+    <ClCompile Include="MissionVisuals\MarkerInfo.cpp" />
+    <ClCompile Include="PauseMenuItems\Generic\MenuPage.cpp" />
+    <ClCompile Include="PauseMenuItems\Generic\MenuPaginator.cpp" />
+    <ClCompile Include="PauseMenuItems\Generic\MenuPaginator.h" />
+    <ClCompile Include="PauseMenuItems\Generic\PauseMenuHeader.cpp" />
+    <ClCompile Include="PauseMenuItems\PauseInterface.cpp" />
+    <ClCompile Include="PauseMenuItems\UIBase.cpp" />
+    <ClCompile Include="PauseMenuItems\UITypes\List.cpp" />
+    <ClCompile Include="ScaleformHelper\CScaleform.cpp" />
+    <ClCompile Include="script.cpp" />
+    <ClCompile Include="SHVNative\types.cpp" />
+    <ClCompile Include="Textures\CTXD.cpp" />
+    <ClCompile Include="UIEditor\BoxDraw\CBoxUI.cpp" />
+    <ClCompile Include="UIEditor\ButtonDraw\CButtonController.cpp" />
+    <ClCompile Include="UIEditor\ButtonDraw\CButtonUI.cpp" />
+    <ClCompile Include="UIEditor\TextDraw\Text.cpp" />
+    <ClCompile Include="UIEditor\TextDraw\TextDropshadow.cpp" />
+    <ClCompile Include="UIEditor\TextDraw\TextJustify.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="keyboard.h" />
+    <ClInclude Include="MarkerLauncher\VisualMarker.h" />
+    <ClInclude Include="Marker\CMarker.h" />
+    <ClInclude Include="Marker\CMissionMarker.h" />
+    <ClInclude Include="MissionScript\TheEnd.h" />
+    <ClInclude Include="MissionVisuals\MarkerHandler.h" />
+    <ClInclude Include="MissionVisuals\MarkerInfo.h" />
+    <ClInclude Include="PauseMenuItems\Generic\MenuNavBtn.h" />
+    <ClInclude Include="PauseMenuItems\Generic\MenuPage.h" />
+    <ClInclude Include="PauseMenuItems\Generic\PauseMenu.h" />
+    <ClInclude Include="PauseMenuItems\Generic\PauseMenuHeader.h" />
+    <ClInclude Include="PauseMenuItems\PauseInterface.h" />
+    <ClInclude Include="PauseMenuItems\PauseMenuMgr.h" />
+    <ClInclude Include="PauseMenuItems\UIBase.h" />
+    <ClInclude Include="PauseMenuItems\UITypes\List.h" />
+    <ClInclude Include="ScaleformHelper\CScaleform.h" />
+    <ClInclude Include="script.h" />
+    <ClInclude Include="SHVNative\enums.h" />
+    <ClInclude Include="SHVNative\main.h" />
+    <ClInclude Include="SHVNative\nativeCaller.h" />
+    <ClInclude Include="SHVNative\natives.h" />
+    <ClInclude Include="SHVNative\OGnatives.h" />
+    <ClInclude Include="SHVNative\types.h" />
+    <ClInclude Include="Textures\CTXD.h" />
+    <ClInclude Include="UIEditor\BoxDraw\CBoxUI.h" />
+    <ClInclude Include="UIEditor\ButtonDraw\CButtonController.h" />
+    <ClInclude Include="UIEditor\ButtonDraw\CButtonUI.h" />
+    <ClInclude Include="UIEditor\TextDraw\Text.h" />
+    <ClInclude Include="UIEditor\TextDraw\TextDropshadow.h" />
+    <ClInclude Include="UIEditor\TextDraw\TextJustify.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="SHVNative\ScriptHookV.lib" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5493e904-35f0-402f-bb93-f470a753a660}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>TheEnd</RootNamespace>
+    <ProjectName>TheEnd</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetExt>.asi</TargetExt>
+    <OutDir>bin\$(Configuration)\</OutDir>
+    <IntDir>tmp\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NativeTrainer_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalOptions>E:\ScriptHookV\lib\ScriptHookV.lib %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(TargetDir)$(TargetName).asi" "E:\SteamLibrary\steamapps\common\Grand Theft Auto V"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
