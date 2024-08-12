@@ -47,7 +47,7 @@ public: // functions
 	void SetTextJustification(int newJust);
 	void DrawDebugInfo(float x, float yOffset = 17.0F);
 	void DrawDebugText(const std::string& debugText, float x, float yOffset, int lineIndex);
-public://variables 
+public: //variables 
 	string text;
 	CVector2 pos;
 	CRGBA colour;

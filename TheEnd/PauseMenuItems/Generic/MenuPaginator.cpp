@@ -22,7 +22,7 @@ void CPauseMenuPaginator::Update(CPauseMenuPage*& __last_page) { // this actuall
 			CTextUI("CurPage Has Focus", { 0.1,0.025 }, { 255,255,255,255 }).Draw();
 			CTextUI("i == box_selection", {0.1, 0.050}, { 255,255,255,255 }).Draw();
 			CTextUI(std::to_string(m_bisFocused), { 0.1,0.075 }, { 255,255,255,255 }).Draw();
-			curBoxObj.SetColour(CRGBA(240,240,240,255));
+			curBoxObj.SetColour(CRGBA(240,240,240,255)); // Todo -- Add here a check to validate whether the box should be drawn if the paginator doesn't have focus.
 			CBox selectionBox = CBox({ curBoxObj.GetDrawPos().x, curBoxObj.GetDrawPos().y - ((curBoxObj.GetHeight() / 2.f) + (selectionHeight / 2.f))}, m_Pages[i].second.GetHighlightColor(), curBoxObj.GetWidth(), selectionHeight);
 			selectionBox.Draw();
 			curText.colour = CRGBA(0, 0, 0, 255);
@@ -150,7 +150,7 @@ void CPauseMenuPaginator::SetSelection(int selection) {
 	return;
 }
 
-int CPauseMenuPaginator::GetSelection() {
+int CPauseMenuPaginator::GetSelection() const {
 	return this->box_selection;
 }
 
@@ -162,7 +162,7 @@ void CPauseMenuPaginator::SetPaginatorFocus(bool focus) {
 	this->m_bisFocused = focus;
 }
 
-bool CPauseMenuPaginator::GetIfPaginatorHasFocus() {
+bool CPauseMenuPaginator::GetIfPaginatorHasFocus() const {
 	return this->m_bisFocused;
 }
 void CPauseMenuPaginator::SetPageInFocus(int page_selection) {
@@ -172,7 +172,7 @@ void CPauseMenuPaginator::SetPageInFocus(int page_selection) {
 	m_Pages[page_selection].second.SetFocus();
 	return;
 }
-int CPauseMenuPaginator::GetPageSelected() {
+int CPauseMenuPaginator::GetPageSelected() const{
 	return box_selection;
 }
 CPauseMenuPage* CPauseMenuPaginator::GetPageFromIndex(int index) {

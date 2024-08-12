@@ -9,11 +9,6 @@ CPauseMenuHeader::CPauseMenuHeader(PauseInfo* info)
     this->pauseInfo = info;
 }
 
-CPauseMenuHeader& CPauseMenuHeader::operator=(CPauseMenuHeader& other) {
-    
-    return other;
-}
-
 CPauseMenuHeader::PauseInfo* CPauseMenuHeader::getInfo() {
     return this->pauseInfo;
 }

@@ -19,7 +19,7 @@ bool CTxd::IsReady() {
 }
 
 const char* CTxd::getDict() {
-    return this->textureDict;
+    return this->textureDict ? this->textureDict : nullptr;
 }
 
 const char* CTxd::getName() {

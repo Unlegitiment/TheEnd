@@ -13,3 +13,5 @@
 #include "./SHVNative/main.h"
 
 void ScriptMain();
+
+void LoggerThread();

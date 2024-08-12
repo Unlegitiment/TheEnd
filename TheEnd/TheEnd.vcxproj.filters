@@ -18,7 +18,6 @@
     <ClCompile Include="UIEditor\TextDraw\Text.cpp" />
     <ClCompile Include="UIEditor\TextDraw\TextDropshadow.cpp" />
     <ClCompile Include="UIEditor\TextDraw\TextJustify.cpp" />
-    <ClCompile Include="MissionScript\TheEnd.cpp" />
     <ClCompile Include="PauseMenuItems\PauseInterface.cpp" />
     <ClCompile Include="PauseMenuItems\Generic\MenuPage.cpp" />
     <ClCompile Include="PauseMenuItems\Generic\MenuPaginator.h" />
@@ -26,6 +25,15 @@
     <ClCompile Include="PauseMenuItems\Generic\PauseMenuHeader.cpp" />
     <ClCompile Include="PauseMenuItems\UIBase.cpp" />
     <ClCompile Include="PauseMenuItems\UITypes\List.cpp" />
+    <ClCompile Include="PauseMenuItems\UIElements\UIList.cpp" />
+    <ClCompile Include="MissionScript\CMission.cpp" />
+    <ClCompile Include="RSGRemake\Phone.cpp" />
+    <ClCompile Include="RSGRemake\CApp.cpp" />
+    <ClCompile Include="Ambience\CConfigureTheEndAmbience.cpp" />
+    <ClCompile Include="Scripts\CDisable.cpp" />
+    <ClCompile Include="Logger\LocalLogger.cpp" />
+    <ClCompile Include="Logger\LoggerClient.cpp" />
+    <ClCompile Include="Logger\CLoggerInstances.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -58,6 +66,19 @@
     <ClInclude Include="PauseMenuItems\Generic\MenuNavBtn.h" />
     <ClInclude Include="PauseMenuItems\UIBase.h" />
     <ClInclude Include="PauseMenuItems\UITypes\List.h" />
+    <ClInclude Include="PauseMenuItems\UIElement.h" />
+    <ClInclude Include="PauseMenuItems\UIElements\UIList.h" />
+    <ClInclude Include="MissionScript\CMission.h" />
+    <ClInclude Include="RSGRemake\Phone.h" />
+    <ClInclude Include="RSGRemake\CApp.h" />
+    <ClInclude Include="RSGRemake\Apps\Contacts.h" />
+    <ClInclude Include="EnableMP\Cars.h" />
+    <ClInclude Include="ScriptPort\Doors\CDoor.h" />
+    <ClInclude Include="ScriptPort\Doors\DoorController.h" />
+    <ClInclude Include="Scripts\CDisable.h" />
+    <ClInclude Include="Logger\LocalLogger.h" />
+    <ClInclude Include="Logger\LoggerClient.h" />
+    <ClInclude Include="Logger\CLoggerInstances.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -66,5 +87,8 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="SHVNative\ScriptHookV.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ambience\CConfigureTheEndAmbience.h" />
   </ItemGroup>
 </Project>

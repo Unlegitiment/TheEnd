@@ -43,12 +43,12 @@ public:
 	void DrawAllNavButtons();
 	void DrawAllMenus();
 	void SetSelection(int selection);
-	int GetSelection();
+	int GetSelection() const;
 	int GetMaxSelections();
 	void SetPaginatorFocus(bool focus);
-	bool GetIfPaginatorHasFocus();
+	bool GetIfPaginatorHasFocus() const;
 	void SetPageInFocus(int page_selection);
-	int GetPageSelected();
+	int GetPageSelected() const;
 	CPauseMenuPage* GetPageFromIndex(int index);
 	void TransferPage(CPauseMenuPage* page);
 	CPauseMenuPage* GetHighlightedPage();

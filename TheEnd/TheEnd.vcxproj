@@ -7,12 +7,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Ambience\CConfigureTheEndAmbience.cpp" />
     <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="Logger\CLoggerInstances.cpp" />
+    <ClCompile Include="Logger\LocalLogger.cpp" />
+    <ClCompile Include="Logger\LoggerClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MarkerLauncher\VisualMarker.cpp" />
     <ClCompile Include="Marker\CMarker.cpp" />
     <ClCompile Include="Marker\CMissionMarker.cpp" />
-    <ClCompile Include="MissionScript\TheEnd.cpp" />
+    <ClCompile Include="MissionScript\CMission.cpp" />
     <ClCompile Include="MissionVisuals\MarkerHandler.cpp" />
     <ClCompile Include="MissionVisuals\MarkerInfo.cpp" />
     <ClCompile Include="PauseMenuItems\Generic\MenuPage.cpp" />
@@ -21,9 +25,13 @@
     <ClCompile Include="PauseMenuItems\Generic\PauseMenuHeader.cpp" />
     <ClCompile Include="PauseMenuItems\PauseInterface.cpp" />
     <ClCompile Include="PauseMenuItems\UIBase.cpp" />
+    <ClCompile Include="PauseMenuItems\UIElements\UIList.cpp" />
     <ClCompile Include="PauseMenuItems\UITypes\List.cpp" />
+    <ClCompile Include="RSGRemake\CApp.cpp" />
+    <ClCompile Include="RSGRemake\Phone.cpp" />
     <ClCompile Include="ScaleformHelper\CScaleform.cpp" />
     <ClCompile Include="script.cpp" />
+    <ClCompile Include="Scripts\CDisable.cpp" />
     <ClCompile Include="SHVNative\types.cpp" />
     <ClCompile Include="Textures\CTXD.cpp" />
     <ClCompile Include="UIEditor\BoxDraw\CBoxUI.cpp" />
@@ -34,10 +42,15 @@
     <ClCompile Include="UIEditor\TextDraw\TextJustify.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EnableMP\Cars.h" />
     <ClInclude Include="keyboard.h" />
+    <ClInclude Include="Logger\CLoggerInstances.h" />
+    <ClInclude Include="Logger\LocalLogger.h" />
+    <ClInclude Include="Logger\LoggerClient.h" />
     <ClInclude Include="MarkerLauncher\VisualMarker.h" />
     <ClInclude Include="Marker\CMarker.h" />
     <ClInclude Include="Marker\CMissionMarker.h" />
+    <ClInclude Include="MissionScript\CMission.h" />
     <ClInclude Include="MissionScript\TheEnd.h" />
     <ClInclude Include="MissionVisuals\MarkerHandler.h" />
     <ClInclude Include="MissionVisuals\MarkerInfo.h" />
@@ -48,9 +61,17 @@
     <ClInclude Include="PauseMenuItems\PauseInterface.h" />
     <ClInclude Include="PauseMenuItems\PauseMenuMgr.h" />
     <ClInclude Include="PauseMenuItems\UIBase.h" />
+    <ClInclude Include="PauseMenuItems\UIElement.h" />
+    <ClInclude Include="PauseMenuItems\UIElements\UIList.h" />
     <ClInclude Include="PauseMenuItems\UITypes\List.h" />
+    <ClInclude Include="RSGRemake\Apps\Contacts.h" />
+    <ClInclude Include="RSGRemake\CApp.h" />
+    <ClInclude Include="RSGRemake\Phone.h" />
     <ClInclude Include="ScaleformHelper\CScaleform.h" />
     <ClInclude Include="script.h" />
+    <ClInclude Include="ScriptPort\Doors\CDoor.h" />
+    <ClInclude Include="ScriptPort\Doors\DoorController.h" />
+    <ClInclude Include="Scripts\CDisable.h" />
     <ClInclude Include="SHVNative\enums.h" />
     <ClInclude Include="SHVNative\main.h" />
     <ClInclude Include="SHVNative\nativeCaller.h" />
@@ -67,6 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="SHVNative\ScriptHookV.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ambience\CConfigureTheEndAmbience.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5493e904-35f0-402f-bb93-f470a753a660}</ProjectGuid>
