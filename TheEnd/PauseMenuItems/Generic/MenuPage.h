@@ -31,8 +31,8 @@ public:
 	size_t GetSize() { return m_DataEntries.size(); }
 	void SetPageHeader(CPauseMenuHeader* header);
 	CPauseMenuHeader* GetHeader();
-	CRGBA GetHighlightColor();
-	void SetHighlightColor(CRGBA rgba);
+	CRGBA<float> GetHighlightColor();
+	void SetHighlightColor(CRGBA<float> rgba);
 	void LoseFocus();
 	bool HasFocus();
 	void SetFocus();
@@ -43,7 +43,7 @@ public:
 	void SetSelectionIndex(int _index);
 private:
 	std::map<int, PageEntry> m_DataEntries; //aight
-	CRGBA highlightColor = { 45, 110, 185, 255 };
+	CRGBA<float> highlightColor = { 45, 110, 185, 255 };
 	CPauseMenuPaginator* m_pMenuOwner;
 	bool m_bHasFocus;
 	int selection_index;

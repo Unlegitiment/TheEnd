@@ -1,6 +1,6 @@
 #include "CMarker.h"
 #include "../SHVNative/natives.h"
-CMarker::CMarker(eMarkerType type, CVector3 pos, CVector3 dir, CVector3 rot, CVector3 scale, CRGBA rgba, bool bob, bool faceCam, int drawRot, bool rotate, CTxd* txd, bool drawOnEnter, bool p24) :
+CMarker::CMarker(eMarkerType type, CVector3<float> pos, CVector3<float> dir, CVector3<float> rot, CVector3<float> scale, CRGBA<float> rgba, bool bob, bool faceCam, int drawRot, bool rotate, CTxd* txd, bool drawOnEnter, bool p24) :
 	m_Type(type),
 	pos(pos),
 	dir(dir),
@@ -51,23 +51,23 @@ CMarker::eMarkerType CMarker::getType() {
 	return this->m_Type;
 }
 
-CVector3 CMarker::getPos() {
+CVector3<float> CMarker::getPos() {
 	return this->pos;
 }
 
-CVector3 CMarker::getDir() {
+CVector3<float> CMarker::getDir() {
 	return this->dir;
 }
 
-CVector3 CMarker::getRot() {
+CVector3<float> CMarker::getRot() {
 	return this->rotation;
 }
 
-CVector3 CMarker::getScale() {
+CVector3<float> CMarker::getScale() {
 	return this->scale;
 }
 
-CRGBA CMarker::getColor() {
+CRGBA<float> CMarker::getColor() {
 	return this->rgba;
 }
 

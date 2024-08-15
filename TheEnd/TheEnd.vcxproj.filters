@@ -34,6 +34,7 @@
     <ClCompile Include="Logger\LocalLogger.cpp" />
     <ClCompile Include="Logger\LoggerClient.cpp" />
     <ClCompile Include="Logger\CLoggerInstances.cpp" />
+    <ClCompile Include="Important\CDeluxo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -72,13 +73,18 @@
     <ClInclude Include="RSGRemake\Phone.h" />
     <ClInclude Include="RSGRemake\CApp.h" />
     <ClInclude Include="RSGRemake\Apps\Contacts.h" />
-    <ClInclude Include="EnableMP\Cars.h" />
     <ClInclude Include="ScriptPort\Doors\CDoor.h" />
     <ClInclude Include="ScriptPort\Doors\DoorController.h" />
     <ClInclude Include="Scripts\CDisable.h" />
     <ClInclude Include="Logger\LocalLogger.h" />
     <ClInclude Include="Logger\LoggerClient.h" />
     <ClInclude Include="Logger\CLoggerInstances.h" />
+    <ClInclude Include="Ambience\CDeluxo.h" />
+    <ClInclude Include="Game\CGameWorld.h" />
+    <ClInclude Include="Game\Objects\CPlayer.h" />
+    <ClInclude Include="Game\Explostion\Explosion.h" />
+    <ClInclude Include="Game\Explostion\ExplosionMgr.h" />
+    <ClInclude Include="Important\CDeluxo.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

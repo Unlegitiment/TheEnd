@@ -68,7 +68,7 @@ const char* CScaleform::GetReturnValString(int endfunctionHandle) {
 	return GRAPHICS::GET_SCALEFORM_MOVIE_METHOD_RETURN_VALUE_STRING(endfunctionHandle);
 }
 
-void CScaleform::Draw(CVector2 drawPosition, CVector2 drawScale) {
+void CScaleform::Draw(CVector2<float> drawPosition, CVector2<float> drawScale) {
 	GRAPHICS::DRAW_SCALEFORM_MOVIE(this->Scaleform, drawPosition.x, drawPosition.y, drawScale.x, drawScale.y, 255, 255, 255, 255, 1);
 }
 
@@ -76,10 +76,10 @@ void CScaleform::DrawBGFG() {
 	GRAPHICS::DRAW_SCALEFORM_MOVIE_FULLSCREEN_MASKED(this->Scaleform_BG, this->Scaleform_FG, 255, 255, 255, 255);
 }
 
-void CScaleform::Draw3D(CVector3 drawPosition, CVector3 drawRotation, CVector3 drawScale, float p7, float sharpness, float p9, Any p13) {
+void CScaleform::Draw3D(CVector3<float> drawPosition, CVector3<float> drawRotation, CVector3<float> drawScale, float p7, float sharpness, float p9, Any p13) {
 	GRAPHICS::DRAW_SCALEFORM_MOVIE_3D(this->Scaleform, drawPosition.x, drawPosition.y, drawPosition.z, drawRotation.x, drawRotation.y, drawRotation.z, 0, 0, 0, drawScale.x, drawScale.y, drawScale.z, p13);
 }
 
-void CScaleform::Draw3DSolid(CVector3 drawPos, CVector3 drawRot, float p7, float p8, float p9, CVector3 drawScale, Any p13) {
+void CScaleform::Draw3DSolid(CVector3<float> drawPos, CVector3<float> drawRot, float p7, float p8, float p9, CVector3<float> drawScale, Any p13) {
 	GRAPHICS::DRAW_SCALEFORM_MOVIE_3D_SOLID(this->Scaleform, drawPos.x, drawPos.y, drawPos.z, drawRot.x, drawRot.y, drawRot.z, p7, p8, p9, drawScale.x, drawScale.y, drawScale.z, p13);
 }

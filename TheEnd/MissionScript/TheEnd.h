@@ -22,7 +22,7 @@ class CTheEnd final : CMission {
 	static const int CREW_BUFFER_MAX_ALLOC = 12;
 	struct PlayerData {
 		int m_iPedHandle;
-		CVector3 m_v3PedLoc;
+		CVector3<float> m_v3PedLoc;
 		float m_fPedHeading;
 		const char m_NameBuffer[NAME_BUFFER_MAX_ALLOC];
 		int m_iRank;
@@ -57,7 +57,7 @@ public:
 	void LoadPreMissionMenu();
 	void PreMissionState();
 	void PreMissionMenu(); // CPauseMenu copy; goes into PreMissionState
-	void SetupSwitch(Ped from, Ped* to, CVector3 teleportLocation); // to can be null which we take a diff path
+	void SetupSwitch(Ped from, Ped* to, CVector3<float> teleportLocation); // to can be null which we take a diff path
 	static void FORCE_SWITCH_OFF(); // just calls STREAMING::STOP_PLAYER_SWITCH and tries to abort switch.
 	int GetMissionState();
 	bool GetLocalMissionActive();
@@ -95,7 +95,7 @@ private:
 	int  m_iCutsceneProgression;
 	int  m_iSyncedSceneProgress;
 	bool m_bisSyncedSceneInProgress;
-	CVector3 m_v3RespawnPoint = {0,0,0}; // interior location;
+	CVector3<float> m_v3RespawnPoint = {0,0,0}; // interior location;
 	bool m_bhasPlayerDiedBefore;
 	int  m_iDeathsAlloted;
 	int  m_iCurrentDeaths;

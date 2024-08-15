@@ -19,7 +19,7 @@ private:
 	DoorId ID;
 	Hash DoorHash;
 	Hash DoorName;
-	CVector3 DoorLocation;
+	CVector3<float> DoorLocation;
 	DoorAjarState doorajar;
 	eDoorState doorState;
 };

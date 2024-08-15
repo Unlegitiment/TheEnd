@@ -27,7 +27,7 @@ CButtonUI::~CButtonUI()
 	
 }
 
-void CButtonUI::SetNewDrawPos(CVector2 __drawPos__)
+void CButtonUI::SetNewDrawPos(CVector2<float> __drawPos__)
 {
 	this->m_Box.SetNewDrawPos(__drawPos__);
 	
@@ -71,7 +71,7 @@ void CButtonUI::IdealDraw(CButtonUI::eText textToSet, CTextUI* textToInput) {
 	}
 	if (textToSet == eText::ETEXT_MIDDLE) {
 		CVector2 drawPos = m_Box.GetDrawPos();
-		textToInput->pos = CVector2(drawPos.x, (drawPos.y -0.001 - (textToInput->size / 20.0F)));
+		textToInput->pos = CVector2<float>(drawPos.x, (drawPos.y -0.001 - (textToInput->size / 20.0F)));
 	}
 	if (textToSet == eText::ETEXT_RIGHT) {
 		CVector2 topRight = m_Box.GetCornerPos(CBox::TOPRIGHT);

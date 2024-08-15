@@ -4,7 +4,7 @@
 void CUIType_ItemList::Draw(int *selection) {
     for (int i = 0; i < m_ListItems.size(); i++) {
         ListItem curItem = m_ListItems[i];
-        CVector2 baseTextVector = { 0.0,0.0 };
+        CVector2<float> baseTextVector = { 0.0,0.0 };
         CBox selectionBox = CBox(baseTextVector, { 5,5,5,255 }, 0.1f, 0.05f); // oke
         // Find the base Vector of which they draw;
         // So as well we need to know some basic stuff;

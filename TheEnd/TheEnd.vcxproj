@@ -8,6 +8,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ambience\CConfigureTheEndAmbience.cpp" />
+    <ClCompile Include="Important\CDeluxo.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="Logger\CLoggerInstances.cpp" />
     <ClCompile Include="Logger\LocalLogger.cpp" />
@@ -42,7 +43,12 @@
     <ClCompile Include="UIEditor\TextDraw\TextJustify.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EnableMP\Cars.h" />
+    <ClInclude Include="Ambience\CDeluxo.h" />
+    <ClInclude Include="Game\CGameWorld.h" />
+    <ClInclude Include="Game\Explostion\Explosion.h" />
+    <ClInclude Include="Game\Explostion\ExplosionMgr.h" />
+    <ClInclude Include="Game\Objects\CPlayer.h" />
+    <ClInclude Include="Important\CDeluxo.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="Logger\CLoggerInstances.h" />
     <ClInclude Include="Logger\LocalLogger.h" />

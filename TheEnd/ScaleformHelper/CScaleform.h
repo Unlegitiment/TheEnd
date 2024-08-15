@@ -22,10 +22,10 @@ public:
 	bool GetReturnValBool(int endfunctionHandle);
 	const char* GetReturnValString(int endfunctionHandle);
 	//Draw Commands
-	void Draw(CVector2 drawPosition, CVector2 drawScale); // 
+	void Draw(CVector2<float> drawPosition, CVector2<float> drawScale); // 
 	void DrawBGFG(); // fullscreen_mask
-	void Draw3D(CVector3 drawPosition, CVector3 drawRotation, CVector3 drawScale, float p7, float sharpness, float p9, Any p13);
-	void Draw3DSolid(CVector3 drawPos, CVector3 drawRot, float p7, float p8, float p9, CVector3 drawScale, Any p13);
+	void Draw3D(CVector3<float> drawPosition, CVector3<float> drawRotation, CVector3<float> drawScale, float p7, float sharpness, float p9, Any p13);
+	void Draw3DSolid(CVector3<float> drawPos, CVector3<float> drawRot, float p7, float p8, float p9, CVector3<float> drawScale, Any p13);
 private:
 	int Scaleform, Scaleform_BG, Scaleform_FG; 
 	

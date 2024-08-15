@@ -7,7 +7,7 @@ CVisMarker::CVisMarker(CMarkerInfo& markerInfo, CMissionMarker& marker) :
 	
 }
 
-void CVisMarker::DrawMarkerInfo(CVector3 rotation, CVector3 scale) {
+void CVisMarker::DrawMarkerInfo(CVector3<float> rotation, CVector3<float> scale) {
 	
 	CScaleform markerInfoScaleform = CScaleform("MP_MISSION_NAME_FREEMODE");
 	markerInfoScaleform.BeginMethod("SET_MISSION_INFO");
@@ -29,7 +29,7 @@ void CVisMarker::DrawMarker() {
 	m_Marker.Draw();
 }
 
-void CVisMarker::DrawAll(CVector3 MarkerInfoRotation, CVector3 MarkerInfoScale) { // Reason for MarkerInformation being outside the CMarkerInfo class is because to draw the Scaleform in 3D I have to have a rotation and in some cases like if you don't want the scaleform to be static than I have to take it as a parameter. 
+void CVisMarker::DrawAll(CVector3<float> MarkerInfoRotation, CVector3<float> MarkerInfoScale) { // Reason for MarkerInformation being outside the CMarkerInfo class is because to draw the Scaleform in 3D I have to have a rotation and in some cases like if you don't want the scaleform to be static than I have to take it as a parameter. 
 	DrawMarker();
 	DrawMarkerInfo(MarkerInfoRotation, MarkerInfoScale);
 }

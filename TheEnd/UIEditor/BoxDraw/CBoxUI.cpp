@@ -1,27 +1,27 @@
 #include "CBoxUI.h"
 #include "../../SHVNative/natives.h"
 CBox::CBox() :
-	drawPos(CVector2(0,0)),
-	colour(CRGBA(0,0,0,0)),
+	drawPos(CVector2<float>(0,0)),
+	colour(CRGBA<float>(0,0,0,0)),
 	width(0.f),
 	height(0.f),
-	corners{ CVector2(0,0),CVector2(0,0), CVector2(0,0), CVector2(0,0) },
+	corners{ CVector2<float>(0,0),CVector2<float>(0,0), CVector2<float>(0,0), CVector2<float>(0,0) },
 	originalColor(colour)
 {
 }
-CBox::CBox(CVector2 _drawPos, CRGBA _colour, float _length, float _height):
+CBox::CBox(CVector2<float> _drawPos, CRGBA<float> _colour, float _length, float _height):
 	drawPos(_drawPos),
 	colour(_colour),
 	width(_length),
 	height(_height),
-	corners{CVector2(0,0),CVector2(0,0), CVector2(0,0), CVector2(0,0)},
+	corners{CVector2<float>(0,0),CVector2<float>(0,0), CVector2<float>(0,0), CVector2<float>(0,0)},
 	originalColor(_colour)
 {
 	this->UpdateCornerPos();
 	return;
 }
 
-void CBox::SetNewDrawPos(CVector2 drawPos)
+void CBox::SetNewDrawPos(CVector2<float> drawPos)
 {
 	this->drawPos = drawPos;
 	UpdateCornerPos();
@@ -55,31 +55,31 @@ void CBox::Draw()
 	GRAPHICS::DRAW_RECT(this->drawPos.x, this->drawPos.y, this->width, this->height, this->colour.r, this->colour.g, this->colour.b, this->colour.a, false);
 }
 
-CVector2& CBox::GetDrawPos()
+CVector2<float>& CBox::GetDrawPos()
 {
 	return this->drawPos;
 }
 
-CVector2& CBox::GetCornerPos(Corner cornerToGet)
+CVector2<float>& CBox::GetCornerPos(Corner cornerToGet)
 {
 	if (cornerToGet > Corner::CORNER_MAX - 1) cornerToGet = Corner::TOPLEFT;
 	if (cornerToGet < Corner::TOPLEFT) cornerToGet = Corner::TOPLEFT;
 	return corners[cornerToGet];
 }
 
-CRGBA CBox::GetColour() 
+CRGBA<float> CBox::GetColour()
 {
 	return this->colour;
 }
 
-void CBox::SetColour(CRGBA __newColour__)
+void CBox::SetColour(CRGBA<float> __newColour__)
 {
 	this->colour = __newColour__;
 }
 #include "../TextDraw/Text.h"
 void CBox::DrawDebugText(const std::string& debugText, float x, float yOffset, int lineIndex)
 {
-	CTextUI debugTextUI(debugText, CVector2(x, ((0.61f + yOffset) * lineIndex) / 900.0F), CRGBA(255, 255, 255, 200));
+	CTextUI debugTextUI(debugText, CVector2(x, ((0.61f + yOffset) * lineIndex) / 900.0F), CRGBA<float>(255, 255, 255, 200));
 
 	debugTextUI.Draw();
 }
@@ -98,7 +98,7 @@ void CBox::ShowDebugInfo(float x, float yOffset)
 	DrawDebugText("HGT: " + std::to_string(height), x, yOffset, 15);
 }
 
-bool CBox::GetIfPointIsInside(CVector2 point)
+bool CBox::GetIfPointIsInside(CVector2<float> point)
 {
 	if (point.x >= GetCornerPos(TOPLEFT).x && point.x <= GetCornerPos(TOPRIGHT).x) {
 		if (point.y <= GetCornerPos(BOTTOMLEFT).y && point.y >= GetCornerPos(TOPLEFT).y) {
@@ -108,12 +108,12 @@ bool CBox::GetIfPointIsInside(CVector2 point)
 	return false;
 }
 
-CRGBA CBox::GetOriginalColor()
+CRGBA<float> CBox::GetOriginalColor()
 {
 	return originalColor;
 }
 
-void CBox::SetNewOriginalColor(CRGBA newColor)
+void CBox::SetNewOriginalColor(CRGBA<float> newColor)
 {
 	this->originalColor = newColor;
 }

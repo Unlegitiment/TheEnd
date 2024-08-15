@@ -52,7 +52,7 @@ void CPauseMenuHeader::DrawMissionDetails(CPauseMenuHeader& info) {
 }
 
 void CPauseMenuHeader::DrawTime(CPauseMenuHeader& info) {
-    CVector2 baseVector = { 0.750f,0.0772f };
+    CVector2<float> baseVector = { 0.750f,0.0772f };
     CTextUI m_Date = CTextUI(info.getInfo()->date, { baseVector.x, baseVector.y + CTextUI::CharacterHeight(1, 0.46) + 0.003f }, { 240,240,240,255 });
     m_Date.font = m_Date.FONT_CHALET_COMPRISE_COLOGNE;
     m_Date.hasOutline = true;
@@ -65,10 +65,10 @@ void CPauseMenuHeader::DrawTime(CPauseMenuHeader& info) {
 }
 
 void CPauseMenuHeader::DrawCharacter(CPauseMenuHeader& info) {
-    CVector2 baseVector = { 0.750f,0.0772f };
+    CVector2<float> baseVector = { 0.750f,0.0772f };
     CTextUI m_CHAR_NAME = CTextUI(info.getInfo()->character, baseVector, { 240,240,240,255 });
     m_CHAR_NAME.font = m_CHAR_NAME.FONT_CHALET_COMPRISE_COLOGNE;
-    m_CHAR_NAME.dropShadow = CTextDropshadow(2, { 0,0,0,255 });
+    m_CHAR_NAME.dropShadow = CTextDropshadow(2, CRGBA<float>{ 0.f,0.f,0.f,255.f });
     m_CHAR_NAME.textJustification = 2;
     m_CHAR_NAME.size = 0.46;
     m_CHAR_NAME.hasOutline = true;
@@ -80,10 +80,10 @@ void CPauseMenuHeader::DrawCharacter(CPauseMenuHeader& info) {
 }
 
 void CPauseMenuHeader::DrawMoney(CPauseMenuHeader& info) {
-    CVector2 baseVector = { 0.750f,0.0772f };
-    CTextUI m_ADDINFO = CTextUI(info.getInfo()->additional_info, { baseVector.x, baseVector.y + CTextUI::CharacterHeight(1,0.46) * 2 + 0.003f }, { 240,240,240,255 });
+    CVector2<float> baseVector = { 0.750f,0.0772f };
+    CTextUI m_ADDINFO = CTextUI(info.getInfo()->additional_info, { baseVector.x, baseVector.y + CTextUI::CharacterHeight(1,0.46) * 2 + 0.003f }, { 240.f,240.f,240.f,255.f });
     m_ADDINFO.font = m_ADDINFO.FONT_CHALET_COMPRISE_COLOGNE;
-    m_ADDINFO.dropShadow = CTextDropshadow(2, { 0,0,0,255 });
+    m_ADDINFO.dropShadow = CTextDropshadow(2, CRGBA<float>{ 0.f,0.f,0.f,255.f });
     m_ADDINFO.textJustification = 2;
     m_ADDINFO.size = 0.46;
     m_ADDINFO.hasOutline = true;
@@ -95,6 +95,6 @@ void CPauseMenuHeader::DrawMoney(CPauseMenuHeader& info) {
 }
 
 void CPauseMenuHeader::DrawCharSprite(CPauseMenuHeader& info) {
-    CBox({ 0.8237, 0.115 }, CRGBA(0, 0, 0, 255), 0.025f * 1.5, 0.045f * 1.5).Draw();
+    CBox({ 0.8237f, 0.115f }, CRGBA(0.0f, 0.0f, 0.0f, 255.0f), 0.025f * 1.5, 0.045f * 1.5).Draw();
     GRAPHICS::DRAW_SPRITE(info.getInfo()->texture.getDict(), info.getInfo()->texture.getName(), 0.8237, 0.115, 0.025f * 1.5, 0.045f * 1.5, 0, 255, 255, 255, 255, 1, 1);
 }

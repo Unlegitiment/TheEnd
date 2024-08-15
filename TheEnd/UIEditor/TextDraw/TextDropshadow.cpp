@@ -1,6 +1,6 @@
 #include "TextDropshadow.h"
 #include "../../SHVNative/natives.h"
-CTextDropshadow::CTextDropshadow(int dist, CRGBA colour)
+CTextDropshadow::CTextDropshadow(int dist, CRGBA<float> colour)
 	:
 	distance(dist),
 	colour(colour)
@@ -13,7 +13,7 @@ void CTextDropshadow::NativeCall()
 	HUD::SET_TEXT_DROPSHADOW(distance, colour.r, colour.g, colour.b, colour.a);
 }
 
-void CTextDropshadow::changeColour(CRGBA newColour)
+void CTextDropshadow::changeColour(CRGBA<float> newColour)
 {
 	this->colour = newColour;
 	this->NativeCall();
@@ -30,7 +30,7 @@ int CTextDropshadow::getDistance()
 	return this->distance;
 }
 
-CRGBA CTextDropshadow::getColour()
+CRGBA<float> CTextDropshadow::getColour()
 {
 	return this->colour;
 }

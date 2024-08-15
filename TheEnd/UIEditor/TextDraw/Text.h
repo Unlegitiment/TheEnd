@@ -25,13 +25,13 @@ public: // functions
 		FONT_CHALET_COMPRISE_COLOGNE= 4,
 		FONT_PRICEDOWN = 7
 	};
-	CTextUI(string text, CVector2 position, float size, int font, CRGBA colour, CTextDropshadow _dropShadow_, int _justification_, bool _hasOutline_);
+	CTextUI(string text, CVector2<float> position, float size, int font, CRGBA<float> colour, CTextDropshadow _dropShadow_, int _justification_, bool _hasOutline_);
 	/*
 	* @brief We'll handle most things. :)
 	* @brief Uses a default size, font, and basic settings allowing more things to apply.
 	*/
 	CTextUI();
-	CTextUI(string text, CVector2 position, CRGBA colour);
+	CTextUI(string text, CVector2<float> position, CRGBA<float> colour);
 	CTextUI operator=(CTextUI & other);
 	~CTextUI();
 	float CharacterHeight(float iLead);
@@ -49,8 +49,8 @@ public: // functions
 	void DrawDebugText(const std::string& debugText, float x, float yOffset, int lineIndex);
 public: //variables 
 	string text;
-	CVector2 pos;
-	CRGBA colour;
+	CVector2<float> pos;
+	CRGBA<float> colour;
 	float size;
 	int font; //make font enum? (yes)
 	CTextDropshadow dropShadow;

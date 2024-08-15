@@ -9,7 +9,6 @@
 #include "PauseMenuItems/Generic/MenuPaginator.h"
 #include "PauseMenuItems/Generic/PauseMenuHeader.h"
 #include "PauseMenuItems/Generic/MenuPage.h"
-#include "./EnableMP/Cars.h"
 #include <bitset>
 #include "./Ambience/CConfigureTheEndAmbience.h"
 #include "./Scripts/CDisable.h"
@@ -22,7 +21,7 @@ void GameVersionCheck();
 std::string ClockToDay(int day);
 void main() {
     CDisableScripts disableScripts = CDisableScripts();
-    CVector3 v = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
+    CVector3<float> v = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
     bool isOnlineReq = false;
     bool isHalloweenInteriorActive = false;
     bool forceFirstPerson = true;
@@ -105,29 +104,13 @@ void main() {
             bitStatus_SHOP_CONTRLLER.set(0, 1);
         }
         if (bitStatus_SHOP_CONTRLLER.test(0)) {
-            const char* SCRIPT_NAME = "blip_controller";
-            const int   SCRIPT_STACK_SIZE = 1024;
-            static int iAttempts = 0;
-            CLogger::GetInst()->GetNetworkLogger()->LogInfo(INFO, true, "Attempting Launch of Script: ", SCRIPT_NAME, " With stack size of: ", SCRIPT_STACK_SIZE);
-            SCRIPT::REQUEST_SCRIPT(SCRIPT_NAME);
-            bitStatus_SHOP_CONTRLLER.set(1, 1);
-            while (!SCRIPT::HAS_SCRIPT_LOADED(SCRIPT_NAME)) {
-                CLogger::GetInst()->GetNetworkLogger()->LogInfo(INFO, true, "Script Attempting Load Attempt: ", iAttempts);
-                SCRIPT::REQUEST_SCRIPT(SCRIPT_NAME);
-                if (iAttempts >= 10) {
-                    CLogger::GetInst()->GetNetworkLogger()->LogInfo(ERROR2, true, SCRIPT_NAME,": Failed Launch! Attempt Count: ", iAttempts);
-                    break;
-                }
-                iAttempts++;
+            while(!CDisableScripts::RestartScript("GB_HEADHUNTER", CDisableScripts::MULTIPLAYER_MISSION)) {
+                bitStatus_SHOP_CONTRLLER.set(2, 1);//isrequesting
                 WAIT(0);
             }
-            bitStatus_SHOP_CONTRLLER.set(1, 0); // clear bit is loading
-            CLogger::GetInst()->GetNetworkLogger()->LogInfo(INFO, true, SCRIPT_NAME, ": Has successfully loaded!");
-            SYSTEM::START_NEW_SCRIPT(SCRIPT_NAME, 62500);
-            SCRIPT::SET_SCRIPT_AS_NO_LONGER_NEEDED(SCRIPT_NAME);
-            
-            bitStatus_SHOP_CONTRLLER.set(2,1); // success bit
-            bitStatus_SHOP_CONTRLLER.reset(0); // bit clear the activation bit.
+            bitStatus_SHOP_CONTRLLER.set(2, 1);//done
+            bitStatus_SHOP_CONTRLLER.set(1, 0);//transition bit done
+            bitStatus_SHOP_CONTRLLER.set(0, 0); //  clear test bit.
         }
         if (IsKeyJustUp(VK_MULTIPLY)) {
             bitStatus_SHOP_CONTRLLER.set(3);
@@ -151,6 +134,7 @@ void main() {
             }
         }
         if (ENTITY::GET_ENTITY_HEALTH(Deluxo) <= 0) {
+            logger->LogInfo(WARN, true, "Deluxo is invalid. Respawning.");
             WAIT(5000);
             Deluxo = VEHICLE::CREATE_VEHICLE(MISC::GET_HASH_KEY("DELUXO"), 47.2755f, -862.1296f, 30.05f, 340.8, 1, 0, 1);
         }
@@ -356,7 +340,7 @@ void main() {
 
         */
 
-        if (v.Dist(CVector3{ -1921.955, 3749.7202, -99 }) < 1.76) {
+        if (v.Dist(CVector3<float>{ -1921.955, 3749.7202, -99 }) < 1.76) {
             CTextUI("You are inside area", {0.5, 0.2}, { 255,255,255,255 }).Draw();
             if (PAD::IS_CONTROL_JUST_RELEASED(0, 51)) {
                 CAM::DO_SCREEN_FADE_OUT(100);
@@ -369,9 +353,9 @@ void main() {
         }
         v = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
         CMarkerInfo markerInfo = CMarkerInfo("Mission", "The End", "", "100%", "", false, "1", "", "", "");
-        CMissionMarker marker = CMissionMarker({v.x, v.y, v.z + 2.f}, { 5.f,5.f,1.f }, CRGBA(255, 255, 255, 255), CTxd("mpmissmarkers256", "custom_icon")); // please kys!
+        CMissionMarker marker = CMissionMarker({v.x, v.y, v.z + 2.f}, { 5.f,5.f,1.f }, CRGBA<float>(255, 255, 255, 255), CTxd("mpmissmarkers256", "custom_icon")); // please kys!
         CVisMarker vismarker = CVisMarker(markerInfo, marker);
-        CVector3 v = CAM::GET_GAMEPLAY_CAM_ROT(2);
+        CVector3<float> v = CAM::GET_GAMEPLAY_CAM_ROT(2);
 
 
 #pragma region PauseMenuInit
@@ -498,7 +482,7 @@ void main() {
                     while (gameTimer + 2500 > MISC::GET_GAME_TIMER()) {
                         CTextUI text = CTextUI("VK_RETURN Pressed", { 0.5,0.5 }, { 255,255,255,255 });
                         text.size = 1;
-                        text.dropShadow = CTextDropshadow(0, { 0,0,0,0 });
+                        text.dropShadow = CTextDropshadow(0, CRGBA<float>{ 0,0,0,0 });
                         text.SetTextJustification(0);
                         text.Draw();
                         if (IsKeyJustUp(VK_BACK)) {

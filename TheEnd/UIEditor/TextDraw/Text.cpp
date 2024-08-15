@@ -1,6 +1,6 @@
 #include "Text.h"
 #include "../../SHVNative/natives.h"
-CTextUI::CTextUI(string text, CVector2 position, float size, int font, CRGBA colour,CTextDropshadow _dropShadow_, int _justification_, bool _hasOutline_) :
+CTextUI::CTextUI(string text, CVector2<float> position, float size, int font, CRGBA<float> colour,CTextDropshadow _dropShadow_, int _justification_, bool _hasOutline_) :
 	text(text),
 	pos(position),
 	size(size),
@@ -14,12 +14,12 @@ CTextUI::CTextUI(string text, CVector2 position, float size, int font, CRGBA col
 }
 
 CTextUI::CTextUI() :
-	CTextUI("", CVector2(1,1), CRGBA(0,0,0,0))
+	CTextUI("", CVector2<float>(1,1), CRGBA<float>(0,0,0,0))
 {
 }
 
-CTextUI::CTextUI(string text, CVector2 position, CRGBA colour)
-	: CTextUI(text, position, 0.3609, 0, colour, CTextDropshadow(1, CRGBA(0, 0, 0, 125)), 1, false)
+CTextUI::CTextUI(string text, CVector2<float> position, CRGBA<float> colour)
+	: CTextUI(text, position, 0.3609, 0, colour, CTextDropshadow(1, CRGBA<float>(0, 0, 0, 125)), 1, false)
 { }
 
 CTextUI CTextUI::operator=(CTextUI & other)
@@ -83,7 +83,7 @@ void CTextUI::DrawDebugInfo(float x, float yOffset)
 
 void CTextUI::DrawDebugText(const std::string& debugText, float x, float yOffset, int lineIndex)
 {
-	CTextUI debugTextUI(debugText, CVector2(x, (0.1f + yOffset * lineIndex) /900.0F), CRGBA(255, 255, 255, 200));
+	CTextUI debugTextUI(debugText, CVector2<float>(x, (0.1f + yOffset * lineIndex) /900.0F), CRGBA<float>(255, 255, 255, 200));
 	
 	debugTextUI.Draw();
 }

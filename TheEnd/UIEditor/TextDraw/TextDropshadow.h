@@ -2,13 +2,13 @@
 #include "../../SHVNative/types.h"
 class CTextDropshadow{
 public:
-	CTextDropshadow(int dist, CRGBA colour);
-	void changeColour(CRGBA newColour);
+	CTextDropshadow(int dist, CRGBA<float> colour);
+	void changeColour(CRGBA<float> newColour);
 	void changeDistance(int newDistance);
 	int getDistance();
-	CRGBA getColour();
+	CRGBA<float> getColour();
 	void NativeCall();
 private:
-	CRGBA colour;
+	CRGBA<float> colour;
 	int distance;
 };

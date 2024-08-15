@@ -7,8 +7,8 @@
 #pragma once
 
 #include <windows.h>
-
-
+#include "../Logger/CLoggerInstances.h"
+#define Logger CLogger::GetInst()
 typedef DWORD Void;
 typedef DWORD Any;
 typedef DWORD uint;
@@ -49,9 +49,10 @@ typedef struct
 #pragma pack(pop)
 #include <math.h>
 #include <string>
+template<typename T>
 class CVector2 {
 public:
-	CVector2(float x, DWORD _paddingX_, float y, DWORD _paddingY_) :
+	CVector2(T x, DWORD _paddingX_, T y, DWORD _paddingY_) :
 		x(x),
 		y(y),
 		_paddingX_(_paddingX_),
@@ -59,28 +60,28 @@ public:
 	{
 		
 	}
-	CVector2(float x, float y)
+	CVector2(T x, T y)
 		:
 		CVector2(x,0UL,y,0UL)
 	{
 
 	}
-	float Dist(CVector2& other) {
-		float xsub, ysub;
+	T Dist(CVector2& other) {
+		T xsub, ysub;
 		xsub = other.x - this->x;
 		ysub = other.y - this->y;
-		float xsq, ysq;
+		T xsq, ysq;
 		xsq = xsub * xsub;
 		ysq = ysub * ysub;
-		float tot = xsq + ysq;
-		return static_cast<float>(sqrt(tot));
+		T tot = xsq + ysq;
+		return static_cast<T>(sqrt(tot));
 	}
 	virtual std::string toStr() {
 		return std::to_string(this->x) + " " + std::to_string(this->y);
 	}
-	void NormalizeScreen(float* locX, float* locY);
+	void NormalizeScreen(T* locX, T* locY);
 	//Warn this can give funky results.
-	void  Normalize(float VAL, float MAX, float MIN) {
+	void  Normalize(T VAL, T MAX, T MIN) {
 
 	}
 	//CVector2 fromVector3(Vector3& const vec);
@@ -92,15 +93,15 @@ public:
 	}
 
 
-	float x;
+	T x;
 	DWORD _paddingX_;
-	float y;
+	T y;
 	DWORD _paddingY_;
 };
-
-class CVector3 : public CVector2{
+template<typename T>
+class CVector3 : public CVector2<T>{
 public:
-	CVector3(float x, DWORD _paddingX_, float y, DWORD _paddingY_, float z, DWORD _paddingZ_)
+	CVector3(T x, DWORD _paddingX_, T y, DWORD _paddingY_, T z, DWORD _paddingZ_)
 		:
 		CVector2(x, _paddingX_, y, _paddingY_),
 		z(z),
@@ -108,7 +109,7 @@ public:
 	{
 
 	}
-	CVector3(float x, float y, float z) :
+	CVector3(T x, T y, T z) :
 		CVector3(x, 0UL, y, 0UL, z, 0UL)
 	{
 
@@ -118,17 +119,17 @@ public:
 	{
 	}
 public:
-	float Dist(CVector3& other) {
-		float xsub, ysub, zsub;
+	T Dist(CVector3& other) {
+		T xsub, ysub, zsub;
 		xsub = other.x - this->x;
 		ysub = other.y - this->y;
 		zsub = other.z - this->z;
-		float xsq, ysq, zsq;
+		T xsq, ysq, zsq;
 		xsq = xsub * xsub;
 		ysq = ysub * ysub;
 		zsq = zsub * zsub;
-		float tot = xsq + ysq + zsq;
-		return static_cast<float>(sqrt(tot));
+		T tot = xsq + ysq + zsq;
+		return static_cast<T>(sqrt(tot));
 	}
 	Vector3 GetAsStruct() {
 		return { x,_paddingX_, y, _paddingY_, z, _paddingZ_ };
@@ -136,14 +137,15 @@ public:
 	std::string toStr() {
 		return std::string(std::to_string(this->x) + " " + std::to_string(this->y) + " " + std::to_string(this->z) + " ");
 	}
-	float z;
+	T z;
 	DWORD _paddingZ_;
 private:
 };
+template<typename T>
 class CRGBA {
 public:
-	float r, g, b, a;
-	CRGBA(float R, float G, float B, float A) :
+	T r, g, b, a;
+	CRGBA(T R, T G, T B, T A) :
 		r(R),
 		g(G),
 		b(B),
@@ -159,3 +161,13 @@ public:
 		return red + " " + gre + " " + blu + " " + alp;
 	}
 };
+
+template<typename T>
+inline void CVector2<T>::NormalizeScreen(T* locX, T* locY) {
+	int SCRX = 0;
+	int SCRY = 0;
+	GRAPHICS::GET_ACTUAL_SCREEN_RESOLUTION(&SCRX, &SCRY);
+	*locX = this->x / SCRX;
+	*locY = this->y / SCRY;
+	return;
+}

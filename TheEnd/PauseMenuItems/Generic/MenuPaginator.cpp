@@ -1,4 +1,5 @@
 #include "MenuPaginator.h"
+
 #include "../../UIEditor/TextDraw/Text.h"
 #include "../../UIEditor/BoxDraw/CBoxUI.h"
 #include "../../keyboard.h"
@@ -10,7 +11,7 @@ void CPauseMenuPaginator::RegisterPage(const char* name, CPauseMenuPage& page) {
 void CPauseMenuPaginator::Update(CPauseMenuPage*& __last_page) { // this actually isn't that bad. might extract some functionality out just to allow the stuff to breathe lol.
 	const float spacing = 0.002f;
 	const float selectionHeight = 0.0079875f; // 287 × 55 | 2560 × 1440 | 124 × 25 (important info) verydesc
-	CVector2 baseVectorText = { 0.216796875f, 0.184722222f };
+	CVector2<float> baseVectorText = { 0.216796875f, 0.184722222f };
 	for (int i = 0; i < m_Pages.size(); i++) {
 		//This stuff can be extracted out into a seperate thing.
 		CPauseMenuPage* curPage = &m_Pages[i].second;
@@ -22,11 +23,11 @@ void CPauseMenuPaginator::Update(CPauseMenuPage*& __last_page) { // this actuall
 			CTextUI("CurPage Has Focus", { 0.1,0.025 }, { 255,255,255,255 }).Draw();
 			CTextUI("i == box_selection", {0.1, 0.050}, { 255,255,255,255 }).Draw();
 			CTextUI(std::to_string(m_bisFocused), { 0.1,0.075 }, { 255,255,255,255 }).Draw();
-			curBoxObj.SetColour(CRGBA(240,240,240,255)); // Todo -- Add here a check to validate whether the box should be drawn if the paginator doesn't have focus.
+			curBoxObj.SetColour(CRGBA<float>(240,240,240,255)); // Todo -- Add here a check to validate whether the box should be drawn if the paginator doesn't have focus.
 			CBox selectionBox = CBox({ curBoxObj.GetDrawPos().x, curBoxObj.GetDrawPos().y - ((curBoxObj.GetHeight() / 2.f) + (selectionHeight / 2.f))}, m_Pages[i].second.GetHighlightColor(), curBoxObj.GetWidth(), selectionHeight);
 			selectionBox.Draw();
-			curText.colour = CRGBA(0, 0, 0, 255);
-			curText.dropShadow = { 0,{0,0,0,0} };
+			curText.colour = CRGBA<float>(0, 0, 0, 255);
+			curText.dropShadow = { 0,CRGBA<float>{0,0,0,0} };
 			__last_page = curPage;
 			CTextUI(std::to_string((unsigned long long) __last_page->GetHeader()), { 0.1,0.0 }, {240,240,240,255}).Draw();
 			curPage->Update();
@@ -43,7 +44,7 @@ void CPauseMenuPaginator::Update(CPauseMenuPage*& __last_page) { // this actuall
 #include "../../ScaleformHelper/CScaleform.h"
 void CPauseMenuPaginator::DrawPage(CPauseMenuPage& page, int selection_index) { //draw one page (edit big bloat lol.) 
 	//For this we need one box and two text entries per block (one for right one for left). this is demo code to outline it.
-	CVector2 baseVectorText = { 0.216796875f, 0.184722222f }; // from (nav menu) above
+	CVector2<float> baseVectorText = { 0.216796875f, 0.184722222f }; // from (nav menu) above
 	CScaleform scaleform = CScaleform("GTAV_ONLINE");
 	scaleform.BeginMethod("SETUP_BIGFEED");
 	scaleform.BoolPush(true);
@@ -58,14 +59,14 @@ void CPauseMenuPaginator::DrawPage(CPauseMenuPage& page, int selection_index) { 
 		isSelectionIndexNegative = false;
 	}
 	for (int i = 0; i < page.getAllEntries().size(); i++) {
-		CVector2 baseVectorBox = { baseVectorText.x + 0.225f / 4.f, baseVectorText.y + 0.0481944444f + ((0.0379544444f) * i) };
+		CVector2<float> baseVectorBox = { baseVectorText.x + 0.225f / 4.f, baseVectorText.y + 0.0481944444f + ((0.0379544444f) * i) };
 		CBox box = CBox({ baseVectorBox.x, baseVectorBox.y }, { 0,0,0,155 }, 0.2265f, 0.0342222222222222f); //576 × 50
 		
 		CPauseMenuPage::PageEntry curEntry = page.getAllEntries()[i];
-		CTextUI ltext = CTextUI(curEntry.leftDataEntry, { 0.1, 0.2f + (ltext.CharacterHeight(1) * i) }, CRGBA(255, 255, 255, 255));
+		CTextUI ltext = CTextUI(curEntry.leftDataEntry, CVector2<float>{ 0.1, 0.2f + (ltext.CharacterHeight(1) * i) }, CRGBA<float>(255, 255, 255, 255));
 		if (i == selection_index && isSelectionIndexNegative == false) {
 			ltext.colour = { 0,0,0,255 };
-			ltext.dropShadow = CTextDropshadow(0, { 0,0,0,0 });
+			ltext.dropShadow = CTextDropshadow(0, CRGBA<float>{ 0,0,0,0 });
 			box.SetColour({ 240,240,240,255 });
 		}
 		box.Draw();
@@ -114,7 +115,7 @@ void CPauseMenuPaginator::DrawPage(CPauseMenuPage& page, int selection_index) { 
 void CPauseMenuPaginator::DrawAllPages() {
 }
 
-void CPauseMenuPaginator::DrawNavBtn(const char* buffer, CVector2 position, CRGBA boxColor) {
+void CPauseMenuPaginator::DrawNavBtn(const char* buffer, CVector2<float> position, CRGBA<float> boxColor) {
 	bool isBoxSelected = false;
 	const float selectionHeight = 0.0079875f; // 287 × 55 | 2560 × 1440 | 124 × 25 (important info) verydesc
 	CBox box = CBox(position, boxColor, 0.112109375f, 0.0381944444f); // note this works on my screen. find the actual way they render these.
@@ -132,7 +133,7 @@ void CPauseMenuPaginator::DrawNavBtn(const char* buffer, CVector2 position, CRGB
 	box.Draw(); // draw box before so it spawns lower
 	if (isBoxSelected) {
 		text.colour = { 0,0,0,255 };
-		text.dropShadow = CTextDropshadow(0, { 0,0,0,0 });
+		text.dropShadow = CTextDropshadow(0, CRGBA<float>{ 0,0,0,0 });
 		selectionBox.Draw();
 	}
 	text.Draw();

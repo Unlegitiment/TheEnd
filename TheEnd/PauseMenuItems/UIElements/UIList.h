@@ -21,9 +21,9 @@ private:
 public:
 	struct sPublicListItem {
 		ListItem& m_item;
-		CVector2 m_ItemLocation;
-		CRGBA m_ItemColour;
-		CRGBA m_ItemSelection;
+		CVector2<float> m_ItemLocation;
+		CRGBA<float> m_ItemColour;
+		CRGBA<float> m_ItemSelection;
 	};
 	UIList(const CPauseMenuPage* pPage);
 	static void DrawItem(sPublicListItem& item);

@@ -39,7 +39,7 @@ public:
 	void Update(CPauseMenuPage*& __last_page);
 	static void DrawPage(CPauseMenuPage& page, int selection_index);
 	void DrawAllPages();
-	static void DrawNavBtn(const char* buffer, CVector2 position, CRGBA boxColor); // now this is gonna be interesting because each page needs to know some stuff.
+	static void DrawNavBtn(const char* buffer, CVector2<float> position, CRGBA<float> boxColor); // now this is gonna be interesting because each page needs to know some stuff.
 	void DrawAllNavButtons();
 	void DrawAllMenus();
 	void SetSelection(int selection);

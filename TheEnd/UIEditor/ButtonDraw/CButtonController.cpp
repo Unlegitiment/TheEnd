@@ -33,7 +33,7 @@ void CButtonMgr::FlagDebugSymbols(bool newDebug)
 	this->drawDebug = newDebug;
 }
 
-void CButtonMgr::handleMouse(CRGBA highlightColour, float mousePosX, float mousePosY)
+void CButtonMgr::handleMouse(CRGBA<float> highlightColour, float mousePosX, float mousePosY)
 {
 	CVector2 mousePos = CVector2(mousePosX, mousePosY);
 	if (button.GetBox().GetIfPointIsInside(mousePos)) {
@@ -44,7 +44,7 @@ void CButtonMgr::handleMouse(CRGBA highlightColour, float mousePosX, float mouse
 }
 
 
-void CButtonMgr::UpdateDrawPos(CVector2 drawPosition)
+void CButtonMgr::UpdateDrawPos(CVector2<float> drawPosition)
 {
 	button.SetNewDrawPos(drawPosition);
 	Update();
@@ -69,7 +69,7 @@ void CButtonMgr::Update()
 		UpdateButtonAtIndex(i);
 	}
 }
-void CButtonMgr::SetNewColor(CRGBA __newColor)
+void CButtonMgr::SetNewColor(CRGBA<float> __newColor)
 {
 	this->button.GetBox().SetColour(__newColor);
 }

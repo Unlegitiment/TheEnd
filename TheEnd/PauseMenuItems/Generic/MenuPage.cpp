@@ -45,11 +45,11 @@ CPauseMenuHeader* CPauseMenuPage::GetHeader() {
 	return this->m_Header;
 }
 
-CRGBA CPauseMenuPage::GetHighlightColor() {
+CRGBA<float> CPauseMenuPage::GetHighlightColor() {
 	return this->highlightColor;
 }
 
-void CPauseMenuPage::SetHighlightColor(CRGBA rgba) {
+void CPauseMenuPage::SetHighlightColor(CRGBA<float> rgba) {
 	this->highlightColor = rgba;
 }
 

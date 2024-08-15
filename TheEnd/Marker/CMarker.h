@@ -49,15 +49,15 @@ public:
 		MarkerTypeSawbladeSymbol = 42,
 		MarkerTypeUnkown = 43
 	};
-	CMarker(eMarkerType type, CVector3 pos, CVector3 dir, CVector3 rot, CVector3 scale, CRGBA rgba, bool bob, bool faceCam, int drawRot, bool rotate, CTxd* txd, bool drawOnEnter, bool p24);
+	CMarker(eMarkerType type, CVector3<float> pos, CVector3<float> dir, CVector3<float> rot, CVector3<float> scale, CRGBA<float> rgba, bool bob, bool faceCam, int drawRot, bool rotate, CTxd* txd, bool drawOnEnter, bool p24);
 	void Draw();
 	//getters cause cringe
 	eMarkerType getType();
-	CVector3 getPos();
-	CVector3 getDir();
-	CVector3 getRot();
-	CVector3 getScale();
-	CRGBA    getColor();
+	CVector3<float> getPos();
+	CVector3<float> getDir();
+	CVector3<float> getRot();
+	CVector3<float> getScale();
+	CRGBA<float>    getColor();
 	bool	 getIfMarkerBobs();
 	bool	 getIfMarkerFacesCam();
 	bool	 getIfMarkerRotates();
@@ -66,11 +66,11 @@ public:
 	CTxd*    getTxd(); // can be null
 protected:
 	eMarkerType m_Type;
-	CVector3 pos;
-	CVector3 dir;
-	CVector3 rotation;
-	CVector3 scale;
-	CRGBA rgba;
+	CVector3<float> pos;
+	CVector3<float> dir;
+	CVector3<float> rotation;
+	CVector3<float> scale;
+	CRGBA<float> rgba;
 	bool bob, faceCam, rotate, drawonEnt, p24;
 	int drawRot;
 	CTxd* texture; // nullptr

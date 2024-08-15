@@ -27,7 +27,7 @@ public:
 		ETEXT_RIGHT,
 		ETEXT_MAX
 	};
-	void SetNewDrawPos(CVector2 __drawPos__);
+	void SetNewDrawPos(CVector2<float> __drawPos__);
 	CBox& GetBox() ;
 
 	void SetNewBox(CBox& __box);

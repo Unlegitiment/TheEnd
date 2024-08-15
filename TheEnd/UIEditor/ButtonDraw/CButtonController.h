@@ -11,13 +11,13 @@ public:
 	CButtonMgr(CButtonUI& buttonToSetup);
 	//CButtonMgr(const CBox& box, const CTextUI* ltextUI);
 	void FlagDebugSymbols(bool newDebug);
-	void handleMouse(CRGBA highlightColour, float mousePosX, float mousePosY);
-	void UpdateDrawPos(CVector2 drawPosition);
+	void handleMouse(CRGBA<float> highlightColour, float mousePosX, float mousePosY);
+	void UpdateDrawPos(CVector2<float> drawPosition);
 	void UpdateButtonAtIndex(int index);
 	void SetHeight(float _height);
 	void SetWidth(float _width);
 	void Update(); 
-	void SetNewColor(CRGBA __newColor);
+	void SetNewColor(CRGBA<float> __newColor);
 	bool isIndexValid(int index);
 
 
