@@ -68,15 +68,43 @@ typedef std::vector<const char*> IPLsLoaded; // this is useless just a nice conv
 * CTheScript - This is just our main injection points, Update loops etc. All threads go through here. Likely have a constexpr array of all possible functions that need to be executed when the program starts. 
 */
 class CGameWorld {
+
 public:
+	enum eGameWorldAdditionState {
+		eGWBS_WORLD_LOAD_CAYO,
+		eGWBS_WORLD_LOAD_NORTH,
+		eGWBS_WORLD_LOAD_AIRCRAFT_CARRIER_SOUTH,
+		eGWBS_WORLD_LOAD_AIRCRAFT_CARRIER_NORTH, // this is as the recent patch goes added an IPL for this.
+		eGWBS_WORLD_DISABLE_LOS_SANTOS,
+		eGWBS_WORLD_LOADED_CAYO,
+		eGWBS_WORLD_LOADED_NORTH,
+		eGWBS_WORLD_LOADED_AIRCRAFT_CARRIER_SOUTH,
+		eGWBS_WORLD_LOADED_AIRCRAFT_CARRIER_NORTH, // this is as the recent patch goes added an IPL for this.
+		eGWBS_WORLD_DISABLED_LOS_SANTOS,
+		eGWBS_MAX
+	};
 	int FindEntityInWorld(CVector3<float>& location);
+	std::bitset<eGWBS_MAX>* GetGameInteriorInformation();
+	
 	void Update(); // defer this to a third thread. same with all systems that go under this.
 	void Init();
 	void Destroy();
+	~CGameWorld();
 	CGameInteriorMgr* GetInteriorManager();
 	static CPlayer* GetLocalPlayer();
 	static CVehicleFactory* GetVehicleFactory();
+	void WORLD_LOAD_CAYO();
+	void OnEnterSp();
+	void OnEnterMp();
+	bool IsMpMapActive();
 private:
+	void GameWorldStateCheck();
+	void WORLD_LOAD_S_CARRIER();
+	void WORLD_LOAD_N_CARRIER();
+	void WORLD_DISABLE_LOS_SANTOS();
+	void WORLD_LOAD_NY();
+	
+	bool m_bMpMapActive;
 	CGameMissionMgr*	m_pMissionMgr; // All missions that are active and the state.
 	CGameScriptMgr*		m_pScriptMgr; //  All scripts go thru this. 
 	static CGameWorld*	m_pWorldInstance; // the global world instance.
@@ -86,15 +114,5 @@ private:
 	CGameInteriorMgr*	m_pInteriorManager;
 	CGameExplosionMgr*	m_pExplostionManager;
 	CPlayer*			m_pPlayer;
-	enum eGameWorldBitState {
-		eGWBS_WORLD_LOAD_CAYO,
-		eGWBS_WORLD_LOAD_NORTH,
-		eGWBS_WORLD_LOAD_AIRCRAFT_CARRIER_SOUTH,
-		eGWBS_WORLD_LOAD_AIRCRAFT_CARRIER_NORTH,
-		eGWBS_MAX
-	};
 	std::bitset<eGWBS_MAX>	m_GameStateInformation;
-	
-
-	
 };

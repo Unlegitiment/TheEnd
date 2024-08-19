@@ -35,6 +35,15 @@
     <ClCompile Include="Logger\LoggerClient.cpp" />
     <ClCompile Include="Logger\CLoggerInstances.cpp" />
     <ClCompile Include="Important\CDeluxo.cpp" />
+    <ClCompile Include="Game\CGameWorld.cpp" />
+    <ClCompile Include="Game\Interior\InteriorManager.cpp" />
+    <ClCompile Include="Game\Interior\GameInterior.h" />
+    <ClCompile Include="Game\Interior\GameInterior.cpp" />
+    <ClCompile Include="Important\Pause\CTheEndPauseMenu.cpp" />
+    <ClCompile Include="Scripts\Respawn\CustomRespawn.cpp" />
+    <ClCompile Include="Game\Interior\GameInterior_PROLOGUE.cpp" />
+    <ClCompile Include="Game\Water\GameWaterMgr.cpp" />
+    <ClCompile Include="Scripts\SPRestart\Restart.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -85,6 +94,13 @@
     <ClInclude Include="Game\Explostion\Explosion.h" />
     <ClInclude Include="Game\Explostion\ExplosionMgr.h" />
     <ClInclude Include="Important\CDeluxo.h" />
+    <ClInclude Include="GlobalUpdateThread.h" />
+    <ClInclude Include="Game\Interior\InteriorManager.h" />
+    <ClInclude Include="Important\Pause\CTheEndPauseMenu.h" />
+    <ClInclude Include="Scripts\Respawn\CustomRespawn.h" />
+    <ClInclude Include="Game\Interior\GameInterior_PROLOGUE.h" />
+    <ClInclude Include="Game\Water\GameWaterMgr.h" />
+    <ClInclude Include="Scripts\SPRestart\Restart.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

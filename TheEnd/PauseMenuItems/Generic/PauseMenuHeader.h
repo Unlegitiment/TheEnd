@@ -35,7 +35,7 @@ public:
 private:
 	PauseInfo* pauseInfo;
 public:
-	CPauseMenuHeader(PauseInfo* info);
+	CPauseMenuHeader(PauseInfo& info);
 	PauseInfo* getInfo();
 	void setInfo(PauseInfo* info);
 	static void DrawHeader(CPauseMenuHeader& header);

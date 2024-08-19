@@ -14,10 +14,11 @@ BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 	{
 	case DLL_PROCESS_ATTACH:
 		scriptRegister(hInstance, LoggerThread);
+		scriptRegisterAdditionalThread(hInstance, ScriptMainThree);
 		scriptRegisterAdditionalThread(hInstance, ScriptMain);
 		keyboardHandlerRegister(OnKeyboardMessage);
 		break;
-	case DLL_PROCESS_DETACH:
+	case DLL_PROCESS_DETACH: // you see if I was like competent i would send a event that says that the program is shutting down here so we can call all the program's destroy and cleanup methods. instead of doing it here.
 		scriptUnregister(hInstance);
 		keyboardHandlerUnregister(OnKeyboardMessage);
 		CLogger::GetInst()->GetNetworkLogger()->Cleanup();

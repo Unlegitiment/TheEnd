@@ -95,7 +95,7 @@ bool CConfigureTheEndAmbience::isAllConfigured() {
 }
 
 void CConfigureTheEndAmbience::DoTimeCycle(float launchTime) {
-    CLogger::GetInst()->GetNetworkLogger()->LogInfo(INFO, true, "DoTimeCycle Called with params: ", launchTime);
+    CLogger::GetInst()->GetNetworkLogger()->LogInfo(INFO, true, "DoTimeCycle Called with params: ", launchTime); //what can we do to just send this once lul
     this->m_LaunchTime = launchTime;
     const char* timeCycleModifier = "New_sewers";
     float timeCycleStrength = Interpolate(0.0, 0.8, this->m_LaunchTime, 5000, MISC::GET_GAME_TIMER());

@@ -170,7 +170,7 @@ void CPauseMenuPaginator::SetPageInFocus(int page_selection) {
 	if (page_selection > m_Pages.size()) {
 		return;
 	}
-	m_Pages[page_selection].second.SetFocus();
+	m_Pages[page_selection].second.SetFocus(true);
 	return;
 }
 int CPauseMenuPaginator::GetPageSelected() const{
@@ -196,7 +196,7 @@ void CPauseMenuPaginator::TransferPage(CPauseMenuPage* page) {
 		}
 		return;
 	}
-	page->SetFocus();
+	page->SetFocus(true);
 	this->SetPaginatorFocus(false);
 	page->Update(); // makes me wanna die lmao.
 }

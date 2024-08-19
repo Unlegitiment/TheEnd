@@ -9,7 +9,7 @@
 #include "./SHVNative/natives.h"
 #include "./SHVNative/types.h"
 #include "./SHVNative/enums.h"
-
+#include "./GlobalUpdateThread.h"
 #include "./SHVNative/main.h"
 
 void ScriptMain();

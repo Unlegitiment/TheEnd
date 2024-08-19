@@ -9,6 +9,11 @@
 #include <windows.h>
 #include "../Logger/CLoggerInstances.h"
 #define Logger CLogger::GetInst()
+#define netLogger CLogger::GetInst()->GetNetworkLogger()
+#define scriptLogI(...) netLogger->LogInfo(INFO, true, __FUNCTION__,": " ,__VA_ARGS__)
+#define scriptLogW(...) netLogger->LogInfo(WARN, true, __FUNCTION__,": " ,__VA_ARGS__)
+#define scriptLogE(...) netLogger->LogInfo(ERROR2, true, __FUNCTION__,": " ,__VA_ARGS__)
+#define scriptLogF(...) netLogger->LogInfo(FATAL, true, __FUNCTION__, ": ", __VA_ARGS__) // this should also trigger a script crash.
 typedef DWORD Void;
 typedef DWORD Any;
 typedef DWORD uint;
@@ -170,4 +175,39 @@ inline void CVector2<T>::NormalizeScreen(T* locX, T* locY) {
 	*locX = this->x / SCRX;
 	*locY = this->y / SCRY;
 	return;
+}
+template<typename _Type>
+class Singleton : protected _Type {
+private:
+	static _Type* Instance;
+public:
+	static _Type* GetInstance();
+	static bool IsInitalized();
+	static void Initalized();
+	~Singleton();
+};
+template<typename _Type> _Type* Singleton<_Type>::Instance = nullptr;
+
+template<typename _Type>
+inline _Type* Singleton<_Type>::GetInstance() {
+	if (!Singleton<_Type>::IsInitalized()) {
+		Singleton<_Type>::Initalized();
+	}
+	return Singleton<_Type>::Instance;
+}
+
+template<typename _Type>
+inline bool Singleton<_Type>::IsInitalized() {
+	return Singleton<_Type>::Instance ? true : false;
+}
+
+template<typename _Type>
+inline void Singleton<_Type>::Initalized() {
+	Singleton<_Type>::Instance = new _Type();
+	return;
+}
+
+template<typename _Type>
+inline Singleton<_Type>::~Singleton() {
+	delete this->Instance;
 }

@@ -62,8 +62,8 @@ bool CPauseMenuPage::HasFocus() {
 	return m_bHasFocus;
 }
 
-void CPauseMenuPage::SetFocus() {
-	this->m_bHasFocus = true;
+void CPauseMenuPage::SetFocus(bool m_bnewfoc) {
+	this->m_bHasFocus = m_bnewfoc;
 }
 #include "../../keyboard.h"
 #include "../../UIEditor/TextDraw/Text.h"
@@ -79,7 +79,7 @@ void CPauseMenuPage::DrawPage(CPauseMenuPage& page) {
 }
 
 CPauseMenuHeader CPauseMenuPage::GetDefaultHeader() {
-	return CPauseMenuHeader(&CPauseMenuHeader::PauseInfo("Grand Theft Auto V", "", "{date}", "{character}", "{money/info}"));
+	return CPauseMenuHeader(CPauseMenuHeader::PauseInfo("Grand Theft Auto V", "", "{date}", "{character}", "{money/info}"));
 }
 
 int CPauseMenuPage::GetSelectionIndex() {

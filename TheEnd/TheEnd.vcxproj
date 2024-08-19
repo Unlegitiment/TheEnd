@@ -8,7 +8,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ambience\CConfigureTheEndAmbience.cpp" />
+    <ClCompile Include="Game\CGameWorld.cpp" />
+    <ClCompile Include="Game\Interior\GameInterior.cpp" />
+    <ClCompile Include="Game\Interior\GameInterior.h" />
+    <ClCompile Include="Game\Interior\GameInterior_PROLOGUE.cpp" />
+    <ClCompile Include="Game\Interior\InteriorManager.cpp" />
+    <ClCompile Include="Game\Water\GameWaterMgr.cpp" />
     <ClCompile Include="Important\CDeluxo.cpp" />
+    <ClCompile Include="Important\Pause\CTheEndPauseMenu.cpp" />
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="Logger\CLoggerInstances.cpp" />
     <ClCompile Include="Logger\LocalLogger.cpp" />
@@ -33,6 +40,8 @@
     <ClCompile Include="ScaleformHelper\CScaleform.cpp" />
     <ClCompile Include="script.cpp" />
     <ClCompile Include="Scripts\CDisable.cpp" />
+    <ClCompile Include="Scripts\Respawn\CustomRespawn.cpp" />
+    <ClCompile Include="Scripts\SPRestart\Restart.cpp" />
     <ClCompile Include="SHVNative\types.cpp" />
     <ClCompile Include="Textures\CTXD.cpp" />
     <ClCompile Include="UIEditor\BoxDraw\CBoxUI.cpp" />
@@ -47,8 +56,13 @@
     <ClInclude Include="Game\CGameWorld.h" />
     <ClInclude Include="Game\Explostion\Explosion.h" />
     <ClInclude Include="Game\Explostion\ExplosionMgr.h" />
+    <ClInclude Include="Game\Interior\GameInterior_PROLOGUE.h" />
+    <ClInclude Include="Game\Interior\InteriorManager.h" />
     <ClInclude Include="Game\Objects\CPlayer.h" />
+    <ClInclude Include="Game\Water\GameWaterMgr.h" />
+    <ClInclude Include="GlobalUpdateThread.h" />
     <ClInclude Include="Important\CDeluxo.h" />
+    <ClInclude Include="Important\Pause\CTheEndPauseMenu.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="Logger\CLoggerInstances.h" />
     <ClInclude Include="Logger\LocalLogger.h" />
@@ -78,6 +92,8 @@
     <ClInclude Include="ScriptPort\Doors\CDoor.h" />
     <ClInclude Include="ScriptPort\Doors\DoorController.h" />
     <ClInclude Include="Scripts\CDisable.h" />
+    <ClInclude Include="Scripts\Respawn\CustomRespawn.h" />
+    <ClInclude Include="Scripts\SPRestart\Restart.h" />
     <ClInclude Include="SHVNative\enums.h" />
     <ClInclude Include="SHVNative\main.h" />
     <ClInclude Include="SHVNative\nativeCaller.h" />

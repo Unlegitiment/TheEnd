@@ -35,7 +35,7 @@ public:
 	void SetHighlightColor(CRGBA<float> rgba);
 	void LoseFocus();
 	bool HasFocus();
-	void SetFocus();
+	void SetFocus(bool m_bnewfoc);
 	void Update();
 	static void DrawPage(CPauseMenuPage& page);
 	static CPauseMenuHeader GetDefaultHeader();

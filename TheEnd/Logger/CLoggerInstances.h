@@ -12,3 +12,4 @@ public:
 	LocalLogger* GetLocalLogger();
 	static CLogger* GetInst();
 };
+#define scriptLog(...) netLogger->LogInfo(INFO, true, __FUNCTION__,": " ,__VA_ARGS__)

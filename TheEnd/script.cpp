@@ -1,3 +1,10 @@
+/*
+    Purpose: Aiming for perfection is hard. So lets aim a little lower. This is the tip of the mountain. Where everything comes together.
+             Recreating the GTA Freemode Experience is hard. Especially for just one thread. We have a few other helper threads to come along. I.E The World Thread.
+             However this is where the script is ran.
+    Author: Unlegitiment.
+*/
+
 #include "script.h"
 #include "keyboard.h"
 
@@ -14,11 +21,14 @@
 #include "./Scripts/CDisable.h"
 #pragma warning(disable : 4244 4305) // double <-> float conversions
 #include "./Logger/CLoggerInstances.h"
-
-
+#include "./GlobalUpdateThread.h"
+#include "./Game/Interior/GameInterior.h"
+#include "./Important/Pause/CTheEndPauseMenu.h"
+#include "./Scripts/SPRestart/Restart.h"
 //This does NOT work. Depricated and completely fucking invalid I mean jfc. Logic found in Shop_Controller.sc which CAN be reset through loading a save file.
 void GameVersionCheck();
 std::string ClockToDay(int day);
+#define WORLD sGameWorld::GetInstance()
 void main() {
     CDisableScripts disableScripts = CDisableScripts();
     CVector3<float> v = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
@@ -32,6 +42,7 @@ void main() {
     bool m_bCanShowPause = false;
     bool isMissionStarted = false;
     CPauseMenuPage* lastPageSelected = nullptr;
+    CTheEndPauseMenu pauseMenu = CTheEndPauseMenu();
     bool isPedSpawned = false;
     Ped p = -1;
     Vehicle Deluxo = -1;
@@ -44,6 +55,9 @@ void main() {
     ENTITY::SET_ENTITY_AS_MISSION_ENTITY(Deluxo, 1, 1);
     double value3 = 0.0;
     bool isAmbienceConfiged = false;
+    CInterior silo = CInterior(WORLD->GetInteriorManager());
+    silo.AddEntry("m23_1_dlc_int_03_m23_1"); // the silo is an DLC::ON_ENTER_MP interior. which means it can't be deloaded from a script. weird.
+    silo.Request();
 #ifdef DESTROY_FM // The Purpose of this is to stop the Dev from accidentally destroying freemode lol All of these scripts effectively manage most of freemode Terminating them results in almost dead freemode environment
     MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_triggerer_A");  // Notsure
     MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_triggerer_B");  // Notsure
@@ -59,15 +73,7 @@ void main() {
     MISC::SET_MISSION_FLAG(1);
 #endif // DESTROY_FM
     std::bitset<8> bitStatus_SHOP_CONTRLLER;
-    MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller"            );
-    MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("blip_controller"            );          // All Mission Blips go through this script
-    MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("vehicle_gen_controller"     );   // All pv's go through this script
-    MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("launcher_Racing"            );   // All races go through this script
-    MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_triggerer_A"        );  // Notsure
-    MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_triggerer_B"        );  // Notsure
-    MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_triggerer_C"        );  // Notsure
-    MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_triggerer_D"        );  // Notsure
-    MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_repeat_controller"  ); // Entire Repeat Menu results in undefined behavior 
+
     Hash left = MISC::GET_HASH_KEY("DOOR_LEFT_SILO_BASE");
     Hash right = MISC::GET_HASH_KEY("DOOR_RIGHT_SILO_BASE");
     OBJECT::ADD_DOOR_TO_SYSTEM(left, MISC::GET_HASH_KEY("v_ilev_garageliftdoor"), -1920.684, 3749.0371, -100.65, 1, 1, 1);
@@ -91,12 +97,28 @@ void main() {
     disableScripts.PushBackScript("mission_triggerer_B");
     disableScripts.PushBackScript("mission_triggerer_C");
     disableScripts.PushBackScript("mission_triggerer_D");
-    disableScripts.PushBackScript("mission_repeat_controller");
+    disableScripts.PushBackScript("mission_repeat_controller"); // also add here to disable respawn script. so that we write our own in here. and so that we can restart it.
     disableScripts.Update();
     CClientNetwork* logger = CLogger::GetInst()->GetNetworkLogger();
     logger->LogInfo(INFO, true, "We have summoned the script");
     logger->LogInfo(INFO, true, disableScripts.GetLogStatement());
+    bool curInteriorStatus = false;
+    CPauseMenuPaginator paginator = CPauseMenuPaginator();
+    pauseMenu.Init(&paginator);
+    DLC::ON_ENTER_MP(); // alrighty lol
+    PED::SET_PED_MODEL_IS_SUPPRESSED(MISC::GET_HASH_KEY("A_C_SHARKTIGER"), 1);
+    int staggeredLoopTimer = MISC::GET_GAME_TIMER();
+    
     while (true){
+        if (IsKeyJustUp(VK_F4)) {
+            disableScripts.RestartAllScripts();
+        }
+        if (!HUD::IS_PAUSEMAP_IN_INTERIOR_MODE()) {
+            HUD::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
+            HUD::SET_RADAR_AS_INTERIOR_THIS_FRAME(MISC::GET_HASH_KEY("h4_fake_islandx"), 4700.0f, -5150.0f, 0.0f, 0.0f);
+        }
+        pauseMenu.Update();
+        disableScripts.StaggeredLoop(&staggeredLoopTimer);
         CTextUI(std::to_string(ambienceConfigurer.GetInterpProgress(ambienceConfigurer.TIMECYCLE)), { 0.5f,0.55f }, { 255,255,255,255 }).Draw();
         CTextUI(std::to_string(ambienceConfigurer.GetInterpProgress(ambienceConfigurer.WEATHER)), {0.5f,0.575f}, {255,255,255,255}).Draw();
         bool isPedInsideDeluxo = (PED::IS_PED_IN_VEHICLE(PLAYER::PLAYER_PED_ID(), Deluxo, 0));
@@ -138,7 +160,13 @@ void main() {
             WAIT(5000);
             Deluxo = VEHICLE::CREATE_VEHICLE(MISC::GET_HASH_KEY("DELUXO"), 47.2755f, -862.1296f, 30.05f, 340.8, 1, 0, 1);
         }
-
+        WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_LOAD_AIRCRAFT_CARRIER_SOUTH, curInteriorStatus); //Todo -- Add cleanup for this bit if we set the curInteriorStatus to false we never clear the interior.
+        WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_LOAD_AIRCRAFT_CARRIER_NORTH, curInteriorStatus); //Todo -- Add cleanup for this bit if we set the curInteriorStatus to false we never clear the interior.
+        WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_DISABLE_LOS_SANTOS, curInteriorStatus);
+        WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_LOAD_NORTH, curInteriorStatus);
+        if (IsKeyJustUp(VK_F14)) {
+            curInteriorStatus = !curInteriorStatus;
+        }
         GameVersionCheck();
         VEHICLE::SET_DISABLE_HOVER_MODE_FLIGHT(Deluxo, 1);
         VEHICLE::SET_DISABLE_VERTICAL_FLIGHT_MODE_TRANSITION(Deluxo, 1);
@@ -167,7 +195,6 @@ void main() {
             PED::SET_PED_DENSITY_MULTIPLIER_THIS_FRAME(0.0);
             PED::SET_SCENARIO_PED_DENSITY_MULTIPLIER_THIS_FRAME(0.0, 0.0);
         }
-
         //if (IsKeyJustUp(VK_F3)) {
         //    isPedSpawned = true;
         //    p = PED::CREATE_PED(0, MISC::GET_HASH_KEY("player_zero"), (GRAPHICS::GET_SAFE_ZONE_SIZE() * 117.2), (GRAPHICS::GET_SAFE_ZONE_SIZE() * -53.3), -113.f, 0,1,1);
@@ -183,12 +210,11 @@ void main() {
         if (IsKeyJustUp(VK_F13)) {
             forceFirstPerson = !forceFirstPerson;
         }
-        if (isOnlineReq == false) {
-            DLC::ON_ENTER_MP();
-            isOnlineReq = true;
-        }
-        if (!STREAMING::IS_IPL_ACTIVE("m23_1_dlc_int_03_m23_1")) {
-            STREAMING::REQUEST_IPL("m23_1_dlc_int_03_m23_1");
+        //if (isOnlineReq == false) {
+        //    DLC::ON_ENTER_MP();
+        //    isOnlineReq = true;
+        //}
+        if (silo.IsInteriorActive()) { // Todo -- Run this threw the game world stuff.
             isHalloweenInteriorActive = true;
         }
         if (IsKeyJustUp(VK_DIVIDE)) {
@@ -353,151 +379,10 @@ void main() {
         }
         v = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
         CMarkerInfo markerInfo = CMarkerInfo("Mission", "The End", "", "100%", "", false, "1", "", "", "");
-        CMissionMarker marker = CMissionMarker({v.x, v.y, v.z + 2.f}, { 5.f,5.f,1.f }, CRGBA<float>(255, 255, 255, 255), CTxd("mpmissmarkers256", "custom_icon")); // please kys!
+        CMissionMarker marker = CMissionMarker({v.x, v.y, v.z + 2.f}, { 5.f,5.f,1.f }, CRGBA<float>(255, 255, 255, 255), CTxd("mpmissmarkers256", "custom_icon")); // i never draw these. idk why these are loaded into mem. 
         CVisMarker vismarker = CVisMarker(markerInfo, marker);
         CVector3<float> v = CAM::GET_GAMEPLAY_CAM_ROT(2);
-
-
-#pragma region PauseMenuInit
-        CPauseMenuPaginator pageinator = CPauseMenuPaginator();
-        pageinator.SetSelection(pageinator_selection);
-        pageinator.SetPaginatorFocus(pageinator_focused); // forces the focus on the user's side now.
-        //vismarker.DrawAll({0,0,-v.z}, {4,4,1});
-        CPauseMenuPage OnlinePage = CPauseMenuPage();
-        CPauseMenuHeader::PauseInfo onlineInfo = CPauseMenuHeader::PauseInfo("Header", "False", "true", "false", "true");
-        CPauseMenuHeader onlineHeader = CPauseMenuHeader(&onlineInfo);
-        CTextUI(std::to_string((unsigned long long) & onlineHeader), { 0.1,0.125 }, { 255,255,255,255 }).Draw();
-        OnlinePage.Init(&pageinator, &onlineHeader);
-        OnlinePage.AddEntry(0, { "Join Friends","" });
-        OnlinePage.AddEntry(1, { "Join Crew Members","" });
-        OnlinePage.AddEntry(2, { "Crews","" });
-        OnlinePage.AddEntry(3, { "Creator","" });
-        OnlinePage.AddEntry(4, { "Choose Character","" });
-        OnlinePage.AddEntry(5, { "Play GTA Online","\n\nCut to the chase and head straight into the world of GTA Online" });
-        OnlinePage.SetHighlightColor({ 171, 237, 171, 255 });
-        OnlinePage.SetPageHeader(&onlineHeader);
-        CPauseMenuPage page = CPauseMenuPage();
-        CPauseMenuHeader::PauseInfo headerInfo = CPauseMenuHeader::PauseInfo("Grand Theft Auto Online", "", "{date}", "{character}", "{money}");
-        CPauseMenuHeader hlol = CPauseMenuHeader(&headerInfo);
-
-        page.Init(&pageinator, &hlol);
-        page.AddEntry(0, { "Quick Join",""});
-        page.AddEntry(1, { "Join Friends","" });
-        page.AddEntry(2, { "Join Crew Member","" });
-        page.AddEntry(3, { "Playlists", "" });
-        page.AddEntry(4,{ "Players", "" });
-        page.AddEntry(5,{ "Crews", "" });
-        page.AddEntry(6,{ "Rockstar Creator", "" });
-        page.AddEntry(7,{ "Manage Characters", "" });
-        page.AddEntry(8,{ "Migrate Profile", "" });
-        page.AddEntry(9,{ "GTA+ Membership", "" });
-        page.AddEntry(10,{ "Purchase Shark Cards", "" });
-        page.AddEntry(11,{ "Options", "" });
-        page.AddEntry(12,{ "Find New Session", "" });
-        page.AddEntry(13,{ "Credits & Legal", "" });
-        page.AddEntry(14,{ "Quit To Story Mode", "" });
-        page.AddEntry(15,{ "Quit To Main Menu", "" });
-        //page.AddEntry(0, { "{menu_option_online0: \"QUICK_JOIN\"}","" });
-        //page.AddEntry(1, { "{menu_option_online1: \"JOIN_FRIEND\"}","" });
-        //page.AddEntry(2, { "{menu_option_online2: \"JOIN_CREWMBR\"}","" });
-        //page.AddEntry(3, { "{menu_option_online3: \"PLAYLIST\"}", "" });
-        //page.AddEntry(4, { "{menu_option_online4: \"PLAYERS\"}", "" });
-        //page.AddEntry(5, { "{menu_option_online5: \"CREWS\"}", "" });
-        //page.AddEntry(6, { "{menu_option_online6: \"CREATOR\"}", "" });
-        //page.AddEntry(7, { "{menu_option_online7: \"MNG_CHAR\"}", "" });
-        //page.AddEntry(8, { "{menu_option_online8: \"MIG_PROF\"}", "" });
-        //page.AddEntry(9, { "{menu_option_online9: \"GTA+_PROMO\"}", "" });
-        //page.AddEntry(10, { "{menu_option_online10: \"BUY_SHK_CRD\"}", "" });
-        //page.AddEntry(11, { "{menu_option_online11: \"SETTINGS\"}", "" });
-        //page.AddEntry(12, { "{menu_option_online12: \"NEW_SESSION\"}", "" });
-        //page.AddEntry(13, { "{menu_option_online13: \"CRED+LEGAL\"}", "" });
-        //page.AddEntry(14, { "{menu_option_online14: \"QUIT_STORY\"}", "" });
-        //page.AddEntry(15, { "{menu_option_online15: \"QUIT_MAIN\"}", "" });
-        pageinator.RegisterPage("MAP", page);
-        pageinator.RegisterPage("BRIEF", OnlinePage);
-        pageinator.RegisterPage("STATS", OnlinePage);
-        pageinator.RegisterPage("SETTINGS", OnlinePage);
-        pageinator.RegisterPage("GAME", OnlinePage);
-        pageinator.RegisterPage("ONLINE", OnlinePage);
-        //CPauseMenuHeader header = CPauseMenuHeader(CPauseMenuHeader::PauseInfo("GrAnd Th3Ft Au0x2 0nIine ?RageParserSchema::NextXMLElement()?0x0fff02bba", "", "T??? ??:??", "UNK_001", "$-ab0x0244f"));
-        CPauseMenuPage* currentPage = pageinator.GetPageFromIndex(pageinator_selection);
-        currentPage->SetSelectionIndex(page_selection);
-        if (IsKeyJustUp(VK_F15) ){
-            m_bCanShowPause = true;
-        }
-        if (m_bCanShowPause) {
-            if (pageinator_focused == false) {
-                if (currentPage == nullptr) {
-                    int gameTime = MISC::GET_GAME_TIMER();
-                    while (gameTime + 5000 > MISC::GET_GAME_TIMER()) {
-                        CTextUI("currentPage passed is nullptr", { 0.5,0.5 }, { 255,0,0,255 }).Draw();
-                        WAIT(0);
-                    }
-                    return;
-                }
-                currentPage->SetFocus();
-                page_focused = true;
-            }
-            if (pageinator.GetIfPaginatorHasFocus()) {
-                if (IsKeyJustUp(VK_RIGHT)) {
-                    pageinator_selection = (pageinator.GetSelection() + 1 < pageinator.GetMaxSelections() ? pageinator.GetSelection() + 1 : 0);
-                }
-                if (IsKeyJustUp(VK_LEFT)) {
-                    pageinator_selection = (pageinator.GetSelection() - 1 >= 0 ? pageinator.GetSelection() - 1 : pageinator.GetMaxSelections() - 1);
-                }
-                if (IsKeyJustUp(VK_RETURN)) {
-                    page_selection = 0;
-                    page_focused = 0;
-                    pageinator_focused = false;
-                }
-                if (IsKeyJustUp(VK_BACK)) {
-                    pageinator_focused = false;
-                    page_selection = 0;
-                    page_focused = 0;
-                    m_bCanShowPause = false;
-                }
-            }
-            if (!pageinator.GetIfPaginatorHasFocus()) {
-                if (IsKeyJustUp(VK_BACK)) {
-                    page_focused = false;
-                    page_selection = -1;
-                    currentPage->LoseFocus();
-                    pageinator_focused = true;
-                }
-                if (IsKeyJustUp(VK_DOWN)) {
-                    if (page_selection == currentPage->getAllEntries().size() - 1) {
-                        page_selection = -1;
-                    }
-                    page_selection++;
-                }
-                if (IsKeyJustUp(VK_UP)) {
-                    if (page_selection == -2) {
-                        page_selection = currentPage->getAllEntries().size() - 1;
-                    }
-                    page_selection--;
-                }
-                if (IsKeyJustUp(VK_RETURN)) {
-                    //Call the function with the arguments of currentPage;
-                    int gameTimer = MISC::GET_GAME_TIMER();
-                    while (gameTimer + 2500 > MISC::GET_GAME_TIMER()) {
-                        CTextUI text = CTextUI("VK_RETURN Pressed", { 0.5,0.5 }, { 255,255,255,255 });
-                        text.size = 1;
-                        text.dropShadow = CTextDropshadow(0, CRGBA<float>{ 0,0,0,0 });
-                        text.SetTextJustification(0);
-                        text.Draw();
-                        if (IsKeyJustUp(VK_BACK)) {
-                            break;
-                        }
-                        WAIT(0);
-                    }
-                }
-            }
-            
-            pageinator.Update(lastPageSelected);
-            
-        }
-#pragma endregion
-        //CPauseMenuPaginator::DrawPage(page);
+        //TODO -- Put all pause menu Logic into a CTheEndPauseMenu! for clean and simplisiticity! Done. 8/18/24 3:50 am
         if (GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("pedmugshot_01")) {
             //CPauseMenuHeader h = CPauseMenuHeader(CPauseMenuHeader::PauseInfo("The End", "[Error]: Disconnection detected; Breach breach breach!", std::string(ClockToDay(CLOCK::GET_CLOCK_DAY_OF_WEEK()) + " " + std::to_string(CLOCK::GET_CLOCK_HOURS()) + (CLOCK::GET_CLOCK_MINUTES() <= 9 ? ":0" : ":") + std::to_string(CLOCK::GET_CLOCK_MINUTES())).c_str(), "FRANKLIN", "$2,147,365,094"));
             //CPauseMenuHeader::DrawHeader(h);
@@ -507,7 +392,6 @@ void main() {
         //vCorona.Draw();eeee
         WAIT(0);
     }
-    
     return;
 }
 void LoggerFunc() {

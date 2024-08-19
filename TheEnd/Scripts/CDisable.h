@@ -43,6 +43,8 @@ public:
     };
 	void PushBackScript(ScrName name);
 	void Update();
+    void RestartAllScripts();
+    void StaggeredLoop(int* updateTimer);
 	void ClearAllScripts();
 	void Destroy();
 	static bool RestartScript(ScrName name, StackSize stackSize); // this is in development a nullsub rn

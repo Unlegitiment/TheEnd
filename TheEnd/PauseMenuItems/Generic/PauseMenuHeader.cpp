@@ -3,10 +3,10 @@
 #include "../../UIEditor/TextDraw/Text.h"
 #include "../../UIEditor/BoxDraw/CBoxUI.h"
 #include "assert.h"
-CPauseMenuHeader::CPauseMenuHeader(PauseInfo* info) 
+CPauseMenuHeader::CPauseMenuHeader(PauseInfo& info) 
 {
     assert(info == nullptr, "CPauseMenuHeader::CPauseMenuHeader(PauseMenu*) cannot be nullptr");
-    this->pauseInfo = info;
+    this->pauseInfo = &info;
 }
 
 CPauseMenuHeader::PauseInfo* CPauseMenuHeader::getInfo() {
