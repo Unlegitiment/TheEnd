@@ -44,6 +44,10 @@
     <ClCompile Include="Game\Interior\GameInterior_PROLOGUE.cpp" />
     <ClCompile Include="Game\Water\GameWaterMgr.cpp" />
     <ClCompile Include="Scripts\SPRestart\Restart.cpp" />
+    <ClCompile Include="Game\CGameStream.cpp" />
+    <ClCompile Include="Game\Building\CBoundingBox.cpp" />
+    <ClCompile Include="Facility\CFacility.cpp" />
+    <ClCompile Include="Game\Objects\CPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -101,6 +105,12 @@
     <ClInclude Include="Game\Interior\GameInterior_PROLOGUE.h" />
     <ClInclude Include="Game\Water\GameWaterMgr.h" />
     <ClInclude Include="Scripts\SPRestart\Restart.h" />
+    <ClInclude Include="Notification\BaseHudNotification.h" />
+    <ClInclude Include="Game\CGameStream.h" />
+    <ClInclude Include="Game\Building\CBoundingBox.h" />
+    <ClInclude Include="Game\GameWrappers\BlipManagement\Blip.h" />
+    <ClInclude Include="Game\GameWrappers\BlipManagement\BlipMgr.h" />
+    <ClInclude Include="Facility\CFacility.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -112,5 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ambience\CConfigureTheEndAmbience.h" />
+    <None Include="Game\Building\BuildingController.h" />
   </ItemGroup>
 </Project>

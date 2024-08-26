@@ -79,7 +79,7 @@ void CPauseMenuPage::DrawPage(CPauseMenuPage& page) {
 }
 
 CPauseMenuHeader CPauseMenuPage::GetDefaultHeader() {
-	return CPauseMenuHeader(CPauseMenuHeader::PauseInfo("Grand Theft Auto V", "", "{date}", "{character}", "{money/info}"));
+	return CPauseMenuHeader("Grand Theft Auto V", "", "{date}", "{character}", "{money/info}");
 }
 
 int CPauseMenuPage::GetSelectionIndex() {

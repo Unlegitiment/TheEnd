@@ -8,11 +8,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ambience\CConfigureTheEndAmbience.cpp" />
+    <ClCompile Include="Facility\CFacility.cpp" />
+    <ClCompile Include="Game\Building\CBoundingBox.cpp" />
+    <ClCompile Include="Game\CGameStream.cpp" />
     <ClCompile Include="Game\CGameWorld.cpp" />
     <ClCompile Include="Game\Interior\GameInterior.cpp" />
     <ClCompile Include="Game\Interior\GameInterior.h" />
     <ClCompile Include="Game\Interior\GameInterior_PROLOGUE.cpp" />
     <ClCompile Include="Game\Interior\InteriorManager.cpp" />
+    <ClCompile Include="Game\Objects\CPlayer.cpp" />
     <ClCompile Include="Game\Water\GameWaterMgr.cpp" />
     <ClCompile Include="Important\CDeluxo.cpp" />
     <ClCompile Include="Important\Pause\CTheEndPauseMenu.cpp" />
@@ -53,9 +57,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ambience\CDeluxo.h" />
+    <ClInclude Include="Facility\CFacility.h" />
+    <ClInclude Include="Game\Building\CBoundingBox.h" />
+    <ClInclude Include="Game\CGameStream.h" />
     <ClInclude Include="Game\CGameWorld.h" />
     <ClInclude Include="Game\Explostion\Explosion.h" />
     <ClInclude Include="Game\Explostion\ExplosionMgr.h" />
+    <ClInclude Include="Game\GameWrappers\BlipManagement\Blip.h" />
+    <ClInclude Include="Game\GameWrappers\BlipManagement\BlipMgr.h" />
     <ClInclude Include="Game\Interior\GameInterior_PROLOGUE.h" />
     <ClInclude Include="Game\Interior\InteriorManager.h" />
     <ClInclude Include="Game\Objects\CPlayer.h" />
@@ -74,6 +83,7 @@
     <ClInclude Include="MissionScript\TheEnd.h" />
     <ClInclude Include="MissionVisuals\MarkerHandler.h" />
     <ClInclude Include="MissionVisuals\MarkerInfo.h" />
+    <ClInclude Include="Notification\BaseHudNotification.h" />
     <ClInclude Include="PauseMenuItems\Generic\MenuNavBtn.h" />
     <ClInclude Include="PauseMenuItems\Generic\MenuPage.h" />
     <ClInclude Include="PauseMenuItems\Generic\PauseMenu.h" />
@@ -113,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ambience\CConfigureTheEndAmbience.h" />
+    <None Include="Game\Building\BuildingController.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5493e904-35f0-402f-bb93-f470a753a660}</ProjectGuid>

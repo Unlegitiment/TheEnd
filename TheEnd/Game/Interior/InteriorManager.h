@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <vector>
+#include <bitset>
 #include "../../SHVNative/natives.h"
 enum eGameWorldState {
 	S_AIRCRAFT_CARRIER,
@@ -9,6 +10,18 @@ enum eGameWorldState {
 	NORTH_YANKTON,
 	DISABLE_LOS_SANTOS,
 	S_INTERIOR_MAX
+};
+enum eInteriorStatus {
+	eIS_INTERIOR_LOADED,
+	eIS_INTERIOR_UNLOADED,
+	eIS_INTERIOR_FORCE_CLEANUP,
+	eIS_PROG_GRAVE_UNLOADED,
+	eIS_PROG_GRAVE_LOADED,
+	eIS_MAX
+};
+struct s_InteriorState {
+	eGameWorldState m_Interior;
+	std::bitset<eIS_MAX> m_InteriorStatus;
 };
 class CInterior;
 class CGameInteriorPrologue;
@@ -21,8 +34,11 @@ private:
 		bool isActive;
 	};
 	std::map<eGameWorldState, std::vector<sIplInfo>> m_Map;
+	
 	std::vector<CInterior*> m_AllInteriorsLoaded; // for full scale customly added interiors.
 public:
+	void UpdateThisPrologue();
+	CGameInteriorPrologue* GetPrologueInterior();
 	void DoSanityCheck(); // check the current IPL's that are loaded like actually on the game.  this should go into init.
 	template<eGameWorldState e> bool SummonInteriorOfType();
 	template<eGameWorldState e> bool DisableInteriorOfType();

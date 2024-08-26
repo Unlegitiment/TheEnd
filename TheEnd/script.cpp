@@ -4,7 +4,7 @@
              However this is where the script is ran.
     Author: Unlegitiment.
 */
-
+#define NOMINMAX
 #include "script.h"
 #include "keyboard.h"
 
@@ -28,10 +28,137 @@
 //This does NOT work. Depricated and completely fucking invalid I mean jfc. Logic found in Shop_Controller.sc which CAN be reset through loading a save file.
 void GameVersionCheck();
 std::string ClockToDay(int day);
+void RotatePoint(float& x, float& y, float& z, float rx, float ry, float rz) {
+    // Convert degrees to radians
+    float rxRad = rx * (3.14f / 180.0f);
+    float ryRad = ry * (3.14f / 180.0f);
+    float rzRad = rz * (3.14f / 180.0f);
+
+    // Rotation around X-axis
+    float yTemp = y * cos(rxRad) - z * sin(rxRad);
+    float zTemp = y * sin(rxRad) + z * cos(rxRad);
+    y = yTemp;
+    z = zTemp;
+
+    // Rotation around Y-axis
+    float xTemp = x * cos(ryRad) + z * sin(ryRad);
+    z = -x * sin(ryRad) + z * cos(ryRad);
+    x = xTemp;
+
+    // Rotation around Z-axis
+    xTemp = x * cos(rzRad) - y * sin(rzRad);
+    y = x * sin(rzRad) + y * cos(rzRad);
+    x = xTemp;
+}
+
+// Function to draw a rotated box around a specific point
+void DrawRotatedBox(float centerX, float centerY, float centerZ, float width, float height, float depth, float rotX, float rotY, float rotZ) {
+    // Calculate half-dimensions
+    float halfWidth = width / 2.0f;
+    float halfHeight = height / 2.0f;
+    float halfDepth = depth / 2.0f;
+
+    // Define vertices of the box
+    float vertices[8][3] = {
+        {centerX - halfWidth, centerY - halfHeight, centerZ - halfDepth},
+        {centerX + halfWidth, centerY - halfHeight, centerZ - halfDepth},
+        {centerX + halfWidth, centerY + halfHeight, centerZ - halfDepth},
+        {centerX - halfWidth, centerY + halfHeight, centerZ - halfDepth},
+        {centerX - halfWidth, centerY - halfHeight, centerZ + halfDepth},
+        {centerX + halfWidth, centerY - halfHeight, centerZ + halfDepth},
+        {centerX + halfWidth, centerY + halfHeight, centerZ + halfDepth},
+        {centerX - halfWidth, centerY + halfHeight, centerZ + halfDepth}
+    };
+
+    // Rotate vertices
+    for (int i = 0; i < 8; ++i) {
+        RotatePoint(vertices[i][0], vertices[i][1], vertices[i][2], rotX, rotY, rotZ);
+    }
+
+    // Draw the edges of the box
+    auto drawLine = [](float* v1, float* v2) {
+        GRAPHICS::DRAW_LINE(v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], 255, 0, 0, 255);
+        };
+
+    // Bottom face
+    drawLine(vertices[0], vertices[1]);
+    drawLine(vertices[1], vertices[2]);
+    drawLine(vertices[2], vertices[3]);
+    drawLine(vertices[3], vertices[0]);
+
+    // Top face
+    drawLine(vertices[4], vertices[5]);
+    drawLine(vertices[5], vertices[6]);
+    drawLine(vertices[6], vertices[7]);
+    drawLine(vertices[7], vertices[4]);
+
+    // Vertical edges
+    drawLine(vertices[0], vertices[4]);
+    drawLine(vertices[1], vertices[5]);
+    drawLine(vertices[2], vertices[6]);
+    drawLine(vertices[3], vertices[7]);
+}
+#include <cmath>
+#include <iostream>
+#include "./Facility/CFacility.h"
+bool IsPointInBox(Vector3 point, Vector3 boxCenter, float width, float height, float depth, float rotX, float rotY, float rotZ) {
+    // Calculate half-dimensions
+    float halfWidth = width / 2.0f;
+    float halfHeight = height / 2.0f;
+    float halfDepth = depth / 2.0f;
+
+    // Define the vertices of the box
+    Vector3 vertices[8] = {
+        {boxCenter.x - halfWidth, boxCenter.y - halfHeight, boxCenter.z - halfDepth},
+        {boxCenter.x + halfWidth, boxCenter.y - halfHeight, boxCenter.z - halfDepth},
+        {boxCenter.x + halfWidth, boxCenter.y + halfHeight, boxCenter.z - halfDepth},
+        {boxCenter.x - halfWidth, boxCenter.y + halfHeight, boxCenter.z - halfDepth},
+        {boxCenter.x - halfWidth, boxCenter.y - halfHeight, boxCenter.z + halfDepth},
+        {boxCenter.x + halfWidth, boxCenter.y - halfHeight, boxCenter.z + halfDepth},
+        {boxCenter.x + halfWidth, boxCenter.y + halfHeight, boxCenter.z + halfDepth},
+        {boxCenter.x - halfWidth, boxCenter.y + halfHeight, boxCenter.z + halfDepth}
+    };
+
+    // Rotate vertices
+    for (int i = 0; i < 8; ++i) {
+        RotatePoint(vertices[i].x, vertices[i].y, vertices[i].z, rotX, rotY, rotZ);
+    }
+
+    // Translate point to origin
+    point.x -= boxCenter.x;
+    point.y -= boxCenter.y;
+    point.z -= boxCenter.z;
+
+    // Rotate point
+    RotatePoint(point.x, point.y, point.z, rotX, rotY, rotZ);
+
+    // Define the min and max values for each axis
+    
+    float minX = std::min({ vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x, vertices[4].x, vertices[5].x, vertices[6].x, vertices[7].x });
+    float maxX = std::max({ vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x, vertices[4].x, vertices[5].x, vertices[6].x, vertices[7].x });
+    float minY = std::min({ vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y, vertices[4].y, vertices[5].y, vertices[6].y, vertices[7].y });
+    float maxY = std::max({ vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y, vertices[4].y, vertices[5].y, vertices[6].y, vertices[7].y });
+    float minZ = std::min({ vertices[0].z, vertices[1].z, vertices[2].z, vertices[3].z, vertices[4].z, vertices[5].z, vertices[6].z, vertices[7].z });
+    float maxZ = std::max({ vertices[0].z, vertices[1].z, vertices[2].z, vertices[3].z, vertices[4].z, vertices[5].z, vertices[6].z, vertices[7].z });
+
+    // Check if point is within bounds
+    return (point.x >= minX && point.x <= maxX) &&
+        (point.y >= minY && point.y <= maxY) &&
+        (point.z >= minZ && point.z <= maxZ);
+}
+#include "./Game/Objects/CPlayer.h"
 #define WORLD sGameWorld::GetInstance()
 void main() {
     CDisableScripts disableScripts = CDisableScripts();
     CVector3<float> v = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
+    CFacility facility = CFacility(WORLD->GetInteriorManager());
+    facility.SummonBase();
+    facility.SummonInteriorComponent("set_int_02_decal_01");
+    facility.SetInteriorPropColor("set_int_02_decal_01", 1);
+    facility.Default();
+    
+    facility.RefreshInterior();
+    WORLD->GetLocalPlayer()->SetCoordinates({ 483.2006225586f, 4810.5405273438f, -58.919288635254f});
     bool isOnlineReq = false;
     bool isHalloweenInteriorActive = false;
     bool forceFirstPerson = true;
@@ -42,7 +169,6 @@ void main() {
     bool m_bCanShowPause = false;
     bool isMissionStarted = false;
     CPauseMenuPage* lastPageSelected = nullptr;
-    CTheEndPauseMenu pauseMenu = CTheEndPauseMenu();
     bool isPedSpawned = false;
     Ped p = -1;
     Vehicle Deluxo = -1;
@@ -58,6 +184,7 @@ void main() {
     CInterior silo = CInterior(WORLD->GetInteriorManager());
     silo.AddEntry("m23_1_dlc_int_03_m23_1"); // the silo is an DLC::ON_ENTER_MP interior. which means it can't be deloaded from a script. weird.
     silo.Request();
+    
 #ifdef DESTROY_FM // The Purpose of this is to stop the Dev from accidentally destroying freemode lol All of these scripts effectively manage most of freemode Terminating them results in almost dead freemode environment
     MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_triggerer_A");  // Notsure
     MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_triggerer_B");  // Notsure
@@ -98,26 +225,71 @@ void main() {
     disableScripts.PushBackScript("mission_triggerer_C");
     disableScripts.PushBackScript("mission_triggerer_D");
     disableScripts.PushBackScript("mission_repeat_controller"); // also add here to disable respawn script. so that we write our own in here. and so that we can restart it.
+    disableScripts.PushBackScript("mission_Race");
     disableScripts.Update();
     CClientNetwork* logger = CLogger::GetInst()->GetNetworkLogger();
     logger->LogInfo(INFO, true, "We have summoned the script");
     logger->LogInfo(INFO, true, disableScripts.GetLogStatement());
     bool curInteriorStatus = false;
     CPauseMenuPaginator paginator = CPauseMenuPaginator();
-    pauseMenu.Init(&paginator);
+    //pauseMenu.Init();
     DLC::ON_ENTER_MP(); // alrighty lol
     PED::SET_PED_MODEL_IS_SUPPRESSED(MISC::GET_HASH_KEY("A_C_SHARKTIGER"), 1);
     int staggeredLoopTimer = MISC::GET_GAME_TIMER();
+    if (GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("pedmugshot_01")) {
+        scriptLogI(__LINE__, __FILE__, ": Script has loaded pedmugshot_01");
+    } else {
+        GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("pedmugshot_01", 1);
+    }
+    CTheEndPauseMenu pauseMenu = CTheEndPauseMenu();
+    const char* model = "m24_1_mp2024_01_additions_carrmp_2_tg_hull1"; // we have to be near to the model to summon this prop.
+    Hash h = MISC::GET_HASH_KEY(model);
+    STREAMING::REQUEST_MODEL(h);
+    Object o;
+    if (STREAMING::HAS_MODEL_LOADED(h)) {
+        scriptLogI("Found Model: ", model, " at: ", h);
+        o = OBJECT::CREATE_OBJECT(h, v.x, v.y, v.z, 1, 0, 1);
+        scriptLogI("Attempting load of Object Collision: ", model);
+        STREAMING::REQUEST_COLLISION_FOR_MODEL(h);
+    } else {
+        scriptLogW("Thats a shame! Model: ", model, " not found! Womp womp!");
+    }
+    pauseMenu.Init();
     
-    while (true){
+    while (true){ // we've turned off the normal loop here for smaller testing of the program. sGameWorld being still active however.
+        CTextUI(WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition.toStr(), { 0.2,0.2 }, { 255,255,255,255.f }).Draw();
+        disableScripts.StaggeredLoop(&staggeredLoopTimer); //keeping the logic of program reload and cancel.
+        
+
+#ifdef TRADITIONAL_PROGRAM_LOOP
+        //// Define vertices for the polygon
+        //float x1 = 100.0f, y1 = 100.0f, z1 = 150.0f; // Vertex 1
+        //float x2 = 125.0f, y2 = 100.0f, z2 = 150.0f; // Vertex 2
+        //float x3 = 125.0f, y3 = 150.0f, z3 = 150.0f; // Vertex 3
+
+        //// Define color and opacity
+        //int red = 255;
+        //int green = 0;
+        //int blue = 0;
+        //int alpha = 128; // Semi-transparent
+
+        // Draw the polygon
+        v = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
+        
+        DrawRotatedBox(-175.6,502.4,137.7,3,2.0,3,0,0,0);
+        if (IsPointInBox(ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(),1), CVector3<float>{-175.6f, 502.4f, 137.7f}.GetAsStruct(), 3, 2.0, 3, 0, 0, 0)) {
+            CTextUI("You're inside the bounding box", { 0.1f,0.15f }, {255.f,255.f,255.f,255.f}).Draw();
+        }
+        //GRAPHICS::DRAW_POLY(x1, y1, z1, x2, y2, z2, x3, y3, z3, red, green, blue, alpha);
+        pauseMenu.Update();
         if (IsKeyJustUp(VK_F4)) {
             disableScripts.RestartAllScripts();
         }
-        if (!HUD::IS_PAUSEMAP_IN_INTERIOR_MODE()) {
+        if (HUD::IS_PAUSEMAP_IN_INTERIOR_MODE()) {
             HUD::SET_RADAR_AS_EXTERIOR_THIS_FRAME();
             HUD::SET_RADAR_AS_INTERIOR_THIS_FRAME(MISC::GET_HASH_KEY("h4_fake_islandx"), 4700.0f, -5150.0f, 0.0f, 0.0f);
         }
-        pauseMenu.Update();
+        //pauseMenu.Update();
         disableScripts.StaggeredLoop(&staggeredLoopTimer);
         CTextUI(std::to_string(ambienceConfigurer.GetInterpProgress(ambienceConfigurer.TIMECYCLE)), { 0.5f,0.55f }, { 255,255,255,255 }).Draw();
         CTextUI(std::to_string(ambienceConfigurer.GetInterpProgress(ambienceConfigurer.WEATHER)), {0.5f,0.575f}, {255,255,255,255}).Draw();
@@ -155,6 +327,7 @@ void main() {
                 m_bConfigureAmbience = false;
             }
         }
+        
         if (ENTITY::GET_ENTITY_HEALTH(Deluxo) <= 0) {
             logger->LogInfo(WARN, true, "Deluxo is invalid. Respawning.");
             WAIT(5000);
@@ -163,7 +336,7 @@ void main() {
         WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_LOAD_AIRCRAFT_CARRIER_SOUTH, curInteriorStatus); //Todo -- Add cleanup for this bit if we set the curInteriorStatus to false we never clear the interior.
         WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_LOAD_AIRCRAFT_CARRIER_NORTH, curInteriorStatus); //Todo -- Add cleanup for this bit if we set the curInteriorStatus to false we never clear the interior.
         WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_DISABLE_LOS_SANTOS, curInteriorStatus);
-        WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_LOAD_NORTH, curInteriorStatus);
+        WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_LOAD_CAYO, curInteriorStatus);
         if (IsKeyJustUp(VK_F14)) {
             curInteriorStatus = !curInteriorStatus;
         }
@@ -383,13 +556,9 @@ void main() {
         CVisMarker vismarker = CVisMarker(markerInfo, marker);
         CVector3<float> v = CAM::GET_GAMEPLAY_CAM_ROT(2);
         //TODO -- Put all pause menu Logic into a CTheEndPauseMenu! for clean and simplisiticity! Done. 8/18/24 3:50 am
-        if (GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("pedmugshot_01")) {
-            //CPauseMenuHeader h = CPauseMenuHeader(CPauseMenuHeader::PauseInfo("The End", "[Error]: Disconnection detected; Breach breach breach!", std::string(ClockToDay(CLOCK::GET_CLOCK_DAY_OF_WEEK()) + " " + std::to_string(CLOCK::GET_CLOCK_HOURS()) + (CLOCK::GET_CLOCK_MINUTES() <= 9 ? ":0" : ":") + std::to_string(CLOCK::GET_CLOCK_MINUTES())).c_str(), "FRANKLIN", "$2,147,365,094"));
-            //CPauseMenuHeader::DrawHeader(h);
-        } else {
-            GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("pedmugshot_01", 1);
-        }
+
         //vCorona.Draw();eeee
+#endif //TRADITIONAL_PROGRAM_LOOP
         WAIT(0);
     }
     return;

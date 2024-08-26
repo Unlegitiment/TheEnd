@@ -16,7 +16,7 @@ class CGameTimeCycle; // timecycle for activation effects etc.
 class CGameInteriorMgr; // interiors specifically the ones for buildings. outside interiors like map expansions are handled elsewhere.
 class CGameExplosionMgr; // explosion mgr. uhh idk what this is for and it'll probably be deleted.
 class CPlayer; // For the player because why not lol also this should extend CGameEntity;
-
+class CGameStreamingMgr;
 typedef std::vector<const char*> IPLsLoaded; // this is useless just a nice convience. 
 /* As I am winding down tonight lets have a little chat. 
 * right so the purpose of this class is so that I can get my custom objects to work nicely with the game's natives.
@@ -103,6 +103,8 @@ private:
 	void WORLD_LOAD_N_CARRIER();
 	void WORLD_DISABLE_LOS_SANTOS();
 	void WORLD_LOAD_NY();
+	void ConfigureWorldState();
+	bool DoClassSanityCheck();
 	
 	bool m_bMpMapActive;
 	CGameMissionMgr*	m_pMissionMgr; // All missions that are active and the state.
@@ -114,5 +116,6 @@ private:
 	CGameInteriorMgr*	m_pInteriorManager;
 	CGameExplosionMgr*	m_pExplostionManager;
 	CPlayer*			m_pPlayer;
+	CGameStreamingMgr*		m_pStreamingManager;
 	std::bitset<eGWBS_MAX>	m_GameStateInformation;
 };

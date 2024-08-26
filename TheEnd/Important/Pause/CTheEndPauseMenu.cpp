@@ -3,10 +3,51 @@
 #include "../../keyboard.h"
 #include "../../SHVNative/natives.h"
 #include "../../UIEditor/TextDraw/Text.h"
+CTheEndPauseMenu::CTheEndPauseMenu() : m_PauseParams(CTheEndPauseParams()), m_pCurPage(nullptr) {
+    scriptLogI("called.");
+}
 //"Header", "False", "true", "false", "true"
-void CTheEndPauseMenu::Init(CPauseMenuPaginator* paginator) { // what the fuck is this shit lmao.
-    this->m_Paginator = paginator;
-    //So in fact this ends the scope of Online Info so it causes the thing to break. I'm not quite sure how to remedy this. Also the OnlinePage gets deleted.
+void CTheEndPauseMenu::Init() { // what the fuck is this shit lmao.
+    CPauseMenuPaginator paginator = CPauseMenuPaginator();
+    CPauseMenuHeader* m_OnlineHeader = this->m_PauseParams.GetHeader(CTheEndPauseParams::ONLINE);
+    CPauseMenuPage* m_OnlinePage = this->m_PauseParams.GetPage(CTheEndPauseParams::ONLINE);
+    CPauseMenuPage* page = this->m_PauseParams.GetPage(CTheEndPauseParams::MAP);
+    CPauseMenuHeader* hlol = this->m_PauseParams.GetHeader(CTheEndPauseParams::MAP);
+
+    page->Init(this->GetPaginator(), hlol);
+    page->AddEntry(0, { "Quick Join","" });
+    page->AddEntry(1, { "Join Friends","" });
+    page->AddEntry(2, { "Join Crew Member","" });
+    page->AddEntry(3, { "Playlists", "" });
+    page->AddEntry(4, { "Players", "" });
+    page->AddEntry(5, { "Crews", "" });
+    page->AddEntry(6, { "Rockstar Creator", "" });
+    page->AddEntry(7, { "Manage Characters", "" });
+    page->AddEntry(8, { "Migrate Profile", "" });
+    page->AddEntry(9, { "GTA+ Membership", "" });
+    page->AddEntry(10, { "Purchase Shark Cards", "" });
+    page->AddEntry(11, { "Options", "" });
+    page->AddEntry(12, { "Find New Session", "" });
+    page->AddEntry(13, { "Credits & Legal", "" });
+    page->AddEntry(14, { "Quit To Story Mode", "" });
+    page->AddEntry(15, { "Quit To Main Menu", "" });
+    m_OnlinePage->Init(this->GetPaginator(), m_OnlineHeader);
+    m_OnlinePage->AddEntry(0, { "Join Friends","" });
+    m_OnlinePage->AddEntry(1, { "Join Crew Members","" });
+    m_OnlinePage->AddEntry(2, { "Crews","" });
+    m_OnlinePage->AddEntry(3, { "Creator","" });
+    m_OnlinePage->AddEntry(4, { "Choose Character","" });
+    m_OnlinePage->AddEntry(5, { "Play GTA Online","\n\nCut to the chase and head straight into the world of GTA Online" });
+    m_OnlinePage->SetHighlightColor({ 171, 237, 171, 255 });
+    if (this->GetPaginator() == nullptr) {
+        scriptLogE("GetPaginator() is null!");
+        CanRender = false;
+        return;
+    }
+    this->GetPaginator()->RegisterPage("MAP", *m_OnlinePage);
+    this->GetPaginator()->RegisterPage("ONLINE", *page);
+    this->GetPaginator()->RegisterPage("FRIENDS", *page);
+    this->GetPaginator()->RegisterPage("SETTINGS", *page);
 }
 
 void CTheEndPauseMenu::Update() {
@@ -17,51 +58,8 @@ void CTheEndPauseMenu::Update() {
         }
     }
     if (CanRender) {
-        CPauseMenuPaginator paginator = CPauseMenuPaginator();
-        CPauseMenuHeader::PauseInfo info = { "Header", "False", "true", "false", "true" }; // I honestly don't know why it has such a hissy fit when this is declared inside of the MenuInfo construct
-        CPauseMenuHeader m_OnlineHeader = CPauseMenuHeader(info);
-        CPauseMenuPage m_OnlinePage = CPauseMenuPage();
-        CPauseMenuPage page = CPauseMenuPage();
-        CPauseMenuHeader::PauseInfo headerInfo = CPauseMenuHeader::PauseInfo("Grand Theft Auto Online", "", "{date}", "{character}", "{money}");
-        CPauseMenuHeader hlol = CPauseMenuHeader(headerInfo);
-        m_Paginator = &paginator; // this is done every frame so it counteracts the shit.
 
-        page.Init(this->m_Paginator, &hlol);
-        page.AddEntry(0, { "Quick Join","" });
-        page.AddEntry(1, { "Join Friends","" });
-        page.AddEntry(2, { "Join Crew Member","" });
-        page.AddEntry(3, { "Playlists", "" });
-        page.AddEntry(4, { "Players", "" });
-        page.AddEntry(5, { "Crews", "" });
-        page.AddEntry(6, { "Rockstar Creator", "" });
-        page.AddEntry(7, { "Manage Characters", "" });
-        page.AddEntry(8, { "Migrate Profile", "" });
-        page.AddEntry(9, { "GTA+ Membership", "" });
-        page.AddEntry(10, { "Purchase Shark Cards", "" });
-        page.AddEntry(11, { "Options", "" });
-        page.AddEntry(12, { "Find New Session", "" });
-        page.AddEntry(13, { "Credits & Legal", "" });
-        page.AddEntry(14, { "Quit To Story Mode", "" });
-        page.AddEntry(15, { "Quit To Main Menu", "" });
-        m_OnlinePage.Init(this->m_Paginator, &m_OnlineHeader);
-        m_OnlinePage.AddEntry(0, { "Join Friends","" });
-        m_OnlinePage.AddEntry(1, { "Join Crew Members","" });
-        m_OnlinePage.AddEntry(2, { "Crews","" });
-        m_OnlinePage.AddEntry(3, { "Creator","" });
-        m_OnlinePage.AddEntry(4, { "Choose Character","" });
-        m_OnlinePage.AddEntry(5, { "Play GTA Online","\n\nCut to the chase and head straight into the world of GTA Online" });
-        m_OnlinePage.SetHighlightColor({ 171, 237, 171, 255 });
-        if (m_Paginator == nullptr) {
-            scriptLogE("m_Paginator is null!");
-            CanRender = false;
-            return;
-        }
-        m_Paginator->RegisterPage("MAP", m_OnlinePage);
-        m_Paginator->RegisterPage("ONLINE", page);
-        m_Paginator->RegisterPage("FRIENDS", page);
-        m_Paginator->RegisterPage("SETTINGS", page);
-        
-        this->m_pCurPage = m_Paginator->GetPageFromIndex(this->m_iPaginatorSelection); // we might have to rework but thats fine.
+        this->m_pCurPage = GetPaginator()->GetPageFromIndex(this->m_iPaginatorSelection); // we might have to rework but thats fine.
         if (this->m_bIsPaginatorFocused == false) {
             if (this->m_pCurPage == nullptr) {
                 int gameTime = MISC::GET_GAME_TIMER();
@@ -71,20 +69,18 @@ void CTheEndPauseMenu::Update() {
                 }
                 return;
             }
-
         }
         if (m_bIsPaginatorFocused) {
             if (IsKeyJustUp(VK_RIGHT)) {
-                //if (m_iPaginatorSelection + 1 < this->m_Paginator->GetMaxSelections()) {
+                //if (m_iPaginatorSelection + 1 < this->GetPaginator()->GetMaxSelections()) {
                 //    this->m_iPaginatorSelection =+ 1;
                 //}
-                this->m_iPaginatorSelection = (m_iPaginatorSelection + 1 < this->m_Paginator->GetMaxSelections() ? m_iPaginatorSelection += 1 : 0);
-                scriptLogI("RIGHT PRESSED!\n\tUpdating m_iSelection : ", this->m_iPaginatorSelection, " \n\tMax Selections : ", m_Paginator->GetMaxSelections());
+                this->m_iPaginatorSelection = (m_iPaginatorSelection + 1 < this->GetPaginator()->GetMaxSelections() ? m_iPaginatorSelection += 1 : 0);
+                scriptLogI("RIGHT PRESSED!\n\tUpdating m_iSelection : ", this->m_iPaginatorSelection, " \n\tMax Selections : ", GetPaginator()->GetMaxSelections());
             }
             if (IsKeyJustUp(VK_LEFT)) {
-                this->m_iPaginatorSelection = (m_iPaginatorSelection - 1 >= 0 ? m_iPaginatorSelection - 1 : this->m_Paginator->GetMaxSelections() - 1);
-                scriptLogI("LEFT PRESSED! \n\tUpdating m_iSelection: ", this->m_iPaginatorSelection, " \n\tMax Selections: ", m_Paginator->GetMaxSelections());
-
+                this->m_iPaginatorSelection = (m_iPaginatorSelection - 1 >= 0 ? m_iPaginatorSelection - 1 : this->GetPaginator()->GetMaxSelections() - 1);
+                scriptLogI("LEFT PRESSED! \n\tUpdating m_iSelection: ", this->m_iPaginatorSelection, " \n\tMax Selections: ", GetPaginator()->GetMaxSelections());
             }
             if (IsKeyJustUp(VK_RETURN)) {
                 this->m_iPageSelection = 0;
@@ -137,16 +133,17 @@ void CTheEndPauseMenu::Update() {
                 }
             }
         }
-        this->m_Paginator->SetSelection(m_iPaginatorSelection);
-        this->m_Paginator->SetPaginatorFocus(m_bIsPaginatorFocused);
+        this->GetPaginator()->SetSelection(m_iPaginatorSelection);
+        this->GetPaginator()->SetPaginatorFocus(m_bIsPaginatorFocused);
         m_pCurPage->SetFocus(m_bIsPageFocused);
         m_pCurPage->SetSelectionIndex(m_iPageSelection);
-        this->m_Paginator->Update(this->m_pLastPage);
+        this->GetPaginator()->Update(this->m_pLastPage);
     }
 }
 
 void CTheEndPauseMenu::Destroy() {
 }
+
 
 //if (pageinator_focused == false) {
 //    if (currentPage == nullptr) {

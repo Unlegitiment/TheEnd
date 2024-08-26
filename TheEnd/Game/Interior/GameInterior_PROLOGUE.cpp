@@ -74,9 +74,13 @@ void CGameInteriorPrologue::Init() {
 }
 
 void CGameInteriorPrologue::Update() {
+	if (this->isGraveActive) {
+
+	}
 }
 
 void CGameInteriorPrologue::SummonGrave() {
+	
 }
 
 void CGameInteriorPrologue::SummonBaseInterior() {

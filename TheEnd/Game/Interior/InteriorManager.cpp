@@ -1,5 +1,13 @@
 #include "InteriorManager.h"
 #include "../../Logger/CLoggerInstances.h"
+#include "GameInterior_PROLOGUE.h"
+void CGameInteriorMgr::UpdateThisPrologue() {
+	
+}
+CGameInteriorPrologue* CGameInteriorMgr::GetPrologueInterior() {
+	UpdateThisPrologue();
+	return this->m_pInterior_PROG;
+}
 void CGameInteriorMgr::DoSanityCheck() {
 }
 CGameInteriorMgr::CGameInteriorMgr() {
@@ -98,7 +106,125 @@ void CGameInteriorMgr::Init() {
 	m_Map[NORTH_YANKTON].push_back({ "prologuerdb", false });
 	m_Map[NORTH_YANKTON].push_back({ "prologuerd_lod", false });
 #pragma endregion
-
+#pragma region CAYO_PERICO
+	m_Map[CAYO_PERICO].push_back({ "h4_islandairstrip", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandairstrip_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_mansion", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_mansion_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandxdock", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandxdock_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandxdock_props_2", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandxtower", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_maindock", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_maindock_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_maindock_props_2", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_IslandX_Mansion_Vault", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandairstrip_propsb", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_beach", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_beach_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_beach_bar_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_barrack_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_checkpoint", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_checkpoint_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_Mansion_Office", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_Mansion_LockUp_01", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_Mansion_LockUp_02", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_Mansion_LockUp_03", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandairstrip_hangar_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_IslandX_Mansion_B", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandairstrip_doorsclosed", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_Underwater_Gate_Closed", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mansion_gate_closed", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_aa_guns", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_IslandX_Mansion_GuardFence", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_IslandX_Mansion_Entrance_Fence", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_IslandX_Mansion_B_Side_Fence", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_IslandX_Mansion_Lights", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandxcanal_props", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_beach_props_party", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandX_Terrain_props_06_a", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandX_Terrain_props_06_b", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandX_Terrain_props_06_c", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandX_Terrain_props_05_a", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandX_Terrain_props_05_b", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandX_Terrain_props_05_c", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandX_Terrain_props_05_d", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandX_Terrain_props_05_e", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandX_Terrain_props_05_f", false });
+	m_Map[CAYO_PERICO].push_back({ "H4_islandx_terrain_01", false });
+	m_Map[CAYO_PERICO].push_back({ "H4_islandx_terrain_02", false });
+	m_Map[CAYO_PERICO].push_back({ "H4_islandx_terrain_03", false });
+	m_Map[CAYO_PERICO].push_back({ "H4_islandx_terrain_04", false });
+	m_Map[CAYO_PERICO].push_back({ "H4_islandx_terrain_05", false });
+	m_Map[CAYO_PERICO].push_back({ "H4_islandx_terrain_06", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_ne_ipl_00", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_ne_ipl_01", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_ne_ipl_02", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_ne_ipl_03", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_ne_ipl_04", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_ne_ipl_05", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_ne_ipl_06", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_ne_ipl_07", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_ne_ipl_08", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_ne_ipl_09", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_nw_ipl_00", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_nw_ipl_01", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_nw_ipl_02", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_nw_ipl_03", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_nw_ipl_04", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_nw_ipl_05", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_nw_ipl_06", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_nw_ipl_07", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_nw_ipl_08", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_nw_ipl_09", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_se_ipl_00", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_se_ipl_01", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_se_ipl_02", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_se_ipl_03", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_se_ipl_04", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_se_ipl_05", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_se_ipl_06", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_se_ipl_07", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_se_ipl_08", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_se_ipl_09", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_sw_ipl_00", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_sw_ipl_01", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_sw_ipl_02", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_sw_ipl_03", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_sw_ipl_04", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_sw_ipl_05", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_sw_ipl_06", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_sw_ipl_07", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_sw_ipl_08", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_sw_ipl_09", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_mansion", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandxtower_veg", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx_sea_mines", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_islandx", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_01_grass_0", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_01_grass_1", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_02_grass_0", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_02_grass_1", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_02_grass_2", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_02_grass_3", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_04_grass_0", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_04_grass_1", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_04_grass_2", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_04_grass_3", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_05_grass_0", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_06_grass_0", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_occ_00", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_occ_01", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_occ_02", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_occ_03", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_occ_04", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_occ_05", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_occ_06", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_occ_07", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_occ_08", false });
+	m_Map[CAYO_PERICO].push_back({ "h4_mph4_terrain_occ_09", false });
+#pragma endregion
 	DoSanityCheck(); // this will eventually do something.
 }
 
@@ -119,5 +245,16 @@ CGameInteriorMgr::~CGameInteriorMgr() {
 }
 
 void CGameInteriorMgr::Update() {
-	
+	bool isCloseToCayo = false;
+	bool isWaterFileLoaded = false;
+	if (MISC::GET_DISTANCE_BETWEEN_COORDS(ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1).x, ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1).y, ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1).z, 4700.0f, -5150.0f, 0.0f,0) < 2000.f) {
+		isCloseToCayo = true;
+	}
+	if (isCloseToCayo && !isWaterFileLoaded && m_Map[CAYO_PERICO][2].isActive) { // check cayo loaded
+		STREAMING::LOAD_GLOBAL_WATER_FILE(1);
+		isWaterFileLoaded = true;
+	} else {
+		STREAMING::LOAD_GLOBAL_WATER_FILE(0);
+	}
+	this->GetPrologueInterior()->Update();
 }

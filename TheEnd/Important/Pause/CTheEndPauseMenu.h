@@ -3,12 +3,56 @@
 #include "../../PauseMenuItems/Generic/MenuPaginator.h"
 #include "../../PauseMenuItems/Generic/MenuPage.h"
 #include "../../PauseMenuItems/Generic/PauseMenuHeader.h"
+#include "../../SHVNative/types.h"
+
 class CTheEndPauseMenu {
 private:
-    CPauseMenuPaginator* m_Paginator;
-    CPauseMenuPage*      m_pLastPage;
-    CPauseMenuPage*      m_pCurPage;
+    class CTheEndPauseParams{
+    private:
+        CPauseMenuPaginator paginator;
+        //CPauseMenuPage m_page;
+        //CPauseMenuHeader m_header;
+        std::pair<CPauseMenuPage, CPauseMenuHeader> MAP_PAGE;
+        std::pair<CPauseMenuPage, CPauseMenuHeader> ONLINE_PAGE;
+        std::pair<CPauseMenuPage, CPauseMenuHeader> INFO_PAGE;
 
+    public:
+        enum ePageSelection {
+            MAP,
+            ONLINE,
+            INFO
+        };
+        CTheEndPauseParams() :
+            MAP_PAGE(CPauseMenuPage(), CPauseMenuHeader("Header", "Subheader", "Test1", "Test2", "Test3")),
+            ONLINE_PAGE(CPauseMenuPage(), CPauseMenuHeader("Grand Theft Auto Online", "", "8/23/24", "FRANKLIN", "2,147,417,240")),
+            INFO_PAGE(CPauseMenuPage(), ONLINE_PAGE.second),
+            paginator(CPauseMenuPaginator())
+        {  
+            scriptLogI("called");
+        }
+
+        CPauseMenuHeader* GetHeader(ePageSelection page) {
+            switch (page) {
+            case MAP: return &MAP_PAGE.second;
+            case ONLINE: return &ONLINE_PAGE.second;
+            case INFO: return &INFO_PAGE.second;
+            default: scriptLogE("page that is passed invalid! "); return nullptr;
+            };
+        }
+        CPauseMenuPage* GetPage(ePageSelection page) {
+            switch (page) {
+            case MAP: return &MAP_PAGE.first;
+            case ONLINE: return &ONLINE_PAGE.first;
+            case INFO: return &INFO_PAGE.first;
+            default: scriptLogE("page that is passed invalid!"); return nullptr;
+            };
+        }
+        CPauseMenuPaginator* GetPaginator() {
+            return &this->paginator;
+        }
+    }m_PauseParams;
+    CPauseMenuPage* m_pCurPage;
+    CPauseMenuPage* m_pLastPage = nullptr;
     constexpr static const int MAX_PAGES = 6;
     int m_iPaginatorSelection = 0; // depends on menu.
     int m_iPageSelection = 0;
@@ -16,10 +60,12 @@ private:
     bool m_bIsPageFocused = false;
     bool CanRender = false;
 public:
-    void Init(CPauseMenuPaginator* paginator);
+    CTheEndPauseMenu();
+    CTheEndPauseParams* GetAllParams() { return &this->m_PauseParams; }
+    void Init();
 	void Update();
     void Destroy();
-    __forceinline CPauseMenuPaginator* GetPaginator() { return this->m_Paginator; }
+    __forceinline CPauseMenuPaginator* GetPaginator() { return this->m_PauseParams.GetPaginator(); }
 };
 
 /*

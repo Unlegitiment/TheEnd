@@ -10,10 +10,10 @@
 #include "../Logger/CLoggerInstances.h"
 #define Logger CLogger::GetInst()
 #define netLogger CLogger::GetInst()->GetNetworkLogger()
-#define scriptLogI(...) netLogger->LogInfo(INFO, true, __FUNCTION__,": " ,__VA_ARGS__)
-#define scriptLogW(...) netLogger->LogInfo(WARN, true, __FUNCTION__,": " ,__VA_ARGS__)
-#define scriptLogE(...) netLogger->LogInfo(ERROR2, true, __FUNCTION__,": " ,__VA_ARGS__)
-#define scriptLogF(...) netLogger->LogInfo(FATAL, true, __FUNCTION__, ": ", __VA_ARGS__) // this should also trigger a script crash.
+#define scriptLogI(...) netLogger->LogInfo(eLoggerState::INFO, true, __FUNCTION__,": " ,__VA_ARGS__)
+#define scriptLogW(...) netLogger->LogInfo(eLoggerState::WARN, true, __FUNCTION__,": " ,__VA_ARGS__)
+#define scriptLogE(...) netLogger->LogInfo(eLoggerState::ERROR2, true, __FUNCTION__,": " ,__VA_ARGS__)
+#define scriptLogF(...) netLogger->LogInfo(eLoggerState::FATAL, true, __FUNCTION__, ": ", __VA_ARGS__) // this should also trigger a script crash.
 typedef DWORD Void;
 typedef DWORD Any;
 typedef DWORD uint;

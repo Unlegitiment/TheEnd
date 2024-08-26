@@ -1,6 +1,10 @@
 #include "CGameWorld.h"
 #include "../GlobalUpdateThread.h"
 #include "./Interior/InteriorManager.h"
+#include "./CGameStream.h"
+#include "./Objects/CPlayer.h"
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#define cus_new(T) new T(); scriptLogI("new object of type: ", #T, "@", __FILENAME__,"::", __LINE__);
 int CGameWorld::FindEntityInWorld(CVector3<float>& location) {
     return 0;
 }
@@ -11,11 +15,13 @@ std::bitset<CGameWorld::eGWBS_MAX>* CGameWorld::GetGameInteriorInformation() {
 
 void CGameWorld::Update() {
     this->GameWorldStateCheck();
+    this->GetLocalPlayer()->Update();
 }
 
 void CGameWorld::Init() {
-    this->m_pInteriorManager = new CGameInteriorMgr();
-    
+    this->m_pStreamingManager = cus_new(CGameStreamingMgr); // keep these classes like this.
+    this->m_pInteriorManager = cus_new(CGameInteriorMgr);
+    this->m_pPlayer = cus_new(CPlayer);
 }
 
 void CGameWorld::Destroy() {
@@ -44,6 +50,8 @@ void CGameWorld::GameWorldStateCheck() {
     WORLD_LOAD_N_CARRIER();
     WORLD_DISABLE_LOS_SANTOS();
     WORLD_LOAD_NY();
+    WORLD_LOAD_CAYO();
+    this->GetInteriorManager()->Update();
 }
 
 void CGameWorld::WORLD_LOAD_S_CARRIER() {
@@ -118,8 +126,34 @@ void CGameWorld::WORLD_LOAD_NY() {
     }
 }
 
-void CGameWorld::WORLD_LOAD_CAYO() { // two methods we either A) use the preexisting options which is just like two things or we load the ipls ourself. I choose just doing A because its easier. however having another way to launch would be nice.
+void CGameWorld::ConfigureWorldState() {
+    this->DoClassSanityCheck();
+    this->m_pStreamingManager->Initialize();
+}
 
+bool CGameWorld::DoClassSanityCheck() { // this checks all values are not null.
+
+
+}
+
+void CGameWorld::WORLD_LOAD_CAYO() { // two methods we either A) use the preexisting options which is just like two things or we load the ipls ourself. I choose just doing A because its easier. however having another way to launch would be nice.
+    int LOADBIT = eGWBS_WORLD_LOAD_CAYO;
+    int LOADEDBIT = eGWBS_WORLD_LOADED_CAYO;
+    const char* mInteriorName = "CAYO_PERICO";
+
+    if (this->m_GameStateInformation.test(LOADBIT) && !this->m_GameStateInformation.test(LOADEDBIT)) {
+        if (this->GetInteriorManager()->SummonInteriorOfType<CAYO_PERICO>()) { //  alright we only need to check it once.
+            scriptLogI("Enabling Interior: ", mInteriorName);
+            this->m_GameStateInformation.set(LOADEDBIT, true);
+            this->m_GameStateInformation.set(LOADBIT, false);
+        }
+    } else if (this->m_GameStateInformation.test(LOADEDBIT) && !this->m_GameStateInformation.test(LOADBIT)) {
+        if (this->GetInteriorManager()->DisableInteriorOfType<CAYO_PERICO>()) {
+            scriptLogI("Disabling Interior: ", mInteriorName);
+            this->m_GameStateInformation.set(LOADEDBIT, false);
+            this->m_GameStateInformation.set(LOADBIT, false);
+        }
+    }
 }
 void CGameWorld::OnEnterSp() {
     this->m_bMpMapActive = false;

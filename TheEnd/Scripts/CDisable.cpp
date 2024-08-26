@@ -24,6 +24,7 @@ void CDisableScripts::RestartAllScripts() {
     m_ScriptMap["mission_triggerer_C"] = DEFAULT;
     m_ScriptMap["mission_triggerer_D"] = DEFAULT;
     m_ScriptMap["mission_repeat_controller"] = DEFAULT;
+    m_ScriptMap["mission_Race"] = DEFAULT;
     scriptLogI("called. Restarting all Scripts for Freemode SP Experience.");
     for (int i = 0; i < m_AllScriptsToDisable.size(); i++) {
         ScrInfo* info = &m_AllScriptsToDisable[i];
@@ -58,7 +59,7 @@ void CDisableScripts::Destroy() {
 bool CDisableScripts::RestartScript(ScrName name, StackSize stackSize) { // The issue with Restarting Scripts is that they don't like to. lol. Shop_controller hates to restart same with veh_gen_controller etc.
     ScrInfo info = { false, name };
     SCRIPT::REQUEST_SCRIPT(name);
-    static int iAttempts = 0;
+    int iAttempts = 0;
     while (!SCRIPT::HAS_SCRIPT_LOADED(name)) {
         iAttempts += 1;
         scriptLogI(": Attempting Load. Attempt: ", iAttempts);
