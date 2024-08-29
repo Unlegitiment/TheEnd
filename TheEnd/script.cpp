@@ -25,6 +25,7 @@
 #include "./Game/Interior/GameInterior.h"
 #include "./Important/Pause/CTheEndPauseMenu.h"
 #include "./Scripts/SPRestart/Restart.h"
+#include "./Launcher/CTheEndLoadMenu.h"
 //This does NOT work. Depricated and completely fucking invalid I mean jfc. Logic found in Shop_Controller.sc which CAN be reset through loading a save file.
 void GameVersionCheck();
 std::string ClockToDay(int day);
@@ -149,16 +150,19 @@ bool IsPointInBox(Vector3 point, Vector3 boxCenter, float width, float height, f
 #include "./Game/Objects/CPlayer.h"
 #define WORLD sGameWorld::GetInstance()
 void main() {
+    CTheEndLoadMenu menuLoad = CTheEndLoadMenu();
+    menuLoad.Init();
+    bool displayLoadMenu = true;
     CDisableScripts disableScripts = CDisableScripts();
     CVector3<float> v = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
     CFacility facility = CFacility(WORLD->GetInteriorManager());
-    facility.SummonBase();
-    facility.SummonInteriorComponent("set_int_02_decal_01");
-    facility.SetInteriorPropColor("set_int_02_decal_01", 1);
-    facility.Default();
-    
-    facility.RefreshInterior();
-    WORLD->GetLocalPlayer()->SetCoordinates({ 483.2006225586f, 4810.5405273438f, -58.919288635254f});
+    //facility.SummonBase();
+    //facility.SummonInteriorComponent("set_int_02_decal_01");
+    //facility.SetInteriorPropColor("set_int_02_decal_01", 1);
+    //facility.Default();
+    //
+    //facility.RefreshInterior();
+    //WORLD->GetLocalPlayer()->SetCoordinates({ 483.2006225586f, 4810.5405273438f, -58.919288635254f});
     bool isOnlineReq = false;
     bool isHalloweenInteriorActive = false;
     bool forceFirstPerson = true;
@@ -252,15 +256,21 @@ void main() {
         scriptLogI("Attempting load of Object Collision: ", model);
         STREAMING::REQUEST_COLLISION_FOR_MODEL(h);
     } else {
-        scriptLogW("Thats a shame! Model: ", model, " not found! Womp womp!");
+        scriptLogW("Thats a shame! Model: ", model, " not found! Womp womp!"); // if we can't load the model this is a big issue. Lets teleport to where it is in the worldspace located: for example if the thing is located in an IPL then summon it. teleport the player to where the loading 
     }
     pauseMenu.Init();
-    
     while (true){ // we've turned off the normal loop here for smaller testing of the program. sGameWorld being still active however.
-        CTextUI(WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition.toStr(), { 0.2,0.2 }, { 255,255,255,255.f }).Draw();
         disableScripts.StaggeredLoop(&staggeredLoopTimer); //keeping the logic of program reload and cancel.
-        
-
+        if (displayLoadMenu) {
+            menuLoad.Update();
+        }
+        if (IsKeyJustUp(VK_F13)) {
+            if (displayLoadMenu) {
+                MINIMAP->SetMinimapActive(true);
+            }
+            displayLoadMenu = !displayLoadMenu;
+            scriptLogI("F13 pressed. CurStatus: ", displayLoadMenu);
+        }
 #ifdef TRADITIONAL_PROGRAM_LOOP
         //// Define vertices for the polygon
         //float x1 = 100.0f, y1 = 100.0f, z1 = 150.0f; // Vertex 1

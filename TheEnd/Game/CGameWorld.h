@@ -1,5 +1,6 @@
 #pragma once
 #include	"../SHVNative/types.h"
+#include	"./Hud/MiniMap.h"
 #include	<bitset>
 #include	<vector>
 class CDoor; // Door

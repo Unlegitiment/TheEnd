@@ -70,6 +70,17 @@ struct sTimer {
 		}*pInteriorTimers;
 	}
 
+	Maybe we should do the gameplay loop next weekend or during this week on wednesday and thursday. Because then we could finally get it off my chest. 
+	Also working on the just quick like menu thing wouldn't be that difficult.
+	Just a basic texture and menu wouldn't be that hard. 
+	God damn do I hate doing stuff like with mission loop? Or is it just that I don't want to spend hours in Menyoo Testing animations and different gameplay loop stuff (probably)
+	I think its also the global variable stuff that I don't particularly like. 
+	Like for example having the BOOL for whether or not the weapon is picked up like its just tiring. And boring. Having the base would be nice to extend upon but yk not everyone gets that luxury. 
+	You know its just boring. And the scripted scenes. Ugh don't get me started!
+	I think we should just start small. 
+	For example getting the animation to start then we set the mission triggers for waking up, then we do the wake up program stuff. 
+	just short meaningful progression. you got it gang!
+
 
 
 */

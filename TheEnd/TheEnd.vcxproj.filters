@@ -48,6 +48,10 @@
     <ClCompile Include="Game\Building\CBoundingBox.cpp" />
     <ClCompile Include="Facility\CFacility.cpp" />
     <ClCompile Include="Game\Objects\CPlayer.cpp" />
+    <ClCompile Include="Launcher\GameLoadMenu.cpp" />
+    <ClCompile Include="Launcher\LoadButtons.cpp" />
+    <ClCompile Include="Launcher\CTheEndLoadMenu.cpp" />
+    <ClCompile Include="Game\Hud\MiniMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -111,6 +115,10 @@
     <ClInclude Include="Game\GameWrappers\BlipManagement\Blip.h" />
     <ClInclude Include="Game\GameWrappers\BlipManagement\BlipMgr.h" />
     <ClInclude Include="Facility\CFacility.h" />
+    <ClInclude Include="Launcher\GameLoadMenu.h" />
+    <ClInclude Include="Launcher\LoadButtons.h" />
+    <ClInclude Include="Launcher\CTheEndLoadMenu.h" />
+    <ClInclude Include="Game\Hud\MiniMap.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
