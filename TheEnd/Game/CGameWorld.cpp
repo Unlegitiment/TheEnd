@@ -16,6 +16,7 @@ std::bitset<CGameWorld::eGWBS_MAX>* CGameWorld::GetGameInteriorInformation() {
 void CGameWorld::Update() {
     this->GameWorldStateCheck();
     this->GetLocalPlayer()->Update();
+    this->TimeUpdate();
 }
 
 void CGameWorld::Init() {
@@ -45,6 +46,21 @@ CVehicleFactory* CGameWorld::GetVehicleFactory() {
     return sGameWorld::GetInstance()->m_pVehicleFactory;
 }
 #define scriptLog(...) netLogger->LogInfo(INFO, true, __FUNCTION__,": " ,__VA_ARGS__)
+void CGameWorld::SetTimePersist(bool enable, sTimeInformation _newtime) {
+    this->m_bIsTimeLocked = enable;
+    if (this->m_bIsTimeLocked) {
+        CLOCK::SET_CLOCK_TIME(_newtime.hour, _newtime.minute, _newtime.second); // configure
+        this->m_TimeLockedInfo = _newtime; // configure correct
+    }
+}   
+void CGameWorld::ResetTime() {
+    this->m_bIsTimeLocked = false; // we're just gonna continue where we left off.
+}
+void CGameWorld::TimeUpdate() {
+    if (this->m_bIsTimeLocked) {
+        CLOCK::SET_CLOCK_TIME(this->m_TimeLockedInfo.hour, this->m_TimeLockedInfo.minute, this->m_TimeLockedInfo.second);
+    }
+}
 void CGameWorld::GameWorldStateCheck() {
     WORLD_LOAD_S_CARRIER();
     WORLD_LOAD_N_CARRIER();
@@ -167,6 +183,16 @@ void CGameWorld::OnEnterMp() {
 }
 bool CGameWorld::IsMpMapActive() {
     return this->m_bMpMapActive;
+}
+
+void CGameWorld::SetBlackoutState(bool _newblackoutstate) {
+    this->m_bBlackoutState = _newblackoutstate;
+    GRAPHICS::SET_ARTIFICIAL_LIGHTS_STATE(_newblackoutstate);
+}
+
+void CGameWorld::SetBlackoutStateEffectVehicle(bool _blackoutstateveh) {
+    this->m_bBlackoutStateEffectVehicle = _blackoutstateveh;
+    GRAPHICS::SET_ARTIFICIAL_VEHICLE_LIGHTS_STATE(this->m_bBlackoutStateEffectVehicle);
 }
 
 /*

@@ -52,6 +52,14 @@
     <ClCompile Include="Launcher\LoadButtons.cpp" />
     <ClCompile Include="Launcher\CTheEndLoadMenu.cpp" />
     <ClCompile Include="Game\Hud\MiniMap.cpp" />
+    <ClCompile Include="TheEnd\Hud.cpp" />
+    <ClCompile Include="Launcher\ScriptDisable.cpp" />
+    <ClCompile Include="CTheScript.cpp" />
+    <ClCompile Include="Game\Building\Blackout.cpp" />
+    <ClCompile Include="Game\Hud\CGameHelpText.cpp" />
+    <ClCompile Include="Game\Hud\HudInterface.cpp" />
+    <ClCompile Include="Game\Hud\CGameSpinner.cpp" />
+    <ClCompile Include="Game\Hud\HelpText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -119,6 +127,14 @@
     <ClInclude Include="Launcher\LoadButtons.h" />
     <ClInclude Include="Launcher\CTheEndLoadMenu.h" />
     <ClInclude Include="Game\Hud\MiniMap.h" />
+    <ClInclude Include="TheEnd\Hud.h" />
+    <ClInclude Include="Launcher\ScriptDisable.h" />
+    <ClInclude Include="CTheScript.h" />
+    <ClInclude Include="Game\Building\Blackout.h" />
+    <ClInclude Include="Game\Hud\HelpText.h" />
+    <ClInclude Include="Game\Hud\CGameHelpText.h" />
+    <ClInclude Include="Game\Hud\HudInterface.h" />
+    <ClInclude Include="Game\Hud\CGameSpinner.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

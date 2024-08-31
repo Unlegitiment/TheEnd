@@ -22,9 +22,10 @@ CLoadMenu::Buttons* CLoadMenu::GetButtons() {
 
 void CLoadMenu::PushNewButton(CLoadButton* loadBtn) {
     if (loadBtn == nullptr) {
-        scriptLogI("inserting a nullptr button @ index", this->m_AllButtons.size(), "!");
+        scriptLogI("inserting a nullptr button @ index", this->m_AllButtons.size(), "! (ignoring)");
         return;
     }
+    scriptLogI("Inserting button: 0x", loadBtn, " @ ", this->m_AllButtons.size());
     this->m_AllButtons.push_back(loadBtn);
     return;
 }

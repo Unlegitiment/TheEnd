@@ -26,6 +26,8 @@
 #include "./Important/Pause/CTheEndPauseMenu.h"
 #include "./Scripts/SPRestart/Restart.h"
 #include "./Launcher/CTheEndLoadMenu.h"
+#include "./Launcher/ScriptDisable.h"
+#include "./CTheScript.h"
 //This does NOT work. Depricated and completely fucking invalid I mean jfc. Logic found in Shop_Controller.sc which CAN be reset through loading a save file.
 void GameVersionCheck();
 std::string ClockToDay(int day);
@@ -53,55 +55,11 @@ void RotatePoint(float& x, float& y, float& z, float rx, float ry, float rz) {
 }
 
 // Function to draw a rotated box around a specific point
-void DrawRotatedBox(float centerX, float centerY, float centerZ, float width, float height, float depth, float rotX, float rotY, float rotZ) {
-    // Calculate half-dimensions
-    float halfWidth = width / 2.0f;
-    float halfHeight = height / 2.0f;
-    float halfDepth = depth / 2.0f;
 
-    // Define vertices of the box
-    float vertices[8][3] = {
-        {centerX - halfWidth, centerY - halfHeight, centerZ - halfDepth},
-        {centerX + halfWidth, centerY - halfHeight, centerZ - halfDepth},
-        {centerX + halfWidth, centerY + halfHeight, centerZ - halfDepth},
-        {centerX - halfWidth, centerY + halfHeight, centerZ - halfDepth},
-        {centerX - halfWidth, centerY - halfHeight, centerZ + halfDepth},
-        {centerX + halfWidth, centerY - halfHeight, centerZ + halfDepth},
-        {centerX + halfWidth, centerY + halfHeight, centerZ + halfDepth},
-        {centerX - halfWidth, centerY + halfHeight, centerZ + halfDepth}
-    };
-
-    // Rotate vertices
-    for (int i = 0; i < 8; ++i) {
-        RotatePoint(vertices[i][0], vertices[i][1], vertices[i][2], rotX, rotY, rotZ);
-    }
-
-    // Draw the edges of the box
-    auto drawLine = [](float* v1, float* v2) {
-        GRAPHICS::DRAW_LINE(v1[0], v1[1], v1[2], v2[0], v2[1], v2[2], 255, 0, 0, 255);
-        };
-
-    // Bottom face
-    drawLine(vertices[0], vertices[1]);
-    drawLine(vertices[1], vertices[2]);
-    drawLine(vertices[2], vertices[3]);
-    drawLine(vertices[3], vertices[0]);
-
-    // Top face
-    drawLine(vertices[4], vertices[5]);
-    drawLine(vertices[5], vertices[6]);
-    drawLine(vertices[6], vertices[7]);
-    drawLine(vertices[7], vertices[4]);
-
-    // Vertical edges
-    drawLine(vertices[0], vertices[4]);
-    drawLine(vertices[1], vertices[5]);
-    drawLine(vertices[2], vertices[6]);
-    drawLine(vertices[3], vertices[7]);
-}
 #include <cmath>
 #include <iostream>
 #include "./Facility/CFacility.h"
+#include "./TheEnd/Hud.h"
 bool IsPointInBox(Vector3 point, Vector3 boxCenter, float width, float height, float depth, float rotX, float rotY, float rotZ) {
     // Calculate half-dimensions
     float halfWidth = width / 2.0f;
@@ -148,47 +106,8 @@ bool IsPointInBox(Vector3 point, Vector3 boxCenter, float width, float height, f
         (point.z >= minZ && point.z <= maxZ);
 }
 #include "./Game/Objects/CPlayer.h"
-#define WORLD sGameWorld::GetInstance()
+#include "./Game/Building/CBoundingBox.h"
 void main() {
-    CTheEndLoadMenu menuLoad = CTheEndLoadMenu();
-    menuLoad.Init();
-    bool displayLoadMenu = true;
-    CDisableScripts disableScripts = CDisableScripts();
-    CVector3<float> v = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
-    CFacility facility = CFacility(WORLD->GetInteriorManager());
-    //facility.SummonBase();
-    //facility.SummonInteriorComponent("set_int_02_decal_01");
-    //facility.SetInteriorPropColor("set_int_02_decal_01", 1);
-    //facility.Default();
-    //
-    //facility.RefreshInterior();
-    //WORLD->GetLocalPlayer()->SetCoordinates({ 483.2006225586f, 4810.5405273438f, -58.919288635254f});
-    bool isOnlineReq = false;
-    bool isHalloweenInteriorActive = false;
-    bool forceFirstPerson = true;
-    int pageinator_selection = 0;
-    int page_selection = 0;
-    int page_focused = 0;
-    bool pageinator_focused = true;
-    bool m_bCanShowPause = false;
-    bool isMissionStarted = false;
-    CPauseMenuPage* lastPageSelected = nullptr;
-    bool isPedSpawned = false;
-    Ped p = -1;
-    Vehicle Deluxo = -1;
-    bool m_bConfigureAmbience = false;
-    float m_fStartTime = 0.0f; 
-    int clock_minutes = 0;
-    int clock_hours = 0;
-    STREAMING::REQUEST_MODEL(MISC::GET_HASH_KEY("DELUXO"));
-    Deluxo = VEHICLE::CREATE_VEHICLE(MISC::GET_HASH_KEY("DELUXO"), 47.2755f, -862.1296f, 30.05f, 340.8, 1,0,1);
-    ENTITY::SET_ENTITY_AS_MISSION_ENTITY(Deluxo, 1, 1);
-    double value3 = 0.0;
-    bool isAmbienceConfiged = false;
-    CInterior silo = CInterior(WORLD->GetInteriorManager());
-    silo.AddEntry("m23_1_dlc_int_03_m23_1"); // the silo is an DLC::ON_ENTER_MP interior. which means it can't be deloaded from a script. weird.
-    silo.Request();
-    
 #ifdef DESTROY_FM // The Purpose of this is to stop the Dev from accidentally destroying freemode lol All of these scripts effectively manage most of freemode Terminating them results in almost dead freemode environment
     MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_triggerer_A");  // Notsure
     MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("mission_triggerer_B");  // Notsure
@@ -203,7 +122,23 @@ void main() {
     MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("cheat_controller");          // All cheats go through this script
     MISC::SET_MISSION_FLAG(1);
 #endif // DESTROY_FM
-    std::bitset<8> bitStatus_SHOP_CONTRLLER;
+
+    THEENDSCRIPT->OneTime();
+    EHUD->OneTick();
+    CDisableScripts disableScripts = CDisableScripts();
+    CVector3<float> v = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
+    CFacility facility = CFacility(WORLD->GetInteriorManager());
+    //facility.SummonBase();
+    //facility.SummonInteriorComponent("set_int_02_decal_01");
+    //facility.SetInteriorPropColor("set_int_02_decal_01", 1);
+    //facility.Default();
+    //
+    //facility.RefreshInterior();
+    //WORLD->GetLocalPlayer()->SetCoordinates({ 483.2006225586f, 4810.5405273438f, -58.919288635254f});
+    CInterior silo = CInterior(WORLD->GetInteriorManager());
+    silo.AddEntry("m23_1_dlc_int_03_m23_1"); // the silo is an DLC::ON_ENTER_MP interior. which means it can't be deloaded from a script. weird.
+    silo.Request();
+    
 
     Hash left = MISC::GET_HASH_KEY("DOOR_LEFT_SILO_BASE");
     Hash right = MISC::GET_HASH_KEY("DOOR_RIGHT_SILO_BASE");
@@ -259,18 +194,12 @@ void main() {
         scriptLogW("Thats a shame! Model: ", model, " not found! Womp womp!"); // if we can't load the model this is a big issue. Lets teleport to where it is in the worldspace located: for example if the thing is located in an IPL then summon it. teleport the player to where the loading 
     }
     pauseMenu.Init();
+    
     while (true){ // we've turned off the normal loop here for smaller testing of the program. sGameWorld being still active however.
-        disableScripts.StaggeredLoop(&staggeredLoopTimer); //keeping the logic of program reload and cancel.
-        if (displayLoadMenu) {
-            menuLoad.Update();
-        }
-        if (IsKeyJustUp(VK_F13)) {
-            if (displayLoadMenu) {
-                MINIMAP->SetMinimapActive(true);
-            }
-            displayLoadMenu = !displayLoadMenu;
-            scriptLogI("F13 pressed. CurStatus: ", displayLoadMenu);
-        }
+
+        SCRIPT_MGR->Update();
+        EHUD->Update();
+        THEENDSCRIPT->Update();
 #ifdef TRADITIONAL_PROGRAM_LOOP
         //// Define vertices for the polygon
         //float x1 = 100.0f, y1 = 100.0f, z1 = 150.0f; // Vertex 1

@@ -144,6 +144,17 @@ public:
 	}
 	T z;
 	DWORD _paddingZ_;
+public: // OPERATOR OVERLOADS
+	CVector3<T> operator-(const CVector3<T>& other) {
+		return { x - other.x, y - other.y, z - other.z };
+	}
+	CVector3<T> operator+(const CVector3<T>& other) const {
+		return { x + other.x, y + other.y, z + other.z };
+	}
+
+	CVector3<T> operator*(float scalar) const {
+		return { x * scalar, y * scalar, z * scalar };
+	}
 private:
 };
 template<typename T>
@@ -164,6 +175,28 @@ public:
 		std::string blu = std::to_string(b);
 		std::string alp = std::to_string(a);
 		return red + " " + gre + " " + blu + " " + alp;
+	}
+};
+template<typename T>
+class Quaternion {
+public:
+	T w, x, y, z;
+	Quaternion Conjugate() const {
+		return { w,-x,-y,-z };
+	}
+	CVector3<T> Rotate(CVector3<T> v) const {
+		Quaternion<T> qv{ 0,v.x,v.y,v.z };
+		Quaternion<T> qr = *this * qv * Conjugate();
+		return { qr.x,qr.y,qr.z };
+	}
+public: // OPERATOR
+	Quaternion operator*(const Quaternion& q) const {
+		return {
+			w * q.w - x * q.x - y * q.y - z * q.z,
+			w * q.x + x * q.w + y * q.z - z * q.y,
+			w * q.y - x * q.z + y * q.w + z * q.x,
+			w * q.z + x * q.y - y * q.x + z * q.w
+		};
 	}
 };
 

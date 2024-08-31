@@ -15,7 +15,6 @@ private:
 		eDBT_EFFECT_TRANS, // effect in transition
 		eDBT_EFFECT_AWAITING, // awaiting player get in.
 		eDBT_EFFECT_EMP,
-
 		eDBT_MAX
 	};
 public:

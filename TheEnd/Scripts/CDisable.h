@@ -11,6 +11,11 @@ private:
 	std::vector<ScrInfo> m_AllScriptsToDisable;
 	bool m_ForceRefresh;
 public:
+    /*
+    These are defined in X:\\update\\update.rpf\\common\\data\\gameconfig.xml
+    Update for each update. Else the script won't work cause the Stack sizes won't align with game params. 
+    if write XML Parser you'd have to crack open scripts too so yk its not really worth it lol
+    */
     enum StackSize {
         MICRO = 128,
         MINI = 512,

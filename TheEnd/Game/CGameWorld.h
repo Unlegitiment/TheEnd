@@ -69,7 +69,6 @@ typedef std::vector<const char*> IPLsLoaded; // this is useless just a nice conv
 * CTheScript - This is just our main injection points, Update loops etc. All threads go through here. Likely have a constexpr array of all possible functions that need to be executed when the program starts. 
 */
 class CGameWorld {
-
 public:
 	enum eGameWorldAdditionState {
 		eGWBS_WORLD_LOAD_CAYO,
@@ -98,7 +97,16 @@ public:
 	void OnEnterSp();
 	void OnEnterMp();
 	bool IsMpMapActive();
+	void SetBlackoutState(bool _newblackoutstate);
+	void SetBlackoutStateEffectVehicle(bool _blackoutstateveh);
+	// TIME COMMANDS
+	struct sTimeInformation {
+		int hour, minute, second;
+	};
+	void SetTimePersist(bool enable, sTimeInformation _newtime);
+	void ResetTime();
 private:
+	void TimeUpdate();
 	void GameWorldStateCheck();
 	void WORLD_LOAD_S_CARRIER();
 	void WORLD_LOAD_N_CARRIER();
@@ -106,7 +114,10 @@ private:
 	void WORLD_LOAD_NY();
 	void ConfigureWorldState();
 	bool DoClassSanityCheck();
-	
+	bool m_bIsTimeLocked = false;
+	sTimeInformation m_TimeLockedInfo; 
+	bool m_bBlackoutState = false;
+	bool m_bBlackoutStateEffectVehicle = false;
 	bool m_bMpMapActive;
 	CGameMissionMgr*	m_pMissionMgr; // All missions that are active and the state.
 	CGameScriptMgr*		m_pScriptMgr; //  All scripts go thru this. 
@@ -120,3 +131,5 @@ private:
 	CGameStreamingMgr*		m_pStreamingManager;
 	std::bitset<eGWBS_MAX>	m_GameStateInformation;
 };
+typedef Singleton<CGameWorld> sGameWorld;
+#define WORLD sGameWorld::GetInstance()

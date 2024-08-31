@@ -8,10 +8,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ambience\CConfigureTheEndAmbience.cpp" />
+    <ClCompile Include="CTheScript.cpp" />
     <ClCompile Include="Facility\CFacility.cpp" />
+    <ClCompile Include="Game\Building\Blackout.cpp" />
     <ClCompile Include="Game\Building\CBoundingBox.cpp" />
     <ClCompile Include="Game\CGameStream.cpp" />
     <ClCompile Include="Game\CGameWorld.cpp" />
+    <ClCompile Include="Game\Hud\CGameHelpText.cpp" />
+    <ClCompile Include="Game\Hud\CGameSpinner.cpp" />
+    <ClCompile Include="Game\Hud\HelpText.cpp" />
+    <ClCompile Include="Game\Hud\HudInterface.cpp" />
     <ClCompile Include="Game\Hud\MiniMap.cpp" />
     <ClCompile Include="Game\Interior\GameInterior.cpp" />
     <ClCompile Include="Game\Interior\GameInterior.h" />
@@ -25,6 +31,7 @@
     <ClCompile Include="Launcher\CTheEndLoadMenu.cpp" />
     <ClCompile Include="Launcher\GameLoadMenu.cpp" />
     <ClCompile Include="Launcher\LoadButtons.cpp" />
+    <ClCompile Include="Launcher\ScriptDisable.cpp" />
     <ClCompile Include="Logger\CLoggerInstances.cpp" />
     <ClCompile Include="Logger\LocalLogger.cpp" />
     <ClCompile Include="Logger\LoggerClient.cpp" />
@@ -52,6 +59,7 @@
     <ClCompile Include="Scripts\SPRestart\Restart.cpp" />
     <ClCompile Include="SHVNative\types.cpp" />
     <ClCompile Include="Textures\CTXD.cpp" />
+    <ClCompile Include="TheEnd\Hud.cpp" />
     <ClCompile Include="UIEditor\BoxDraw\CBoxUI.cpp" />
     <ClCompile Include="UIEditor\ButtonDraw\CButtonController.cpp" />
     <ClCompile Include="UIEditor\ButtonDraw\CButtonUI.cpp" />
@@ -61,7 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ambience\CDeluxo.h" />
+    <ClInclude Include="CTheScript.h" />
     <ClInclude Include="Facility\CFacility.h" />
+    <ClInclude Include="Game\Building\Blackout.h" />
     <ClInclude Include="Game\Building\CBoundingBox.h" />
     <ClInclude Include="Game\CGameStream.h" />
     <ClInclude Include="Game\CGameWorld.h" />
@@ -69,6 +79,10 @@
     <ClInclude Include="Game\Explostion\ExplosionMgr.h" />
     <ClInclude Include="Game\GameWrappers\BlipManagement\Blip.h" />
     <ClInclude Include="Game\GameWrappers\BlipManagement\BlipMgr.h" />
+    <ClInclude Include="Game\Hud\CGameHelpText.h" />
+    <ClInclude Include="Game\Hud\CGameSpinner.h" />
+    <ClInclude Include="Game\Hud\HelpText.h" />
+    <ClInclude Include="Game\Hud\HudInterface.h" />
     <ClInclude Include="Game\Hud\MiniMap.h" />
     <ClInclude Include="Game\Interior\GameInterior_PROLOGUE.h" />
     <ClInclude Include="Game\Interior\InteriorManager.h" />
@@ -81,6 +95,7 @@
     <ClInclude Include="Launcher\CTheEndLoadMenu.h" />
     <ClInclude Include="Launcher\GameLoadMenu.h" />
     <ClInclude Include="Launcher\LoadButtons.h" />
+    <ClInclude Include="Launcher\ScriptDisable.h" />
     <ClInclude Include="Logger\CLoggerInstances.h" />
     <ClInclude Include="Logger\LocalLogger.h" />
     <ClInclude Include="Logger\LoggerClient.h" />
@@ -119,6 +134,7 @@
     <ClInclude Include="SHVNative\OGnatives.h" />
     <ClInclude Include="SHVNative\types.h" />
     <ClInclude Include="Textures\CTXD.h" />
+    <ClInclude Include="TheEnd\Hud.h" />
     <ClInclude Include="UIEditor\BoxDraw\CBoxUI.h" />
     <ClInclude Include="UIEditor\ButtonDraw\CButtonController.h" />
     <ClInclude Include="UIEditor\ButtonDraw\CButtonUI.h" />

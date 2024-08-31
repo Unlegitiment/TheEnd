@@ -7,6 +7,7 @@
 #include "./SHVNative/main.h"
 #include "script.h"
 #include "keyboard.h"
+#include "./Launcher/ScriptDisable.h"
 #include "./Logger/CLoggerInstances.h"
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {

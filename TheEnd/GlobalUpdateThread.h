@@ -7,7 +7,6 @@
 __forceinline void scriptUpdateGameWorld(CGameWorld* m_WorldPointer) {
 	m_WorldPointer->Update();
 }
-typedef Singleton<CGameWorld> sGameWorld;
 
 __forceinline void ScriptMainThree() {
 	sGameWorld::GetInstance()->Init();

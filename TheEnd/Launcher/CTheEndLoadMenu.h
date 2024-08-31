@@ -11,7 +11,7 @@ private:
 	int DX_Texture = 0;
 	CLoadButton Button1;
 	CLoadButton Button2;
-	CLoadButton Button3;
+	CLoadButton Button3; 
 private:
 	void HandleLeftPress();
 	void HandleRightPress();
