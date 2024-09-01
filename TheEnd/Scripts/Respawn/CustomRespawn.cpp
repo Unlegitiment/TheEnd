@@ -4,7 +4,7 @@ void CRespawn::RespawnPlayer() {
 	CPlayer* player = sGameWorld::GetInstance()->GetLocalPlayer();
 	/*
 	* CVector3<float> hospitalLocation = CRespawn::GetBestHospitalForDeath(player->GetCoordinates());
-	* CSyncronizedScene respawn = player->StartSyncronizedScene();
+	* CSynchronizedScene respawn = player->StartSyncronizedScene();
 	* CAnimDictionary animDict = {"anim@player_respawn@hospital"};
 	* animDict.Request();
 	* player->PlaySyncedScene(animDict, "death_character_1a", hospitalLocation) // this doesn't work pseudocode.

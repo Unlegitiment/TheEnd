@@ -5,6 +5,9 @@
 CTheEndLoadMenu* CTheEndHud::GetLoadingMenu() {
     return &this->mMenu;
 }
+CFade* CTheEndHud::GetFade() {
+    return &this->m_Fade;
+}
 bool CTheEndHud::IsLoadingMenuActive() {
     return this->DoesDisplayMenu;
 }
@@ -16,6 +19,7 @@ void CTheEndHud::OneTick() {
 }
 
 void CTheEndHud::Update() {
+    this->GetFade()->Render();
     if (DoesDisplayMenu) {
         this->mMenu.Update();
     }
@@ -25,4 +29,5 @@ void CTheEndHud::Update() {
     if (IsKeyJustUp(VK_F13)) {
         DoesDisplayMenu = !DoesDisplayMenu;
     }
+    
 }

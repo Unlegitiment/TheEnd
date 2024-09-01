@@ -2,6 +2,7 @@
 #include "./SHVNative/natives.h"
 #include "./Ambience/CConfigureTheEndAmbience.h"
 #include "./Game/Building/CBoundingBox.h"
+#include "./Game/Anim/SyncronizedScene.h"
 class CTheScript {
 public:
 	void OneTime();
@@ -14,6 +15,8 @@ private:
 	void ClearTraffic();
 	void BlipSetup();
 	void UFOSetup();
+	void SetupWarp();
+	void StartWarp();
 	enum class CHECKPOINT {
 		DREAM_SEQUENCE,
 		WAKE_UP_NOW,
@@ -52,13 +55,20 @@ private: //STATE
 	int CurStateOfPlayer = -1; // -1 means idle/freeroam etcc
 	bool isAwoken = (CurrentLevel >= (int)CHECKPOINT::WAKE_UP_NOW);
 	int FAIL_CONDITION = 0; // fail condition
-	void SetupEnemies(int level); // for specifically the postwakeup sequence.
-	void SetupEnvironment(int level); // Screen FX, etc.
 private: // GLOBAL_DATA
 	float m_fZGroundZCoord_UFO = 0.0f;
 	CVector3<float> m_fRespawnLocation = { 0,0,0 }; // Todo -- write respawn layer for this to lay on top of.
 	bool m_bDisplayHelpText = true; 
-	int m_iSceneId = -1;
+	CSynchronizedScene Scene = CSynchronizedScene();
+private: //WARP RELATED ACTIONS
+	enum eWarpSet {
+		WARP_HAS_STARTED,
+		WARP_TRANSITIONING,
+		WARP_ENDING,
+		EWS_SIZE
+	};
+	std::bitset<EWS_SIZE> m_bsWarp;
+	Ped WarpPed;
 };
 typedef Singleton<CTheScript> sScript;
 #define THEENDSCRIPT sScript::GetInstance()

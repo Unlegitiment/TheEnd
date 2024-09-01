@@ -7,6 +7,7 @@
 #include "./Game/Hud/CGameHelpText.h"
 #include "./Game/Hud/CGameSpinner.h"
 #include "./Game/Hud/HudInterface.h"
+#include "./TheEnd/Hud.h"
 /*
 	TODO -- Write up a quick class to do vehicles and their modifications. 
 	Also cause shop controller is annoying for this we might just have to void the shop controller when we get close and restart it when we are done. Or Leave the area. 
@@ -48,79 +49,123 @@ void CTheScript::Update() {
 	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("CLEARSCRFX"))) {
 		this->Cheat_CLEARSCRFX();
 	}
-	
 	CVector3<float> pos = WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition;
-	//GRAPHICS::DRAW_LIGHT_WITH_RANGE(-1725.449f, -190.3516f, 103.0902f - 2.0f, 255, 255, 255, 50, 10);
-	
-	if (m_bRenderUFOEffect) {
-		GRAPHICS::DRAW_MARKER(1, -1725.449f, -190.3516f, this->m_fZGroundZCoord_UFO - 2.0f, 0, 0, 0, 0, 0, 0, 10, 10, 55, 93, 182, 229, 60, 0, 0, 0, 0, nullptr, nullptr, 0);
-		GRAPHICS::DRAW_LIGHT_WITH_RANGEEX(-1725.449f, -190.3516f, this->m_fZGroundZCoord_UFO, 255, 255, 255, 10, 10, 64);
-	}
 	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("GOTODELUXO"))) {
 		this->Cheat_GOTODELUXO();
 	}
 	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("DEVSTAR_UT1")) || this->CurrentLevel == (int)CHECKPOINT::DREAM_SEQUENCE) {
-		/*
-			This is only used if the cheat is used.
-		*/
-		float fLaunch = MISC::GET_GAME_TIMER();
-		while (MISC::GET_GAME_TIMER() < fLaunch + 1000 && this->CurrentLevel != (int)CHECKPOINT::DREAM_SEQUENCE) {
-			CTextUI("Simulating getting to grave", { 0.5,0.5 }, { 255,255,255,255 }).Draw();
-			if (MISC::GET_GAME_TIMER() == fLaunch + 999) {
-				this->CurrentLevel = (int)CHECKPOINT::DREAM_SEQUENCE;
-			}
-			WAIT(0);
-		}
 		m_bRenderUFOEffect = true;
+		float fLaunch = MISC::GET_GAME_TIMER();
 		WORLD->SetTimePersist(true, { 0,0,0 });
 		WORLD->SetBlackoutState(false);
 		if (!HUD::DOES_BLIP_EXIST(Blip_MainObj)) {
 			scriptLogI("Main Obj blip does not exist!");
 			BlipSetup();
 		}
+		this->CurrentLevel = (int)CHECKPOINT::DREAM_SEQUENCE;
 		UFOSetup();
 	}
+	if (m_bRenderUFOEffect) {
+		GRAPHICS::DRAW_MARKER(1, -1725.449f, -190.3516f, this->m_fZGroundZCoord_UFO - 2.0f, 0, 0, 0, 0, 0, 0, 10, 10, 55, 93, 182, 229, 60, 0, 0, 0, 0, nullptr, nullptr, 0);
+		GRAPHICS::DRAW_LIGHT_WITH_RANGEEX(-1725.449f, -190.3516f, this->m_fZGroundZCoord_UFO, 255, 255, 255, 10, 10, 64);
+	}
 	if (isWithinCircle(pos.x, pos.y, -1725.309, -190.1009, 4.80) && CurrentLevel == (int)CHECKPOINT::DREAM_SEQUENCE) { //ok ive had enough of this shit
-	
-		GAMEHUD->GetHelpText()->SetHelpText("Press ~INPUT_CONTEXT~ to awake");
+		GAMEHUD->GetHelpText()->SetHelpText("Press ~INPUT_CONTEXT~ to wake up.");
 		GAMEHUD->GetHelpText()->SetHelpTextCanRender(m_bDisplayHelpText);
 		GAMEHUD->GetHelpText()->RenderNow();
 		if (PAD::IS_CONTROL_JUST_PRESSED(0, 51)) {
 			m_bDisplayHelpText = false;
-			STREAMING::REQUEST_ANIM_DICT("anim@scripted@freemode@ufo_invasion@ufo_float@heeled@");
-			while (!STREAMING::HAS_ANIM_DICT_LOADED("anim@scripted@freemode@ufo_invasion@ufo_float@heeled@")) {
-				WAIT(0);
-			}
-			m_iSceneId = PED::CREATE_SYNCHRONIZED_SCENE(pos.x,pos.y,pos.z,0,0,ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()), 2);
-			TASK::TASK_SYNCHRONIZED_SCENE(PLAYER::PLAYER_PED_ID(), m_iSceneId, "anim@scripted@freemode@ufo_invasion@ufo_float@heeled@", "float", 1, 0, 0, 1, 1, 0);
-			GAMEHUD->GetSpinner()->SetType(CGameSpinner::BUSY_SPINNER_RIGHT);
-			GAMEHUD->GetSpinner()->SetText("Loading");
-			GAMEHUD->GetSpinner()->StartRender();
+			SetupWarp();
 		}
-		if (m_iSceneId != -1) {
-			if (PED::GET_SYNCHRONIZED_SCENE_PHASE(m_iSceneId) >= 0.75f) {
-				scriptLogI("Start wake up scene");
-				/*
-					Fade to white and trigger wake up sequence. 
-				*/
-				GAMEHUD->GetSpinner()->ForceStopRender();
-				TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
-				m_bDisplayHelpText = true;
-			}
+		if (Scene.GetSceneProgression() >= 0.95) {
+			scriptLogI("Finished ready for warp");
+			m_bDisplayHelpText = true;
+			Scene.Destroy();
+			this->StartWarp();
 		}
 	}
+	if (m_bsWarp.test(WARP_HAS_STARTED)) {
+		if (STREAMING::GET_PLAYER_SWITCH_STATE() == 5) {
+			STREAMING::SWITCH_TO_MULTI_SECONDPART(WarpPed);
+			m_bsWarp.set(WARP_TRANSITIONING, 1);
+			ambienceConfig.ClearAll();
+			m_bsWarp.reset(WARP_HAS_STARTED);
+		}
+	}
+	if (m_bsWarp.test(WARP_TRANSITIONING)) {
+		GAMEHUD->GetSpinner()->ForceStopRender();
+		GAMEHUD->GetSpinner()->SetText("Transitioning");
+		GAMEHUD->GetSpinner()->StartRender();
+		ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), 1);
+		WORLD->GetLocalPlayer()->SetCoordinates({ -1873.391, 3748.26, -99.3408 });
+		if (STREAMING::GET_PLAYER_SWITCH_STATE() == 8) {
+			ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), 0);
+			GAMEHUD->GetSpinner()->ForceStopRender();
+			m_bsWarp.set(WARP_ENDING, 1);
+			m_bsWarp.reset(WARP_TRANSITIONING);
+		}
+	}
+	//END ANIMATION WAKE: 0.763802
+	if (m_bsWarp.test(WARP_ENDING)) {
+		PED::DELETE_PED(&this->WarpPed);
+		m_bsWarp.reset(WARP_ENDING);
+	}
+	CTextUI(std::to_string(STREAMING::GET_PLAYER_SWITCH_STATE()), { 0.5,0.525 }, { 255,255,255,255 }).Draw();
 	if (IsKeyJustUp(VK_MULTIPLY) || MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("STOPSYNC"))) {
 		scriptLogI("Cancelling Script Scene");
 		TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
 	}
+	if (IsKeyJustUp(VK_ADD)) {
+		EHUD->GetFade()->DoWhiteScreenFade(false);
+	}
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("TESTANIM"))) {
+		SetupWarp();
+	}
+	if (this->CurrentLevel == (int)CHECKPOINT::INSIDE_INTERIOR) {
+		static bool isSceneRunning = false;
+		static bool hasWarpDone = false;
+		static bool hasAmbienceCleared = false;
+		static bool hasConfiguredScene = false;
+		if (!hasAmbienceCleared) {
+			scriptLogI("TEST");
+			this->ambienceConfig.ClearAll();
+			this->isAwoken = true;
+			this->m_bConfigureAmbience = false;
+			this->m_bIsAmbienceConfigured = false;
 
-	
+			HUD::REMOVE_BLIP(&this->Blip_MainObj);
+			hasAmbienceCleared = true;
+		}
+		while ((!STREAMING::HAS_ANIM_DICT_LOADED("switch@michael@wakes_up_screaming"))) {
+			STREAMING::REQUEST_ANIM_DICT("switch@michael@wakes_up_screaming");
+			DLC::ON_ENTER_MP();
+			WAIT(0);
+		}
+		if (!hasWarpDone) {
+			//ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), -1873.391, 3748.26, -99.8408, 1, 0, 0, 0);
+			hasWarpDone = true;
+		}
+		if (!hasConfiguredScene) {
+			//this->m_iSceneId = PED::CREATE_SYNCHRONIZED_SCENE(-1873.391, 3748.2637, -99.8408, 0.0, 0.0, -8.9672, 2);
+			hasConfiguredScene = true;
+		}
+		if (!isSceneRunning) {
+			scriptLogI("Scene is not running. Must start running scene!");
+			//TASK::TASK_SYNCHRONIZED_SCENE(PLAYER::PLAYER_PED_ID(), m_iSceneId, "switch@michael@wakes_up_screaming", "001671_02_mics2_1_wakes_up_screaming_exit", 0, 1.0, 0, 1, 1, 0);
+			isSceneRunning = true;
+		}
+		//CTextUI(std::to_string(PED::GET_SYNCHRONIZED_SCENE_PHASE(this->m_iSceneId)), { 0.5,0.5 }, { 255,255,255,255 }).Draw();
+		/*if (PED::GET_SYNCHRONIZED_SCENE_PHASE(this->m_iSceneId) >= 0.85f) {
+			TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+		}*/
+	}
 }
 
 void CTheScript::SetupEnvironment() {
 	if (this->m_bConfigureAmbience) {
 		this->ambienceConfig.DoAll(m_fStartTime);
 		if (ambienceConfig.isAllConfigured()) {
+			scriptLogI("Ambience is all configured");
 			this->CurrentLevel = (int)CHECKPOINT::DREAM_SEQUENCE;
 			m_bIsAmbienceConfigured = true;
 			m_bConfigureAmbience = false;
@@ -143,11 +188,14 @@ void CTheScript::BoxCheck() {
 }
 
 void CTheScript::Cheat_CLEARSCRFX() {
+	scriptLogI("[CHEAT] called");
 	this->ambienceConfig.ClearAll();
 	WORLD->ResetTime();
 }
 
 void CTheScript::Cheat_GOTODELUXO() {
+	scriptLogI("[CHEAT] called");
+
 	STREAMING::SWITCH_TO_MULTI_FIRSTPART(PLAYER::PLAYER_PED_ID(), 0, 1);
 	Ped player = PED::CLONE_PED(PLAYER::PLAYER_PED_ID(), 0, 0, 1);
 	ENTITY::SET_ENTITY_COORDS(player, 42.8494, -860.811, 30, 1, 0, 0, 0);
@@ -190,13 +238,42 @@ void CTheScript::UFOSetup() {
 	}
 }
 
-void CTheScript::SetupEnemies(int level) {
-	if (level == (int)CHECKPOINT::DREAM_SEQUENCE) {
-		scriptLogI("We do not have any enemies at this point in the mission!, DELUXO_SEQUENCE");
-		return; 
-	}
-
+void CTheScript::SetupWarp() {
+	CVector3<float> pos = WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition;
+	
+	Scene.SetupScene("anim@scripted@freemode@ufo_invasion@ufo_float@heeled@", pos, { 0, 0, ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()) });
+	Scene.QueueAnimation(PLAYER::PLAYER_PED_ID(), "float");	
+	Scene.RunScene();
+	GAMEHUD->GetSpinner()->SetType(CGameSpinner::BUSY_SPINNER_RIGHT);
+	GAMEHUD->GetSpinner()->SetText("Loading");
+	GAMEHUD->GetSpinner()->StartRender();
 }
 
-void CTheScript::SetupEnvironment(int level) {
+void CTheScript::StartWarp() {
+	WarpPed = PED::CLONE_PED(PLAYER::PLAYER_PED_ID(), 1, 0, 0);
+	ENTITY::SET_ENTITY_COORDS(WarpPed, -2054.274, 3238.3389, -1, 1, 0, 0, 0);
+	STREAMING::SWITCH_TO_MULTI_FIRSTPART(PLAYER::PLAYER_PED_ID(), 0, 1);
+	this->m_bsWarp.set(eWarpSet::WARP_HAS_STARTED, 1);
 }
+//if (PED::GET_SYNCHRONIZED_SCENE_PHASE(m_iSceneId) >= 0.85f) {
+//	scriptLogI("Starting wake up scene...");
+//	STREAMING::SWITCH_TO_MULTI_FIRSTPART(PLAYER::PLAYER_PED_ID(), 0, 1);
+//	Ped p = PED::CLONE_PED(PLAYER::PLAYER_PED_ID(), 1, 0, 1);
+//	ENTITY::SET_ENTITY_COORDS(p, -1873.391, 3748.26, -99.8408, 1, 0, 0, 0);
+//	STREAMING::SWITCH_TO_MULTI_SECONDPART(p);
+//	GAMEHUD->GetSpinner()->ForceStopRender();
+//	TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+//	//ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), 1);
+//	while (STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
+//		if (STREAMING::GET_PLAYER_SWITCH_STATE() == 7) {
+//			scriptLogI("We're launching the script here");
+//			TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+//			ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), -1873.391, 3748.26, -99.8408, 1, 0, 0, 0);
+//			this->CurrentLevel = (int)CHECKPOINT::INSIDE_INTERIOR;
+//			break;
+//		}
+//		WAIT(0);
+//	}
+//	m_bDisplayHelpText = true;
+//	this->m_iSceneId = -1;
+//}

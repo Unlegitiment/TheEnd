@@ -60,6 +60,8 @@
     <ClCompile Include="Game\Hud\HudInterface.cpp" />
     <ClCompile Include="Game\Hud\CGameSpinner.cpp" />
     <ClCompile Include="Game\Hud\HelpText.cpp" />
+    <ClCompile Include="TheEnd\CFadeScreen.cpp" />
+    <ClCompile Include="Game\Anim\SyncronizedScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -135,6 +137,8 @@
     <ClInclude Include="Game\Hud\CGameHelpText.h" />
     <ClInclude Include="Game\Hud\HudInterface.h" />
     <ClInclude Include="Game\Hud\CGameSpinner.h" />
+    <ClInclude Include="TheEnd\CFadeScreen.h" />
+    <ClInclude Include="Game\Anim\SyncronizedScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

@@ -10,6 +10,7 @@
     <ClCompile Include="Ambience\CConfigureTheEndAmbience.cpp" />
     <ClCompile Include="CTheScript.cpp" />
     <ClCompile Include="Facility\CFacility.cpp" />
+    <ClCompile Include="Game\Anim\SyncronizedScene.cpp" />
     <ClCompile Include="Game\Building\Blackout.cpp" />
     <ClCompile Include="Game\Building\CBoundingBox.cpp" />
     <ClCompile Include="Game\CGameStream.cpp" />
@@ -59,6 +60,7 @@
     <ClCompile Include="Scripts\SPRestart\Restart.cpp" />
     <ClCompile Include="SHVNative\types.cpp" />
     <ClCompile Include="Textures\CTXD.cpp" />
+    <ClCompile Include="TheEnd\CFadeScreen.cpp" />
     <ClCompile Include="TheEnd\Hud.cpp" />
     <ClCompile Include="UIEditor\BoxDraw\CBoxUI.cpp" />
     <ClCompile Include="UIEditor\ButtonDraw\CButtonController.cpp" />
@@ -71,6 +73,7 @@
     <ClInclude Include="Ambience\CDeluxo.h" />
     <ClInclude Include="CTheScript.h" />
     <ClInclude Include="Facility\CFacility.h" />
+    <ClInclude Include="Game\Anim\SyncronizedScene.h" />
     <ClInclude Include="Game\Building\Blackout.h" />
     <ClInclude Include="Game\Building\CBoundingBox.h" />
     <ClInclude Include="Game\CGameStream.h" />
@@ -134,6 +137,7 @@
     <ClInclude Include="SHVNative\OGnatives.h" />
     <ClInclude Include="SHVNative\types.h" />
     <ClInclude Include="Textures\CTXD.h" />
+    <ClInclude Include="TheEnd\CFadeScreen.h" />
     <ClInclude Include="TheEnd\Hud.h" />
     <ClInclude Include="UIEditor\BoxDraw\CBoxUI.h" />
     <ClInclude Include="UIEditor\ButtonDraw\CButtonController.h" />
