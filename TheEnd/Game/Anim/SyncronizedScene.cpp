@@ -1,6 +1,9 @@
 #include "SyncronizedScene.h"
 #include "../../SHVNative/natives.h"
 #include <cassert>
+std::string& CSynchronizedScene::GetAnimDictionary() {
+	return this->m_AnimDictionary;
+}
 void CSynchronizedScene::SetupScene(const char* animdictionary, CVector3<float> pos, CVector3<float> rot) {
 	if (!STREAMING::DOES_ANIM_DICT_EXIST(animdictionary)) {
 		scriptLogW("[SYNCHRONIZED_SCENE] ", animdictionary, " Does not exist!");

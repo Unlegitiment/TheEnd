@@ -3,6 +3,7 @@
 #include "./Ambience/CConfigureTheEndAmbience.h"
 #include "./Game/Building/CBoundingBox.h"
 #include "./Game/Anim/SyncronizedScene.h"
+#include "CaptureSys/include.h"
 class CTheScript {
 public:
 	void OneTime();
@@ -12,11 +13,13 @@ private:
 	void BoxCheck();
 	void Cheat_CLEARSCRFX();
 	void Cheat_GOTODELUXO();
+	void UT_2();
 	void ClearTraffic();
 	void BlipSetup();
 	void UFOSetup();
 	void SetupWarp();
 	void StartWarp();
+	void LockFirstPerson();
 	enum class CHECKPOINT {
 		DREAM_SEQUENCE,
 		WAKE_UP_NOW,
@@ -55,8 +58,10 @@ private: //STATE
 	int CurStateOfPlayer = -1; // -1 means idle/freeroam etcc
 	bool isAwoken = (CurrentLevel >= (int)CHECKPOINT::WAKE_UP_NOW);
 	int FAIL_CONDITION = 0; // fail condition
+	bool m_bLockFirstPerson;
+	CWeaponCapture m_WeaponCapture = *WEAP_CAP;
 private: // GLOBAL_DATA
-	float m_fZGroundZCoord_UFO = 0.0f;
+	float m_fZGroundZCoord_UFO = 57.5193f; // this val was acquired via MISC::GET_GROUND_Z_AT_COORD however due to collision this value gets invalidated sometimes thus the static value was created,.
 	CVector3<float> m_fRespawnLocation = { 0,0,0 }; // Todo -- write respawn layer for this to lay on top of.
 	bool m_bDisplayHelpText = true; 
 	CSynchronizedScene Scene = CSynchronizedScene();

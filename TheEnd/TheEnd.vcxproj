@@ -8,6 +8,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ambience\CConfigureTheEndAmbience.cpp" />
+    <ClCompile Include="CaptureSys\PlayerWeapon.cpp" />
+    <ClCompile Include="CaptureSys\WeapComponent.cpp" />
+    <ClCompile Include="CaptureSys\WeapComponent.h" />
+    <ClCompile Include="CaptureSys\WeaponCapture.cpp" />
     <ClCompile Include="CTheScript.cpp" />
     <ClCompile Include="Facility\CFacility.cpp" />
     <ClCompile Include="Game\Anim\SyncronizedScene.cpp" />
@@ -17,6 +21,7 @@
     <ClCompile Include="Game\CGameWorld.cpp" />
     <ClCompile Include="Game\Hud\CGameHelpText.cpp" />
     <ClCompile Include="Game\Hud\CGameSpinner.cpp" />
+    <ClCompile Include="Game\Hud\CWeaponWheel.cpp" />
     <ClCompile Include="Game\Hud\HelpText.cpp" />
     <ClCompile Include="Game\Hud\HudInterface.cpp" />
     <ClCompile Include="Game\Hud\MiniMap.cpp" />
@@ -71,6 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ambience\CDeluxo.h" />
+    <ClInclude Include="CaptureSys\include.h" />
+    <ClInclude Include="CaptureSys\PlayerWeapon.h" />
+    <ClInclude Include="CaptureSys\WeaponCapture.h" />
     <ClInclude Include="CTheScript.h" />
     <ClInclude Include="Facility\CFacility.h" />
     <ClInclude Include="Game\Anim\SyncronizedScene.h" />
@@ -84,6 +92,7 @@
     <ClInclude Include="Game\GameWrappers\BlipManagement\BlipMgr.h" />
     <ClInclude Include="Game\Hud\CGameHelpText.h" />
     <ClInclude Include="Game\Hud\CGameSpinner.h" />
+    <ClInclude Include="Game\Hud\CWeaponWheel.h" />
     <ClInclude Include="Game\Hud\HelpText.h" />
     <ClInclude Include="Game\Hud\HudInterface.h" />
     <ClInclude Include="Game\Hud\MiniMap.h" />

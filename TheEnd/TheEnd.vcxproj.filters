@@ -62,6 +62,11 @@
     <ClCompile Include="Game\Hud\HelpText.cpp" />
     <ClCompile Include="TheEnd\CFadeScreen.cpp" />
     <ClCompile Include="Game\Anim\SyncronizedScene.cpp" />
+    <ClCompile Include="CaptureSys\WeaponCapture.cpp" />
+    <ClCompile Include="CaptureSys\WeapComponent.h" />
+    <ClCompile Include="CaptureSys\WeapComponent.cpp" />
+    <ClCompile Include="CaptureSys\PlayerWeapon.cpp" />
+    <ClCompile Include="Game\Hud\CWeaponWheel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -139,6 +144,10 @@
     <ClInclude Include="Game\Hud\CGameSpinner.h" />
     <ClInclude Include="TheEnd\CFadeScreen.h" />
     <ClInclude Include="Game\Anim\SyncronizedScene.h" />
+    <ClInclude Include="CaptureSys\WeaponCapture.h" />
+    <ClInclude Include="CaptureSys\PlayerWeapon.h" />
+    <ClInclude Include="CaptureSys\include.h" />
+    <ClInclude Include="Game\Hud\CWeaponWheel.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

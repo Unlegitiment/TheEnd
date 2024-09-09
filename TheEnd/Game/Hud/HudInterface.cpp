@@ -2,11 +2,13 @@
 #include "./CGameHelpText.h"
 #include "./MiniMap.h"
 #include "./CGameSpinner.h"
+#include "./CWeaponWheel.h"
 #include <cassert>
 HudInterface::HudInterface() :
     m_pHelpText(new CGameHelpText()),
     m_pMinimap(MINIMAP),
-    m_pSpinner(new CGameSpinner())
+    m_pSpinner(new CGameSpinner()),
+    m_pWeaponWheel(new CGameWeaponWheel())
 {
 }
 CGameHelpText* HudInterface::GetHelpText() {
@@ -22,4 +24,9 @@ CMinimap* HudInterface::GetMiniMap() {
 CGameSpinner* HudInterface::GetSpinner() {
     assert(m_pSpinner);
     return this->m_pSpinner;
+}
+
+CGameWeaponWheel* HudInterface::GetWeaponWheel() {
+    assert(this->m_pWeaponWheel);
+    return this->m_pWeaponWheel;
 }

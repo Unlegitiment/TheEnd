@@ -107,6 +107,7 @@ public:
 	void ResetTime();
 private:
 	void TimeUpdate();
+	void BlackoutUpdate();
 	void GameWorldStateCheck();
 	void WORLD_LOAD_S_CARRIER();
 	void WORLD_LOAD_N_CARRIER();

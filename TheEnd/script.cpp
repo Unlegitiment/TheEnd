@@ -34,13 +34,41 @@
 #include "./Game/Objects/CPlayer.h"
 #include "./Game/Building/CBoundingBox.h"
 #include "./Game/Anim/SyncronizedScene.h"
+#include "./CaptureSys/WeaponCapture.h"
+#include "./CaptureSys/PlayerWeapon.h"
+#include "./Game/Hud/CWeaponWheel.h"
+#include "./Game/Hud/HudInterface.h"
 void main() {
+    CWeaponCapture weapCapture = CWeaponCapture();
     THEENDSCRIPT->OneTime();
     EHUD->OneTick();
+    bool m_bShowWeapnWheel = false;
     while (true){ // we've turned off the normal loop here for smaller testing of the program. sGameWorld being still active however.
         SCRIPT_MGR->Update();
         EHUD->Update();
         THEENDSCRIPT->Update();
+        if (IsKeyJustUp(VK_F14)) {
+            m_bShowWeapnWheel = !m_bShowWeapnWheel;
+            scriptLogI("ShowWeaponWheel: ", m_bShowWeapnWheel);
+        }
+        if (m_bShowWeapnWheel) {
+            int x = GRAPHICS::REQUEST_SCALEFORM_MOVIE_INSTANCE("NEW_HUD"); // hud.gfx?
+            GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(x, "SET_WEAPON_WHEEL_ACTIVE");
+            GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1);
+            GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+            GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(x, "SHOW_ALL");
+            GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1);
+            GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+            GRAPHICS::DRAW_SCALEFORM_MOVIE(x, 0.5, 0.5, 1, 1, 255, 255, 255, 255, 0);
+            HUD::SHOW_HUD_COMPONENT_THIS_FRAME(x - 1);
+            
+        }
+        if (IsKeyJustUp(VK_F16)) {
+            OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(MISC::GET_HASH_KEY("THEEND_DOOR_1"), 0, 0, 1);
+            OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(MISC::GET_HASH_KEY("THEEND_DOOR_2"), 0, 0, 1);
+            OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(MISC::GET_HASH_KEY("THEEND_DOOR_3"), 0, 0, 1);
+        }
+        
         WAIT(0);
     }
     return;

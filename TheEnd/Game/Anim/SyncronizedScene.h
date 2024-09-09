@@ -22,6 +22,7 @@ private:
 	CVector3<float> Rotation = { 0,0,0 };
 	std::vector<sAnimationData> m_Animations;
 public:
+	std::string& GetAnimDictionary();
 	void SetupScene(const char* animdictionary, CVector3<float> pos, CVector3<float> rot);
 	void QueueAnimation(int entityHandle, const char* name);
 	sAnimationData* GetAnimation(int index);

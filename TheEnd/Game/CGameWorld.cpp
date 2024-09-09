@@ -17,6 +17,7 @@ void CGameWorld::Update() {
     this->GameWorldStateCheck();
     this->GetLocalPlayer()->Update();
     this->TimeUpdate();
+    this->BlackoutUpdate();
 }
 
 void CGameWorld::Init() {
@@ -60,6 +61,10 @@ void CGameWorld::TimeUpdate() {
     if (this->m_bIsTimeLocked) {
         CLOCK::SET_CLOCK_TIME(this->m_TimeLockedInfo.hour, this->m_TimeLockedInfo.minute, this->m_TimeLockedInfo.second);
     }
+}
+void CGameWorld::BlackoutUpdate() {
+    GRAPHICS::SET_ARTIFICIAL_LIGHTS_STATE(this->m_bBlackoutState);
+    GRAPHICS::SET_ARTIFICIAL_VEHICLE_LIGHTS_STATE(this->m_bBlackoutStateEffectVehicle);
 }
 void CGameWorld::GameWorldStateCheck() {
     WORLD_LOAD_S_CARRIER();
@@ -187,12 +192,10 @@ bool CGameWorld::IsMpMapActive() {
 
 void CGameWorld::SetBlackoutState(bool _newblackoutstate) {
     this->m_bBlackoutState = _newblackoutstate;
-    GRAPHICS::SET_ARTIFICIAL_LIGHTS_STATE(_newblackoutstate);
 }
 
 void CGameWorld::SetBlackoutStateEffectVehicle(bool _blackoutstateveh) {
     this->m_bBlackoutStateEffectVehicle = _blackoutstateveh;
-    GRAPHICS::SET_ARTIFICIAL_VEHICLE_LIGHTS_STATE(this->m_bBlackoutStateEffectVehicle);
 }
 
 /*

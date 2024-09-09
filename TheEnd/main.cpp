@@ -9,6 +9,7 @@
 #include "keyboard.h"
 #include "./Launcher/ScriptDisable.h"
 #include "./Logger/CLoggerInstances.h"
+
 BOOL APIENTRY DllMain(HMODULE hInstance, DWORD reason, LPVOID lpReserved)
 {
 	switch (reason)
