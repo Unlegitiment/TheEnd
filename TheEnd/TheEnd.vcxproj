@@ -8,6 +8,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ambience\CConfigureTheEndAmbience.cpp" />
+    <ClCompile Include="CaptureSys\CStat.cpp" />
+    <ClCompile Include="CaptureSys\CStatsCapture.cpp" />
     <ClCompile Include="CaptureSys\PlayerWeapon.cpp" />
     <ClCompile Include="CaptureSys\WeapComponent.cpp" />
     <ClCompile Include="CaptureSys\WeapComponent.h" />
@@ -16,7 +18,10 @@
     <ClCompile Include="Facility\CFacility.cpp" />
     <ClCompile Include="Game\Anim\SyncronizedScene.cpp" />
     <ClCompile Include="Game\Building\Blackout.cpp" />
+    <ClCompile Include="Game\Building\Casino.cpp" />
     <ClCompile Include="Game\Building\CBoundingBox.cpp" />
+    <ClCompile Include="Game\Building\Interior\InteriorMgr.cpp" />
+    <ClCompile Include="Game\Building\Interior\InterriorBase.cpp" />
     <ClCompile Include="Game\CGameStream.cpp" />
     <ClCompile Include="Game\CGameWorld.cpp" />
     <ClCompile Include="Game\Hud\CGameHelpText.cpp" />
@@ -29,6 +34,9 @@
     <ClCompile Include="Game\Interior\GameInterior.h" />
     <ClCompile Include="Game\Interior\GameInterior_PROLOGUE.cpp" />
     <ClCompile Include="Game\Interior\InteriorManager.cpp" />
+    <ClCompile Include="Game\Music\MusicInterface.cpp" />
+    <ClCompile Include="Game\Music\Track.cpp" />
+    <ClCompile Include="Game\Music\TrackMgr.cpp" />
     <ClCompile Include="Game\Objects\CPlayer.cpp" />
     <ClCompile Include="Game\Water\GameWaterMgr.cpp" />
     <ClCompile Include="Important\CDeluxo.cpp" />
@@ -64,9 +72,11 @@
     <ClCompile Include="Scripts\Respawn\CustomRespawn.cpp" />
     <ClCompile Include="Scripts\SPRestart\Restart.cpp" />
     <ClCompile Include="SHVNative\types.cpp" />
+    <ClCompile Include="AI\EnemyAI.cpp" />
     <ClCompile Include="Textures\CTXD.cpp" />
     <ClCompile Include="TheEnd\CFadeScreen.cpp" />
     <ClCompile Include="TheEnd\Hud.cpp" />
+    <ClCompile Include="TheEnd\Music.cpp" />
     <ClCompile Include="UIEditor\BoxDraw\CBoxUI.cpp" />
     <ClCompile Include="UIEditor\ButtonDraw\CButtonController.cpp" />
     <ClCompile Include="UIEditor\ButtonDraw\CButtonUI.cpp" />
@@ -76,14 +86,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ambience\CDeluxo.h" />
+    <ClInclude Include="CaptureSys\CStat.h" />
+    <ClInclude Include="CaptureSys\CStatsCapture.h" />
     <ClInclude Include="CaptureSys\include.h" />
     <ClInclude Include="CaptureSys\PlayerWeapon.h" />
     <ClInclude Include="CaptureSys\WeaponCapture.h" />
     <ClInclude Include="CTheScript.h" />
+    <ClInclude Include="DataTypes\IndexedUSet.h" />
     <ClInclude Include="Facility\CFacility.h" />
     <ClInclude Include="Game\Anim\SyncronizedScene.h" />
     <ClInclude Include="Game\Building\Blackout.h" />
+    <ClInclude Include="Game\Building\Casino.h" />
     <ClInclude Include="Game\Building\CBoundingBox.h" />
+    <ClInclude Include="Game\Building\Interior\InteriorMgr.h" />
+    <ClInclude Include="Game\Building\Interior\InterriorBase.h" />
     <ClInclude Include="Game\CGameStream.h" />
     <ClInclude Include="Game\CGameWorld.h" />
     <ClInclude Include="Game\Explostion\Explosion.h" />
@@ -98,6 +114,9 @@
     <ClInclude Include="Game\Hud\MiniMap.h" />
     <ClInclude Include="Game\Interior\GameInterior_PROLOGUE.h" />
     <ClInclude Include="Game\Interior\InteriorManager.h" />
+    <ClInclude Include="Game\Music\MusicInterface.h" />
+    <ClInclude Include="Game\Music\Track.h" />
+    <ClInclude Include="Game\Music\TrackMgr.h" />
     <ClInclude Include="Game\Objects\CPlayer.h" />
     <ClInclude Include="Game\Water\GameWaterMgr.h" />
     <ClInclude Include="GlobalUpdateThread.h" />
@@ -145,9 +164,11 @@
     <ClInclude Include="SHVNative\natives.h" />
     <ClInclude Include="SHVNative\OGnatives.h" />
     <ClInclude Include="SHVNative\types.h" />
+    <ClInclude Include="AI\EnemyAI.h" />
     <ClInclude Include="Textures\CTXD.h" />
     <ClInclude Include="TheEnd\CFadeScreen.h" />
     <ClInclude Include="TheEnd\Hud.h" />
+    <ClInclude Include="TheEnd\Music.h" />
     <ClInclude Include="UIEditor\BoxDraw\CBoxUI.h" />
     <ClInclude Include="UIEditor\ButtonDraw\CButtonController.h" />
     <ClInclude Include="UIEditor\ButtonDraw\CButtonUI.h" />

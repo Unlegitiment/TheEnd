@@ -167,7 +167,6 @@ void CConfigureTheEndAmbience::ClearAll() {
     GRAPHICS::CLEAR_EXTRA_TCMODIFIER();
     GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
     MISC::SET_WEATHER_TYPE_NOW("CLEAR");
-    CLOCK::ADVANCE_CLOCK_TIME_TO(12, 0, 0);
 }
 
 void CConfigureTheEndAmbience::HoldTime(CConfigureTheEndAmbience* config) {

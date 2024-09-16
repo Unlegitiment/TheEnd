@@ -38,35 +38,67 @@
 #include "./CaptureSys/PlayerWeapon.h"
 #include "./Game/Hud/CWeaponWheel.h"
 #include "./Game/Hud/HudInterface.h"
+#include "./TheEnd/Music.h"
+#include "./Game/Music/MusicInterface.h"
+#include "./Game/Building/Casino.h"
+#include "./CaptureSys/CStat.h"
+#include "./AI/EnemyAI.h"
 void main() {
-    CWeaponCapture weapCapture = CWeaponCapture();
+    CMilitaryAI temp = CMilitaryAI();
+    CWeaponCapture capture = CWeaponCapture();
     THEENDSCRIPT->OneTime();
     EHUD->OneTick();
     bool m_bShowWeapnWheel = false;
+    const char* music = "DATA_LEAK_DFWD_START_MUSIC";
+    char MusicMood[70] = { 0 };
+    CCasino casino = CCasino();
+    bool isAlarmActive = false;
+    bool fuckupminimap = true;
+    const char* AlarmStr = "PORT_OF_LS_HEIST_FORT_ZANCUDO_ALARMS";
+    auto x = 0;
     while (true){ // we've turned off the normal loop here for smaller testing of the program. sGameWorld being still active however.
+        if (IsKeyJustUp(VK_DIVIDE)) {
+            temp.TriggerAI();
+        }
+        if (IsKeyJustUp(VK_MULTIPLY)) {
+            temp.RemoveAllPedsSummoned();
+            temp.RemoveAllVehiclesInScene();
+        }
+        if (!DLC::GET_IS_LOADING_SCREEN_ACTIVE() && x == 0) {
+            x = GRAPHICS::REQUEST_SCALEFORM_MOVIE("minimap");
+            HUD::SET_BIGMAP_ACTIVE(true, false);
+            WAIT(0);
+            HUD::SET_BIGMAP_ACTIVE(false, false);
+        }
+        if (fuckupminimap && x != 0 && !DLC::GET_IS_LOADING_SCREEN_ACTIVE()) {
+            GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(x, "MULTIPLAYER_IS_ACTIVE");
+            GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1);
+            GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(0);
+            GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
+        }
         SCRIPT_MGR->Update();
         EHUD->Update();
         THEENDSCRIPT->Update();
-        if (IsKeyJustUp(VK_F14)) {
-            m_bShowWeapnWheel = !m_bShowWeapnWheel;
-            scriptLogI("ShowWeaponWheel: ", m_bShowWeapnWheel);
+        CTextUI(std::to_string(AUDIO::GET_MUSIC_VOL_SLIDER()), { 0.5,0.5 }, { 255,255,255,255 }).Draw();
+        CTextUI(std::to_string(AUDIO::GET_MUSIC_PLAYTIME()), {0.5,0.55}, {255,255,255,255}).Draw();
+        if (IsKeyJustUp(VK_F15)) {
+            int x = INTERIOR::GET_INTERIOR_FROM_ENTITY(PLAYER::PLAYER_PED_ID());
+            Vector3 pos = { 0,0,0,0,0,0 };
+            Hash hash = 0;
+            INTERIOR::GET_INTERIOR_LOCATION_AND_NAMEHASH(x, &pos, &hash);
+            GRAPHICS::REMOVE_DECALS_IN_RANGE(pos.x, pos.y, pos.z, 0xff);
+            INTERIOR::REFRESH_INTERIOR(x);
+            scriptLogI("Refreshing Interior:", x, " @ PLAYER::PLAYER_PED_ID()");
+            if (casino.GetState()->m_bHasCasinoDoorsLoaded) {
+                casino.Despawn();
+            } else {
+                casino.Trigger();
+            }
         }
-        if (m_bShowWeapnWheel) {
-            int x = GRAPHICS::REQUEST_SCALEFORM_MOVIE_INSTANCE("NEW_HUD"); // hud.gfx?
-            GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(x, "SET_WEAPON_WHEEL_ACTIVE");
-            GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1);
-            GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-            GRAPHICS::BEGIN_SCALEFORM_MOVIE_METHOD(x, "SHOW_ALL");
-            GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(1);
-            GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
-            GRAPHICS::DRAW_SCALEFORM_MOVIE(x, 0.5, 0.5, 1, 1, 255, 255, 255, 255, 0);
-            HUD::SHOW_HUD_COMPONENT_THIS_FRAME(x - 1);
-            
-        }
-        if (IsKeyJustUp(VK_F16)) {
-            OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(MISC::GET_HASH_KEY("THEEND_DOOR_1"), 0, 0, 1);
-            OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(MISC::GET_HASH_KEY("THEEND_DOOR_2"), 0, 0, 1);
-            OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(MISC::GET_HASH_KEY("THEEND_DOOR_3"), 0, 0, 1);
+        if (IsKeyJustUp(VK_F16) && !capture.HasBeenCaptured()) {
+            capture.Capture();
+        } else if (IsKeyJustUp(VK_F14)) {
+            capture.Revert();
         }
         
         WAIT(0);

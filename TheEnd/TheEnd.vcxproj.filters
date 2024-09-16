@@ -67,6 +67,16 @@
     <ClCompile Include="CaptureSys\WeapComponent.cpp" />
     <ClCompile Include="CaptureSys\PlayerWeapon.cpp" />
     <ClCompile Include="Game\Hud\CWeaponWheel.cpp" />
+    <ClCompile Include="Game\Music\Track.cpp" />
+    <ClCompile Include="Game\Music\TrackMgr.cpp" />
+    <ClCompile Include="TheEnd\Music.cpp" />
+    <ClCompile Include="Game\Music\MusicInterface.cpp" />
+    <ClCompile Include="Game\Building\Interior\InterriorBase.cpp" />
+    <ClCompile Include="Game\Building\Casino.cpp" />
+    <ClCompile Include="Game\Building\Interior\InteriorMgr.cpp" />
+    <ClCompile Include="CaptureSys\CStat.cpp" />
+    <ClCompile Include="CaptureSys\CStatsCapture.cpp" />
+    <ClCompile Include="AI\EnemyAI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -148,6 +158,17 @@
     <ClInclude Include="CaptureSys\PlayerWeapon.h" />
     <ClInclude Include="CaptureSys\include.h" />
     <ClInclude Include="Game\Hud\CWeaponWheel.h" />
+    <ClInclude Include="Game\Music\Track.h" />
+    <ClInclude Include="Game\Music\TrackMgr.h" />
+    <ClInclude Include="TheEnd\Music.h" />
+    <ClInclude Include="Game\Music\MusicInterface.h" />
+    <ClInclude Include="Game\Building\Casino.h" />
+    <ClInclude Include="Game\Building\Interior\InterriorBase.h" />
+    <ClInclude Include="Game\Building\Interior\InteriorMgr.h" />
+    <ClInclude Include="DataTypes\IndexedUSet.h" />
+    <ClInclude Include="CaptureSys\CStatsCapture.h" />
+    <ClInclude Include="CaptureSys\CStat.h" />
+    <ClInclude Include="AI\EnemyAI.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

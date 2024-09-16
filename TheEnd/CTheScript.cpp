@@ -23,6 +23,7 @@ void CTheScript::OneTime() {
 	VEHICLE::SET_SPECIAL_FLIGHT_MODE_ALLOWED(DELUXO, 0);
 	VEHICLE::SET_DISABLE_HOVER_MODE_FLIGHT(DELUXO, 0);
 	VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(DELUXO, "OUTATIME");
+	AUDIO::SET_VEH_RADIO_STATION(DELUXO, "RADIO_OFF");
 }
 
 bool isWithinCircle(float x, float y, float circleX, float circleY, float radius) {
@@ -36,6 +37,8 @@ bool isWithinCircle(float x, float y, float circleX, float circleY, float radius
 }
 
 void CTheScript::Update() {
+	CheatHelper();
+	WarpStateManagement();
 	this->isPlayerInDeluxo = PED::IS_PED_IN_VEHICLE(PLAYER::PLAYER_PED_ID(), DELUXO, 0);
 	if (this->isPlayerInDeluxo) {
 		m_bSetVehicleDensityNow = this->isPlayerInDeluxo;
@@ -45,24 +48,9 @@ void CTheScript::Update() {
 		ClearTraffic();
 	}
 	SetupEnvironment();
-	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("CLEARSCRFX"))) {
-		this->Cheat_CLEARSCRFX();
-	}
 	CVector3<float> pos = WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition;
-	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("GOTODELUXO"))) {
-		this->Cheat_GOTODELUXO();
-	}
-	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("DEVSTAR_UT1")) || this->CurrentLevel == (int)CHECKPOINT::DREAM_SEQUENCE) {
-		m_bRenderUFOEffect = true;
-		float fLaunch = MISC::GET_GAME_TIMER();
-		WORLD->SetTimePersist(true, { 0,0,0 });
-		WORLD->SetBlackoutState(true); // setting the blackout to take effect
-		if (!HUD::DOES_BLIP_EXIST(Blip_MainObj)) {
-			scriptLogI("Main Obj blip does not exist!");
-			BlipSetup();
-		}
-		this->CurrentLevel = (int)CHECKPOINT::DREAM_SEQUENCE;
-		UFOSetup();
+	if (IsKeyJustUp(VK_DIVIDE)) {
+		//SummonArmyAI();
 	}
 	if (m_bRenderUFOEffect) {
 		GRAPHICS::DRAW_MARKER(1, -1725.449f, -190.3516f, this->m_fZGroundZCoord_UFO - 2.0f, 0, 0, 0, 0, 0, 0, 10, 10, 55, 93, 182, 229, 60, 0, 0, 0, 0, nullptr, nullptr, 0);
@@ -82,11 +70,183 @@ void CTheScript::Update() {
 			this->StartWarp();
 		}
 	}
+	if (isWithinCircle(pos.x, pos.y, -1725.309, -190.1009, 625) && this->m_CurrentScore.GetMood().first == SUSPENSE) { // suspense
+		this->m_CurrentScore.ChangeMood(ACTION); // action;
+	}
+
+	CTextUI(std::to_string(STREAMING::GET_PLAYER_SWITCH_STATE()), { 0.5,0.525 }, { 255,255,255,255 }).Draw();
+	
+	if (IsKeyJustUp(VK_ADD)) {
+		EHUD->GetFade()->DoFadeWhite(MISC::GET_GAME_TIMER());
+	}
+	if (this->isPlayerAwake && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0)) {
+		HUD::DISPLAY_RADAR(false); // global mission fx
+	} 
+	if (this->isPlayerAwake && PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 0) && HUD::IS_RADAR_HIDDEN()) {
+		HUD::DISPLAY_RADAR(true);
+	}
+	if (this->CurrentLevel == (int)CHECKPOINT::INSIDE_INTERIOR) {
+		if (!this->isPlayerAwake) {
+			MISC::SET_FAKE_WANTED_LEVEL(5);
+			
+			this->isPlayerAwake = true;
+		}
+		if (this->Scene.GetSceneProgression() >= 0.76 && this->Scene.GetAnimDictionary() == "switch@michael@wakes_up_screaming") {
+			scriptLogI("This part of the mission is not written yet!");
+			TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+			Scene.Destroy();
+		}
+		if (isWithinCircle(pos.x, pos.y, -1873.440, 3742.1902, 1.5f) && !this->m_bDoesHaveWeapon) { // && !this->m_bisWeaponGrabbed
+			GAMEHUD->GetHelpText()->SetHelpText("Press ~INPUT_CONTEXT~ to grab weapon.");
+			GAMEHUD->GetHelpText()->SetHelpTextCanRender(true);
+			GAMEHUD->GetHelpText()->RenderNow();
+			if (PAD::IS_CONTROL_JUST_RELEASED(0, 51) && !m_bDoesHaveWeapon) { // control_action / e
+				int TaskId = NULL;
+				TASK::OPEN_SEQUENCE_TASK(&TaskId);
+					TASK::TASK_GO_STRAIGHT_TO_COORD(NULL, -1873.1250f, 3742.7180f, -99.8454, 1.0f, 10000, 147.2582, 0.0f);
+					m_bDoesNeedToGetWeapon = true;
+				TASK::CLOSE_SEQUENCE_TASK(TaskId);
+				TASK::TASK_PERFORM_SEQUENCE(PLAYER::PLAYER_PED_ID(), TaskId);
+				TASK::CLEAR_SEQUENCE_TASK(&TaskId);
+			}
+			if (m_bDoesNeedToGetWeapon) {
+				if (WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition.Dist({ -1873.1250f, 3742.7180f, -99.8454 }) < .01f) {
+					Scene.Destroy();
+					Scene.SetupScene("anim@scripted@player@freemode@tun_prep_grab_midd_ig3@male@", { -1873.1250f, 3742.7180f, -99.8454 -1.0f }, { 0,0,147.2582f });
+					Scene.QueueAnimation(PLAYER::PLAYER_PED_ID(), "tun_prep_grab_midd_ig3");
+					Scene.RunScene();
+					this->m_bDoesHaveWeapon = true;
+					this->m_bDoesNeedToGetWeapon = false;
+				}
+			}
+		}
+		if (this->Scene.GetSceneProgression() >= 0.95f) {
+			Object weapon = OBJECT::GET_CLOSEST_OBJECT_OF_TYPE(-1873.440, 3742.1902, -99.8485, 0.05f, MISC::GET_HASH_KEY("w_pi_appistol"), 1,0,0);
+			if (ENTITY::IS_ENTITY_AN_OBJECT(weapon)) {
+				OBJECT::DELETE_OBJECT(&weapon); // deleteing from world.
+			}
+			WEAPON::GIVE_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), MISC::GET_HASH_KEY("WEAPON_APPISTOL"), 216, 0, 1);
+			TASK::CLEAR_PED_TASKS(PLAYER::PLAYER_PED_ID());
+			Scene.Destroy();
+		}
+		if (isPlayerInElevator()) {
+			GAMEHUD->GetHelpText()->SetHelpTextCanRender(true);
+			GAMEHUD->GetHelpText()->SetHelpText("Press ~INPUT_CONTEXT~ to leave the Silo.");
+			GAMEHUD->GetHelpText()->RenderNow();
+			if (PAD::IS_CONTROL_JUST_RELEASED(0, 51)) { // input context
+				GAMEHUD->GetHelpText()->SetHelpTextCanRender(false);
+				m_CurrentScore.ChangeMood(ACTION);
+				MISC::SET_FAKE_WANTED_LEVEL(0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 5, 0);
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+				EHUD->GetFade()->DoFadeWhite(MISC::GET_GAME_TIMER());
+			}
+			if (EHUD->GetFade()->GetIsHoldingFade()) {
+				AI.TriggerAI();
+				ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), -2055.498f, 3239.1194f, 31.4989f, 1,0,0,1);
+				ENTITY::SET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID(), 63.5304f);
+				EHUD->GetFade()->DoFadeOutWhite(MISC::GET_GAME_TIMER());
+				AI.TriggerAI();
+				iFrameStart = MISC::GET_GAME_TIMER();
+				this->CurrentLevel = (int)CHECKPOINT::INSIDE_MIL_BASE;
+			}
+		}
+	}
+	if (this->CurrentLevel == (int)CHECKPOINT::INSIDE_MIL_BASE) { // this entire segment is easy.
+		if (MISC::GET_HASH_KEY(this->GetZoneWherePlayerIs().c_str()) != MISC::GET_HASH_KEY("ARMYB")) {
+			HUD::FLASH_WANTED_DISPLAY(1);
+			this->Blip_MainObj = HUD::ADD_BLIP_FOR_COORD( -1038.108, -2737.415, 20.1693 );
+			if (HUD::DOES_BLIP_EXIST(this->Blip_MainObj)) {
+				HUD::SET_BLIP_ROUTE(this->Blip_MainObj, true);
+				HUD::SET_BLIP_SPRITE(this->Blip_MainObj, 90); // icon plane/flight_school
+				HUD::BEGIN_TEXT_COMMAND_SET_BLIP_NAME("STRING");
+					HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("Airport");
+				HUD::END_TEXT_COMMAND_SET_BLIP_NAME(this->Blip_MainObj);
+			}
+			this->CurrentLevel = (int)CHECKPOINT::DRIVING_TO_LSIA;
+		}
+	}	
+	if (this->CurrentLevel == (int)CHECKPOINT::DRIVING_TO_LSIA) {
+		/*
+		AP1_02_DOOR_R 
+			coords door_r{
+			-1044.840,
+			-2746.488,
+			22.0308
+			}
+		AP1_02_DOOR_L
+			coords door_l{
+				-1041.932,
+				-2748.167, 
+				22.0308
+			}
+			ped pathfinder target:
+			 -1044.812, 
+			 -2749.310,
+			 21.3634,
+			 150
+		*/
+		static bool isPadDisabled = false;
+		if(MISC::GET_HASH_KEY(GetZoneWherePlayerIs().c_str()) == MISC::GET_HASH_KEY("AIRP") && !this->m_bHasTextMessageBeenSent) {
+			SendTextMessage();
+			this->m_bHasTextMessageBeenSent = true;
+		}
+		if (WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition.Dist({-1038.108, -2737.415, 20.1693}) <= 5.0f) {
+			// Upon entering doors fade to black. open select menu. handle transfer to cayo or transfer to north yankton. handle cayo because its the easiest. then send. 
+			// 
+			isPadDisabled = true;
+		}
+		if (isPadDisabled) {
+			PAD::DISABLE_CONTROL_ACTION(0, 1, 0); // CAM Horizontal Movement
+			PAD::DISABLE_CONTROL_ACTION(0, 2, 0); // CAM vertical movement
+		}
+		if (IsKeyJustUp(VK_ADD)) {
+			isPadDisabled = false;
+		}
+	}
+	LockFirstPerson();
+}
+
+void CTheScript::TimeCopy(float fLaunch, int targetHours, int targetMinutes, int targetSeconds) {
+	auto interp_minutes = CConfigureTheEndAmbience::InterpolateTimeWithDuration(CLOCK::GET_CLOCK_HOURS(), CLOCK::GET_CLOCK_MINUTES(), targetHours, targetMinutes, 10000, fLaunch);
+	int clock_hours = static_cast<int>(interp_minutes) / 60;
+	int clock_minutes = static_cast<int>(interp_minutes) % 60;
+	if (clock_minutes >= 61) {
+		clock_hours += 1;
+		clock_minutes = 0;
+	}
+	if (clock_hours >= 25) {
+		clock_hours = 0;
+	}
+	CLOCK::SET_CLOCK_TIME(clock_hours, clock_minutes, 0);
+}
+
+void CTheScript::SendTextMessage() {
+	GRAPHICS::REQUEST_STREAMED_TEXTURE_DICT("char_default", 1);
+	while (!GRAPHICS::HAS_STREAMED_TEXTURE_DICT_LOADED("char_default")) {
+		WAIT(0);
+	}
+	HUD::BEGIN_TEXT_COMMAND_THEFEED_POST("STRING");
+	HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME("I see you've escaped. We should meet however I see you have your hands tied. Enjoy your flight.");
+	HUD::END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT_TU("char_default", "char_Default", 0, 1, "UNKNOWN", "", 1.0f);
+	AUDIO::PLAY_SOUND_FRONTEND(-1, "Text_Arrive_Tone", "Phone_SoundSet_Default", true);
+}
+
+std::string CTheScript::GetZoneWherePlayerIs() {
+	Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0);
+	return std::string(ZONE::GET_NAME_OF_ZONE(pos.x, pos.y, pos.z));
+}
+
+void CTheScript::WarpStateManagement() {
 	if (m_bsWarp.test(WARP_HAS_STARTED)) {
 		if (STREAMING::GET_PLAYER_SWITCH_STATE() == 5) {
 			STREAMING::SWITCH_TO_MULTI_SECONDPART(WarpPed);
 			m_bsWarp.set(WARP_TRANSITIONING, 1);
 			ambienceConfig.ClearAll();
+			WORLD->SetTimePersist(0, { 0,0,0 });
+			this->TimeCopy(MISC::GET_GAME_TIMER(), 12,0,0);
+			this->m_bCanMusicPlay = false;
+			this->m_CurrentScore.ChangeMood(AIRBORNE);
 			m_bsWarp.reset(WARP_HAS_STARTED);
 		}
 	}
@@ -103,13 +263,11 @@ void CTheScript::Update() {
 			m_bsWarp.reset(WARP_TRANSITIONING);
 		}
 	}
-	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("DEVSTAR_UT2"))) {
-		UT_2();
-	}
 	if (m_bsWarp.test(WARP_ENDING)) {
 		this->m_bDisplayHelpText = true;
 		WORLD->SetBlackoutState(false);
 		WORLD->SetBlackoutStateEffectVehicle(false);
+		this->m_bSetVehicleDensityNow = false;
 		m_WeaponCapture.Capture();
 		Scene.SetupScene("switch@michael@wakes_up_screaming", { -1873.391, 3748.26, -99.8408 }, { 0.0, 0.0, -8.9672 });
 		Scene.QueueAnimation(PLAYER::PLAYER_PED_ID(), "001671_02_mics2_1_wakes_up_screaming_exit");
@@ -118,44 +276,53 @@ void CTheScript::Update() {
 		this->CurrentLevel = (int)CHECKPOINT::INSIDE_INTERIOR;
 		HUD::REMOVE_BLIP(&this->Blip_MainObj);
 		OBJECT::DELETE_OBJECT(&this->OBJ_UFO);
+		UT_2();
 		this->m_bLockFirstPerson = true;
 		m_bsWarp.reset(WARP_ENDING);
 	}
-	CTextUI(std::to_string(STREAMING::GET_PLAYER_SWITCH_STATE()), { 0.5,0.525 }, { 255,255,255,255 }).Draw();
-	if (IsKeyJustUp(VK_MULTIPLY) || MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("STOPSYNC"))) {
-		scriptLogI("Cancelling Script Scene");
-		TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+}
+
+void CTheScript::CheatHelper() {
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("CLEARSCRFX"))) {
+		this->Cheat_CLEARSCRFX();
 	}
-	if (IsKeyJustUp(VK_ADD)) {
-		EHUD->GetFade()->DoWhiteScreenFade(false);
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("GOTODELUXO"))) {
+		this->Cheat_GOTODELUXO();
+	}
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("DEVSTAR_UT1")) || this->CurrentLevel == (int)CHECKPOINT::DREAM_SEQUENCE) {
+		m_bRenderUFOEffect = true;
+		float fLaunch = MISC::GET_GAME_TIMER();
+		WORLD->SetTimePersist(true, { 0,0,0 });
+		WORLD->SetBlackoutState(true); // setting the blackout to take effect
+		if (!HUD::DOES_BLIP_EXIST(Blip_MainObj)) {
+			scriptLogI("Main Obj blip does not exist!");
+			BlipSetup();
+		}
+		this->CurrentLevel = (int)CHECKPOINT::DREAM_SEQUENCE;
+		UFOSetup();
+	}
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("DEVSTAR_UT2"))) {
+		UT_2();
 	}
 	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("TESTANIM"))) {
 		SetupWarp();
 	}
-	if (this->CurrentLevel == (int)CHECKPOINT::INSIDE_INTERIOR) {
-		if (this->Scene.GetSceneProgression() >= 0.76 && this->Scene.GetAnimDictionary() == "switch@michael@wakes_up_screaming") {
-			scriptLogI("This part of the mission is not written yet!");
-			TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
-			Scene.Destroy();
-			this->m_bLockFirstPerson = false;
-		}
-		if (isWithinCircle(pos.x, pos.y, -1873.440, 3742.1902, 1.5f)) { // && !this->m_bisWeaponGrabbed
-			GAMEHUD->GetHelpText()->SetHelpText("Press ~INPUT_CONTEXT~ to grab weapon.");
-			GAMEHUD->GetHelpText()->RenderNow();
-			if (PAD::IS_CONTROL_JUST_RELEASED(0, 51)) { // control_action / e
-				Scene.Destroy();
-				Scene.SetupScene("anim@scripted@player@freemode@tun_prep_grab_midd_ig3@male@", { -1873.1250f, 3742.6252f, -100.685f }, { 0,0,147.2582f });
-				Scene.QueueAnimation(PLAYER::PLAYER_PED_ID(), "tun_prep_grab_midd_ig3");
-				Scene.RunScene();
-			}
-		}
-		if (this->Scene.GetSceneProgression() >= 0.91f) {
-			WEAPON::GIVE_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), MISC::GET_HASH_KEY("WEAPON_APPISTOL"), 216, 0, 1);
-			TASK::CLEAR_PED_TASKS(PLAYER::PLAYER_PED_ID());
-			Scene.Destroy();
-		}
+	if (IsKeyJustUp(VK_MULTIPLY) || MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("STOPSYNC"))) {
+		scriptLogI("Cancelling Script Scene");
+		TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
 	}
-	LockFirstPerson();
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("GOTOSILO"))) {
+		WORLD->GetLocalPlayer()->SetCoordinates({  -1873.391, 3748.26, -99.3408  });
+	}
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("RESET_GLOBALS"))) {
+		Cheat_ResetGlobals();
+	}
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("DEVSTAR_UT3"))) {
+		UT_3();
+	}
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("DO_TEST_WARP"))) {
+		StartWarp();
+	}
 }
 
 void CTheScript::SetupEnvironment() {
@@ -183,6 +350,13 @@ void CTheScript::BoxCheck() {
 			WORLD->SetBlackoutStateEffectVehicle(false);
 			ClearTraffic();
 		}
+		if (!this->m_bIsMusicActive && this->m_bCanMusicPlay) {
+			AUDIO::SET_AUDIO_FLAG("ActivateSwitchWheelAudio", false);
+			AUDIO::SET_AUDIO_FLAG("WantedMusicDisabled", true);
+			this->m_CurrentScore.PlayTrack(SUSPENSE); // SUSPENSE
+			scriptLogI("[AUD], Setting Track score to: SUSPENSE");
+			this->m_bIsMusicActive = true;
+		}
 	}
 }
 
@@ -204,10 +378,49 @@ void CTheScript::Cheat_GOTODELUXO() {
 	STREAMING::SWITCH_TO_MULTI_SECONDPART(player);
 }
 
+void CTheScript::Cheat_ChangeScore() {
+}
+
+void CTheScript::Cheat_ResetGlobals() {
+	scriptLogI("[CHEAT] Activated");
+	this->m_bDoesHaveWeapon = false;
+	this->m_bDoesNeedToGetWeapon = false;
+	this->m_CurrentScore.CancelTrack(CMusicTrack::sMusicCancel{ CMusicTrack::sMusicCancel::GLOB_KILL_MUSIC, {""} });
+	this->m_bDisplayHelpText = true;
+	this->m_bCanMusicPlay = true;
+	this->isPlayerAwake = false;
+	HUD::DISPLAY_RADAR(true);
+	if (MISC::GET_FAKE_WANTED_LEVEL() > 0) {
+		MISC::SET_FAKE_WANTED_LEVEL(0);
+	}
+	//this->m_bCanEnemiesSpawn = true;
+	this->m_bIsAmbienceConfigured = false;
+	this->ambienceConfig.ClearAll();
+	this->m_bConfigureAmbience = false;
+	this->CurrentLevel = -1;
+	//this->m_AllPeds.clear();
+	this->m_bRenderUFOEffect = false;
+	this->m_bIsMusicActive = false;
+	//his->m_CurrentEnemyBatch.clear();
+	if (HUD::DOES_BLIP_EXIST(this->Blip_MainObj)) {
+		HUD::REMOVE_BLIP(&this->Blip_MainObj);
+	}
+	this->isPlayerInDeluxo = false;
+	this->m_bLockFirstPerson = false;
+	this->m_WeaponCapture.Revert();
+	this->m_fStartTime = 0;
+	this->m_bsWarp.reset();
+	//this->m_bShouldEnemiesSpawn = false;
+	WORLD->ResetTime();
+
+}
+
 void CTheScript::UT_2() {
 	scriptLogI("Simulating Wake");
 	this->CurrentLevel = (int)CHECKPOINT::INSIDE_INTERIOR; // simulation of after the scene == 0.76
-
+	//this->m_bCanEnemiesSpawn = true;
+	//this->m_bShouldEnemiesSpawn = true;
+	//this->m_iLastSpawnTime = MISC::GET_GAME_TIMER();
 	Hash h = MISC::GET_HASH_KEY("v_ilev_garageliftdoor");
 	Hash weap = MISC::GET_HASH_KEY("w_pi_appistol");
 	STREAMING::REQUEST_MODEL(weap);
@@ -215,11 +428,10 @@ void CTheScript::UT_2() {
 	while (!STREAMING::HAS_MODEL_LOADED(h) && !STREAMING::HAS_MODEL_LOADED(weap)) {
 		WAIT(0);
 	}
-
 	//LEFT
 	Object DoorLeft = -1;
 	Object DoorRight = -1;
-	Object Weapon = -1;
+	Object Weapon = -1; // fuck meeee port this to class. 
 	if (!OBJECT::DOES_OBJECT_OF_TYPE_EXIST_AT_COORDS(-1920.684, 3749.0371, -100.6573, 0.05f, h, 0)) {
 		 DoorLeft = OBJECT::CREATE_OBJECT(h, -1920.684, 3749.0371, -100.6573, 1, 0, 0);
 	} else {
@@ -259,6 +471,11 @@ void CTheScript::UT_2() {
 	OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(MISC::GET_HASH_KEY("THEEND_DOOR_2"), 1, 0, 1);
 	OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(MISC::GET_HASH_KEY("THEEND_DOOR_3"), 1, 0, 1);
 	this->CurrentLevel = (int)CHECKPOINT::INSIDE_INTERIOR;
+}
+
+void CTheScript::UT_3() {
+	scriptLogI("[CHEAT] Triggered");
+	this->CurrentLevel = (int)CHECKPOINT::INSIDE_MIL_BASE;
 }
 
 void CTheScript::ClearTraffic() {
@@ -318,25 +535,6 @@ void CTheScript::LockFirstPerson() {
 		CAM::SET_FOLLOW_VEHICLE_CAM_VIEW_MODE(4);
 	}
 }
-//if (PED::GET_SYNCHRONIZED_SCENE_PHASE(m_iSceneId) >= 0.85f) {
-//	scriptLogI("Starting wake up scene...");
-//	STREAMING::SWITCH_TO_MULTI_FIRSTPART(PLAYER::PLAYER_PED_ID(), 0, 1);
-//	Ped p = PED::CLONE_PED(PLAYER::PLAYER_PED_ID(), 1, 0, 1);
-//	ENTITY::SET_ENTITY_COORDS(p, -1873.391, 3748.26, -99.8408, 1, 0, 0, 0);
-//	STREAMING::SWITCH_TO_MULTI_SECONDPART(p);
-//	GAMEHUD->GetSpinner()->ForceStopRender();
-//	TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
-//	//ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), 1);
-//	while (STREAMING::IS_PLAYER_SWITCH_IN_PROGRESS()) {
-//		if (STREAMING::GET_PLAYER_SWITCH_STATE() == 7) {
-//			scriptLogI("We're launching the script here");
-//			TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
-//			ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), -1873.391, 3748.26, -99.8408, 1, 0, 0, 0);
-//			this->CurrentLevel = (int)CHECKPOINT::INSIDE_INTERIOR;
-//			break;
-//		}
-//		WAIT(0);
-//	}
-//	m_bDisplayHelpText = true;
-//	this->m_iSceneId = -1;
-//}
+bool CTheScript::isPlayerInElevator() {
+	return (WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition.Dist({-1922.2150f, 3749.8501f, -100.6458f}) < 2.0f);
+}

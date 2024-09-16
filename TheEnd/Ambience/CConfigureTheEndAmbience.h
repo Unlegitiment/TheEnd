@@ -16,28 +16,30 @@ private:
 	};
 	std::bitset<8> m_Set;
 	int m_LaunchTime;
-	__forceinline float easeInOutQuad(float t) {
+	static __forceinline float easeInOutQuad(float t) {
 		if (t < 0.5f) {
 			return 2 * t * t;
 		} else {
 			return -1 + (4 - 2 * t) * t;
 		}
 	}
-	__forceinline float easeInOutCubic(float x) {
+	static __forceinline float easeInOutCubic(float x) {
 		if (x < 0.5) {
 			return 4 * x * x * x;
 		} else {
 			return 1 - std::pow(-2 * x + 2, 3) / 2;
 		}
 	}
-	__forceinline float easeInOutSine(float f) {
+	static __forceinline float easeInOutSine(float f) {
 		return -(cos(3.14159 * f) - 1) / 2;
 	}
-	float Interpolate(float startValue, float endValue, float startTime, float duration, float currentTime);
-	float InterpolateTimeWithDuration(int startHour, int startMinute, int targetHour, int targetMinute, float durationMs, long long startTimeMs);
-	float Lerp(float start, float end, float t);
-	float InterpolateTime(int startHour, int startMinute, int endHour, int endMinute, float t);
-	int TimeToMinutes(int hour, int minute);
+public:
+	static float Interpolate(float startValue, float endValue, float startTime, float duration, float currentTime);
+	static float InterpolateTimeWithDuration(int startHour, int startMinute, int targetHour, int targetMinute, float durationMs, long long startTimeMs);
+	static float Lerp(float start, float end, float t);
+	static float InterpolateTime(int startHour, int startMinute, int endHour, int endMinute, float t);
+	static int TimeToMinutes(int hour, int minute);
+private:
 	float InterpTimeProgress;
 	float InterpTimeCycleProgress;
 	float InterpWeatherProgress;

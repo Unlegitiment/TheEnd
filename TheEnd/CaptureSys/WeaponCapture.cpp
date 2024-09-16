@@ -12,12 +12,18 @@ void CWeaponCapture::Capture() {
 			// as such we're just gonna drop all weapon components as soon as we give the weapon back because its REALLY annoying to get components.
 			int ammClip = 0;
 			WEAPON::GET_AMMO_IN_CLIP(PLAYER::PLAYER_PED_ID(), it->first, &ammClip);
+			for (const char* component : WeaponComponents) {
+				if (WEAPON::HAS_PED_GOT_WEAPON_COMPONENT(PLAYER::PLAYER_PED_ID(), it->first, MISC::GET_HASH_KEY(component))) { // this is going to take a sweet minute jesus. computers are fast but god damn is this a bad idea.
+					weap.AddWeaponComponent(component);
+				}
+			}
 			weap.SetAmmoInClip(ammClip);
 			weap.SetAmmo(WEAPON::GET_AMMO_IN_PED_WEAPON(PLAYER::PLAYER_PED_ID(), it->first));
 			this->m_CapturedWeapons.push_back(weap);
 			if (it->first == 2725352035) {
 				continue; // so we don't remove the player's fists lul
 			}
+			WEAPON::SET_PED_AMMO(PLAYER::PLAYER_PED_ID(), weap.GetWeapon(), 0, 1);
 			WEAPON::REMOVE_WEAPON_FROM_PED(PLAYER::PLAYER_PED_ID(), it->first);
 			scriptLogI("\n\tWeaponName: ", weap.GetName(this));
 		}
@@ -32,9 +38,17 @@ void CWeaponCapture::Reset() {
 void CWeaponCapture::Revert() {
 	for (auto it = this->GetCaptured()->begin(); it != GetCaptured()->end(); it++) {
 		CPlayerWeapon* weap = const_cast<CPlayerWeapon*>(&(*it));
+		scriptLogI("Giving Weapon: ", weap->GetName(this));
 		WEAPON::GIVE_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), weap->GetWeapon(), weap->GetAmmo(), 0, 0);
+		for (const char* component : *(weap->GetAllWeaponComponentVec())) {
+			scriptLogI("Giving Weapon Component: ", component); 
+			WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(PLAYER::PLAYER_PED_ID(), weap->GetWeapon(), MISC::GET_HASH_KEY(component));
+		}
 		WEAPON::SET_AMMO_IN_CLIP(PLAYER::PLAYER_PED_ID(), weap->GetWeapon(), weap->GetAmmoInClip());
+		WEAPON::SET_PED_AMMO(PLAYER::PLAYER_PED_ID(), weap->GetWeapon(), weap->GetAmmo(), 1);
 	}
+	const_cast<std::vector<CPlayerWeapon>*>(this->GetCaptured())->clear();
+	this->isCaptured = false;
 }
 
 void CWeaponCapture::Delete() {

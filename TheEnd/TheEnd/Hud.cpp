@@ -19,7 +19,7 @@ void CTheEndHud::OneTick() {
 }
 
 void CTheEndHud::Update() {
-    this->GetFade()->Render();
+    this->GetFade()->Update();
     if (DoesDisplayMenu) {
         this->mMenu.Update();
     }
@@ -29,5 +29,6 @@ void CTheEndHud::Update() {
     if (IsKeyJustUp(VK_F13)) {
         DoesDisplayMenu = !DoesDisplayMenu;
     }
+
     
 }

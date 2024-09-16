@@ -13,7 +13,7 @@ private:
 		float fAnimProgression = 0.0f;
 		const char* pAnimName;
 		Entity ObjectInScene;  
-		float blendIn = 1.0f, blendOut = 1.0f, moverBlendDelta = 1.0f;
+		float blendIn = 1.0f, blendOut = 1.0f, moverBlendDelta = 0.0f;
 		int flags = 0, ragdollBlockingFlags = 0, ikFlags = 0;
 	};
 	float m_fSceneProgression = 0.0f;

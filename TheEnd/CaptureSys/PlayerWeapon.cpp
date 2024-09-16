@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "../SHVNative/natives.h"
 #include "./WeaponCapture.h"
+#include "./include.h"
 CPlayerWeapon::CPlayerWeapon(const char* weaponName) {
 	this->m_u64WeapHash = MISC::GET_HASH_KEY(weaponName);
 	this->m_u64ModelHash = WEAPON::GET_WEAPONTYPE_MODEL(this->m_u64WeapHash);
@@ -10,6 +11,11 @@ CPlayerWeapon::CPlayerWeapon(const char* weaponName) {
 CPlayerWeapon::CPlayerWeapon(CPlayerWeapon::Hash weaponHash) {
 	this->m_u64WeapHash = weaponHash;
 	this->m_u64ModelHash = WEAPON::GET_WEAPONTYPE_MODEL(this->m_u64WeapHash);
+}
+
+void CPlayerWeapon::AddWeaponComponent(const char* comp) {
+	this->m_ComponentsOnGun.push_back(comp);
+	scriptLogI("\n\tWeapon Comp: ", comp, " \n\tOn weapon: ", this->GetName(WEAP_CAP));
 }
 
 CPlayerWeapon::Hash CPlayerWeapon::GetModel() {
@@ -40,4 +46,16 @@ void CPlayerWeapon::SetAmmo(int amm) {
 
 void CPlayerWeapon::SetAmmoInClip(int amm) {
 	this->m_iAmmoInClip = amm;
+}
+
+std::string CPlayerWeapon::GetAllWeaponComponents() {
+	std::stringstream buffer;
+	for (const char* weapComponent : this->m_ComponentsOnGun) {
+		buffer << weapComponent << std::endl;
+	}
+	return buffer.str();
+}
+
+std::vector<CPlayerWeapon::WeaponComponent>* CPlayerWeapon::GetAllWeaponComponentVec() {
+	return &this->m_ComponentsOnGun;
 }

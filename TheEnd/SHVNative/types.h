@@ -13,7 +13,7 @@
 #define scriptLogI(...) netLogger->LogInfo(eLoggerState::INFO, true, __FUNCTION__,": " ,__VA_ARGS__)
 #define scriptLogW(...) netLogger->LogInfo(eLoggerState::WARN, true, __FUNCTION__,": " ,__VA_ARGS__)
 #define scriptLogE(...) netLogger->LogInfo(eLoggerState::ERROR2, true, __FUNCTION__,": " ,__VA_ARGS__)
-#define scriptLogF(...) netLogger->LogInfo(eLoggerState::FATAL, true, __FUNCTION__, ": ", __VA_ARGS__) // this should also trigger a script crash.
+#define scriptLogF(...) netLogger->LogInfo(eLoggerState::FATAL, true, __FUNCTION__, ": ", __VA_ARGS__); exit(0)
 typedef DWORD Void;
 typedef DWORD Any;
 typedef DWORD uint;
@@ -124,7 +124,7 @@ public:
 	{
 	}
 public:
-	T Dist(CVector3& other) {
+	T Dist(const CVector3& other) {
 		T xsub, ysub, zsub;
 		xsub = other.x - this->x;
 		ysub = other.y - this->y;
@@ -141,6 +141,12 @@ public:
 	}
 	std::string toStr() {
 		return std::string(std::to_string(this->x) + " " + std::to_string(this->y) + " " + std::to_string(this->z) + " ");
+	}
+	std::string toStr() const {
+		return std::string(std::to_string(this->x) + " " + std::to_string(this->y) + " " + std::to_string(this->z) + " ");
+	}
+	bool operator==(const CVector3& other) {
+		return (this->x == other.x && this->y == other.y && this->z == other.z);
 	}
 	T z;
 	DWORD _paddingZ_;
