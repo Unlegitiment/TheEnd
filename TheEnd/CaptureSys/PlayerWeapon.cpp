@@ -4,6 +4,7 @@
 #include "../SHVNative/natives.h"
 #include "./WeaponCapture.h"
 #include "./include.h"
+#include <sstream>
 CPlayerWeapon::CPlayerWeapon(const char* weaponName) {
 	this->m_u64WeapHash = MISC::GET_HASH_KEY(weaponName);
 	this->m_u64ModelHash = WEAPON::GET_WEAPONTYPE_MODEL(this->m_u64WeapHash);
@@ -15,7 +16,7 @@ CPlayerWeapon::CPlayerWeapon(CPlayerWeapon::Hash weaponHash) {
 
 void CPlayerWeapon::AddWeaponComponent(const char* comp) {
 	this->m_ComponentsOnGun.push_back(comp);
-	scriptLogI("\n\tWeapon Comp: ", comp, " \n\tOn weapon: ", this->GetName(WEAP_CAP));
+	scriptLogI("\n\tWeapon Comp: %s\n\tOn Weapon: %s", comp, this->GetName(WEAP_CAP));
 }
 
 CPlayerWeapon::Hash CPlayerWeapon::GetModel() {

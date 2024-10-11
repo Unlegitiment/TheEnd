@@ -4,7 +4,7 @@
 #include "./CGameStream.h"
 #include "./Objects/CPlayer.h"
 #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
-#define cus_new(T) new T(); scriptLogI("new object of type: ", #T, "@", __FILENAME__,"::", __LINE__);
+#define cus_new(T) new T(); scriptLogI("new object of type: %s@%s::%i", #T, __FILENAME__,__LINE__);
 int CGameWorld::FindEntityInWorld(CVector3<float>& location) {
     return 0;
 }
@@ -28,6 +28,8 @@ void CGameWorld::Init() {
 
 void CGameWorld::Destroy() {
     delete this->m_pInteriorManager; // we clean up heap here.
+    delete this->m_pStreamingManager;
+    delete this->m_pPlayer;
 }
 
 CGameWorld::~CGameWorld() {
@@ -114,13 +116,13 @@ void CGameWorld::WORLD_DISABLE_LOS_SANTOS() { // its easy just enable heist isla
 
     if (this->m_GameStateInformation.test(LOADBIT) && !this->m_GameStateInformation.test(LOADEDBIT)) {
         if (this->GetInteriorManager()->SummonInteriorOfType<DISABLE_LOS_SANTOS>()) { //  alright we only need to check it once.
-            scriptLogI("Enabling Interior: ", mInteriorName);
+            scriptLogI("Enabling Interior: %s", mInteriorName);
             this->m_GameStateInformation.set(LOADEDBIT, true);
             this->m_GameStateInformation.set(LOADBIT, false);
         }
     } else if (this->m_GameStateInformation.test(LOADEDBIT) && !this->m_GameStateInformation.test(LOADBIT)) {
         if (this->GetInteriorManager()->DisableInteriorOfType<DISABLE_LOS_SANTOS>()) { // fuck y'all.
-            scriptLogI("Disabling Interior: ", mInteriorName);
+            scriptLogI("Disabling Interior: %s", mInteriorName);
             this->m_GameStateInformation.set(LOADEDBIT, false);
             this->m_GameStateInformation.set(LOADBIT, false);
         }
@@ -134,13 +136,13 @@ void CGameWorld::WORLD_LOAD_NY() {
 
     if (this->m_GameStateInformation.test(LOADBIT) && !this->m_GameStateInformation.test(LOADEDBIT)) {
         if (this->GetInteriorManager()->SummonInteriorOfType<NORTH_YANKTON>()) { //  alright we only need to check it once.
-            scriptLogI("Enabling Interior: ", mInteriorName);
+            scriptLogI("Enabling Interior: %s", mInteriorName);
             this->m_GameStateInformation.set(LOADEDBIT, true);
             this->m_GameStateInformation.set(LOADBIT, false);
         }
     } else if (this->m_GameStateInformation.test(LOADEDBIT) && !this->m_GameStateInformation.test(LOADBIT)) {
         if (this->GetInteriorManager()->DisableInteriorOfType<NORTH_YANKTON>()) {
-            scriptLogI("Disabling Interior: ", mInteriorName);
+            scriptLogI("Disabling Interior: %s", mInteriorName);
             this->m_GameStateInformation.set(LOADEDBIT, false);
             this->m_GameStateInformation.set(LOADBIT, false);
         }
@@ -164,13 +166,13 @@ void CGameWorld::WORLD_LOAD_CAYO() { // two methods we either A) use the preexis
 
     if (this->m_GameStateInformation.test(LOADBIT) && !this->m_GameStateInformation.test(LOADEDBIT)) {
         if (this->GetInteriorManager()->SummonInteriorOfType<CAYO_PERICO>()) { //  alright we only need to check it once.
-            scriptLogI("Enabling Interior: ", mInteriorName);
+            scriptLogI("Enabling Interior: %s", mInteriorName);
             this->m_GameStateInformation.set(LOADEDBIT, true);
             this->m_GameStateInformation.set(LOADBIT, false);
         }
     } else if (this->m_GameStateInformation.test(LOADEDBIT) && !this->m_GameStateInformation.test(LOADBIT)) {
         if (this->GetInteriorManager()->DisableInteriorOfType<CAYO_PERICO>()) {
-            scriptLogI("Disabling Interior: ", mInteriorName);
+            scriptLogI("Disabling Interior: %s", mInteriorName);
             this->m_GameStateInformation.set(LOADEDBIT, false);
             this->m_GameStateInformation.set(LOADBIT, false);
         }

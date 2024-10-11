@@ -12,7 +12,7 @@ void CMilitaryAI::SummonAllVehicles() {
 		while (!STREAMING::HAS_MODEL_LOADED(h)) WAIT(0);
 		auto vehicle = VEHICLE::CREATE_VEHICLE(h, it.second.x, it.second.y, it.second.z, it.second.h, 1, 0, 1);
 		this->m_SummonedVehicles.push_back(vehicle);
-		scriptLogI("Spawning Vehicle: ", GetModelString(it.first));
+		scriptLogI("Spawning Vehicle: %s", GetModelString(it.first));
 	}
 }
 Hash CMilitaryAI::GetModelHashFromVehicle(eVehicle veh) {
@@ -31,7 +31,7 @@ std::string CMilitaryAI::GetModelString(eVehicle veh) {
 	case FIB: return "fbi";
 	case BARRACKS: return "barracks";
 	default:
-		scriptLogE("Invalid object passed: ", veh);
+		scriptLogE("Invalid object passed: %i", veh);
 		return "";
 	}
 	return std::string();
@@ -61,7 +61,7 @@ void CMilitaryAI::GivePedWeaponBasedOnEnemyType(const sEnemyInfo& s) {
 		case SUIT:
 			WEAPON::GIVE_WEAPON_TO_PED(s.pedIndex, MISC::GET_HASH_KEY(SUIT_WEAPON), 120, 0, 1);
 			break;
-		default: scriptLogW("Invalid object passed: ", s.enemyType); break;
+		default: scriptLogW("Invalid object passed: %i", s.enemyType); break;
 	}
 }
 void CMilitaryAI::ActivateCombatOnPlayer(const sEnemyInfo& p) {
@@ -77,7 +77,7 @@ void CMilitaryAI::SummonRandomPed(eEnemyType type, CVector3<float> pos) {
 	eGovernmentEnemy GOV_ENTITY_TYPE = PedModelIndex[RandomPedIndex];
 	Hash pedHash = ArmyEnumToModel(GOV_ENTITY_TYPE); // summon a randomized ped based on the enemy thing.
 	STREAMING::REQUEST_MODEL(pedHash);
-	scriptLogI("Spawning Ped: ", pedHash, "\n\t@: ", pos.toStr(), "\n\tEnemy Type: ", type);
+	scriptLogI("Spawning Ped: %i\n\t@%s\n\tEnemy Type: %i", pedHash, pos.toStr().c_str(), type);
 	Ped p = PED::CREATE_PED(0, pedHash, pos.x, pos.y, pos.z, 273, 1, 0);
 	this->m_SpawnedByPeds.push_back({GOV_ENTITY_TYPE, pedHash, type, p});
 }

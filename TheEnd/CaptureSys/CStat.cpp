@@ -26,12 +26,12 @@ void CStat::ModifyStat(T _newStatVal) {
     MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME(SCRIPT_);
     WAIT(50);
     STATS::STAT_SET_INT(MISC::GET_HASH_KEY(m_FullStatName), _newStatVal, 1);
-    scriptLogI("Setting stat: ", m_FullStatName, " to ", _newStatVal, " Character: ", EnumToString(this->m_CharacterThatStatBelongsTo));
+    scriptLogI("Setting stat: %s to %i on Character: %s", m_FullStatName, _newStatVal, EnumToString(this->m_CharacterThatStatBelongsTo));
     int StatVal = -1;
     STATS::STAT_GET_INT(MISC::GET_HASH_KEY(m_FullStatName), &StatVal, -1);
-    scriptLogI("StatsVal: ", StatVal);
+    scriptLogI("StatsVal: %i", StatVal);
     STATS::STAT_GET_INT(MISC::GET_HASH_KEY(m_FullStatName), &StatVal, -1);
-    scriptLogI("StatsVal: ", StatVal);
+    scriptLogI("StatsVal: %i", StatVal);
 }
 
 CStat::eCharacter CStat::DeduceCharacterFromStat(const char* statName) {

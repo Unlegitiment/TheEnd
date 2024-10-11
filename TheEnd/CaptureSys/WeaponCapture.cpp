@@ -23,10 +23,14 @@ void CWeaponCapture::Capture() {
 			if (it->first == 2725352035) {
 				continue; // so we don't remove the player's fists lul
 			}
-			WEAPON::SET_PED_AMMO(PLAYER::PLAYER_PED_ID(), weap.GetWeapon(), 0, 1);
 			WEAPON::REMOVE_WEAPON_FROM_PED(PLAYER::PLAYER_PED_ID(), it->first);
-			scriptLogI("\n\tWeaponName: ", weap.GetName(this));
+			scriptLogI("WeaponName: %s\n\tWeaponAmmo: %i", weap.GetName(this), weap.GetAmmo());
 		}
+	}
+	for (auto it = this->GetCaptured()->begin(); it != GetCaptured()->end(); it++) {
+		auto* real_it = static_cast<std::vector<CPlayerWeapon>::iterator*>(&it);
+		WEAPON::SET_PED_AMMO(PLAYER::PLAYER_PED_ID(), real_it->_Ptr->GetWeapon(), 0, 1); // issue was with weapon class because each weapon in a weapon class shares ammo. which is really unrealistic. anyways yeah this is basically the work around to that because it would fetch 0's from above. just gotta hope that it scales a little better. 
+
 	}
 	this->isCaptured = true;
 }
@@ -38,10 +42,10 @@ void CWeaponCapture::Reset() {
 void CWeaponCapture::Revert() {
 	for (auto it = this->GetCaptured()->begin(); it != GetCaptured()->end(); it++) {
 		CPlayerWeapon* weap = const_cast<CPlayerWeapon*>(&(*it));
-		scriptLogI("Giving Weapon: ", weap->GetName(this));
+		scriptLogI("Giving Weapon: %s", weap->GetName(this));
 		WEAPON::GIVE_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), weap->GetWeapon(), weap->GetAmmo(), 0, 0);
 		for (const char* component : *(weap->GetAllWeaponComponentVec())) {
-			scriptLogI("Giving Weapon Component: ", component); 
+			scriptLogI("Giving Weapon Component: %s", component); 
 			WEAPON::GIVE_WEAPON_COMPONENT_TO_PED(PLAYER::PLAYER_PED_ID(), weap->GetWeapon(), MISC::GET_HASH_KEY(component));
 		}
 		WEAPON::SET_AMMO_IN_CLIP(PLAYER::PLAYER_PED_ID(), weap->GetWeapon(), weap->GetAmmoInClip());

@@ -76,11 +76,11 @@ void CTheEndPauseMenu::Update() {
                 //    this->m_iPaginatorSelection =+ 1;
                 //}
                 this->m_iPaginatorSelection = (m_iPaginatorSelection + 1 < this->GetPaginator()->GetMaxSelections() ? m_iPaginatorSelection += 1 : 0);
-                scriptLogI("RIGHT PRESSED!\n\tUpdating m_iSelection : ", this->m_iPaginatorSelection, " \n\tMax Selections : ", GetPaginator()->GetMaxSelections());
+                scriptLogI("RIGHT PRESSED!\n\tUpdating m_iSelection : %i\n\tMax Selections :%i", this->m_iPaginatorSelection, GetPaginator()->GetMaxSelections());
             }
             if (IsKeyJustUp(VK_LEFT)) {
                 this->m_iPaginatorSelection = (m_iPaginatorSelection - 1 >= 0 ? m_iPaginatorSelection - 1 : this->GetPaginator()->GetMaxSelections() - 1);
-                scriptLogI("LEFT PRESSED! \n\tUpdating m_iSelection: ", this->m_iPaginatorSelection, " \n\tMax Selections: ", GetPaginator()->GetMaxSelections());
+                scriptLogI("LEFT PRESSED!\n\tUpdating m_iSelection : %i\n\tMax Selections :%i", this->m_iPaginatorSelection, GetPaginator()->GetMaxSelections());
             }
             if (IsKeyJustUp(VK_RETURN)) {
                 this->m_iPageSelection = 0;
@@ -106,7 +106,7 @@ void CTheEndPauseMenu::Update() {
                     this->m_iPageSelection = -1;
                 }
                 this->m_iPageSelection++;
-                scriptLogI("called DOWN PRESSED! m_iPageSelection: ", this->m_iPageSelection);
+                scriptLogI("called DOWN PRESSED! m_iPageSelection: %i", this->m_iPageSelection);
             }
             if (IsKeyJustUp(VK_UP)) {
                 if (this->m_iPageSelection == 0) {
@@ -114,7 +114,7 @@ void CTheEndPauseMenu::Update() {
                     return;
                 }
                 this->m_iPageSelection--;
-                scriptLogI("called UP PRESSED! m_iPageSelection: ", this->m_iPageSelection);
+                scriptLogI("called UP PRESSED! m_iPageSelection: %i", this->m_iPageSelection);
 
             }
             if (IsKeyJustUp(VK_RETURN)) {

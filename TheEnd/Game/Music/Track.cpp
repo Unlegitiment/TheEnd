@@ -4,9 +4,9 @@ CGameTrack::CGameTrack(const TrackName track, std::vector<TrackMood> moods) :
     m_TrackName(track),
     m_TrackMood(moods)
 { 
-    scriptLogI("Track: ", track.c_str());
+    scriptLogI("Track: %s", track.c_str());
     for (TrackMood trackM : moods) {
-        scriptLogI("Track Mood Loaded: ", trackM.c_str());
+        scriptLogI("Track Mood Loaded: %s", trackM.c_str());
     }
 }
 

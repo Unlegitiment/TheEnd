@@ -43,7 +43,36 @@
 #include "./Game/Building/Casino.h"
 #include "./CaptureSys/CStat.h"
 #include "./AI/EnemyAI.h"
+#include "./MenuAPI/PlayerMenu.h"
+#include "./Game/Interior/InteriorManager.h"
+#include "DebugMenu.h"
+#include "./PauseMenuItems/MenuRework/GTAVIM.h"
+#include "./TerminalColors.h"
+enum TEST_VAL {
+    DOES_NEED_WARP,
+    WARP_CAYO,
+    TEST_VAL_MAX
+};
+// This entire function was funky to write. However it makes sense to some degree. 
+void ScriptId() {
+    int CurScriptId = 0;
+    std::string strName;
+    SCRIPT::SCRIPT_THREAD_ITERATOR_RESET();
+    CurScriptId = SCRIPT::SCRIPT_THREAD_ITERATOR_GET_NEXT_THREAD_ID();
+    while (SCRIPT::IS_THREAD_ACTIVE(CurScriptId)) {
+        strName = SCRIPT::GET_NAME_OF_SCRIPT_WITH_THIS_ID(CurScriptId);
+        scriptLogI("Script Name: ", strName.c_str(), " ID: ", CurScriptId);
+#ifdef DES_GAME
+        if (strName != "main" || strName != "main_persistent" || strName != "theend.asi") {
+            SCRIPT::TERMINATE_THREAD(CurScriptId);
+        }
+#endif //DES_GAME
+        CurScriptId = SCRIPT::SCRIPT_THREAD_ITERATOR_GET_NEXT_THREAD_ID();
+        WAIT(0);
+    }
+}
 void main() {
+    std::bitset<TEST_VAL::TEST_VAL_MAX> m_BitSet;
     CMilitaryAI temp = CMilitaryAI();
     CWeaponCapture capture = CWeaponCapture();
     THEENDSCRIPT->OneTime();
@@ -56,14 +85,17 @@ void main() {
     bool fuckupminimap = true;
     const char* AlarmStr = "PORT_OF_LS_HEIST_FORT_ZANCUDO_ALARMS";
     auto x = 0;
-    while (true){ // we've turned off the normal loop here for smaller testing of the program. sGameWorld being still active however.
-        if (IsKeyJustUp(VK_DIVIDE)) {
-            temp.TriggerAI();
-        }
-        if (IsKeyJustUp(VK_MULTIPLY)) {
-            temp.RemoveAllPedsSummoned();
-            temp.RemoveAllVehiclesInScene();
-        }
+    bool isPlayerMenuShowing = false;
+    int selected = 0;
+    Ped WarpPed = 0;
+    bool hasSwitchBeenInit = false;
+    bool runOneIterator = true;
+    bool m_bIsShowing = false;
+    CGTAVMenu::CGTAVHeader headerTest = CGTAVMenu::CGTAVHeader("Player", "Menu", "Name");
+    scriptLogI("GET_ID_OF_THIS_THREAD()::%i", SCRIPT::GET_ID_OF_THIS_THREAD());
+    scriptLogI("GET_NAME()::%s", SCRIPT::GET_NAME_OF_SCRIPT_WITH_THIS_ID(SCRIPT::GET_ID_OF_THIS_THREAD()));
+   
+    while (true) { // we've turned off the normal loop here for smaller testing of the program. sGameWorld being still active however.
         if (!DLC::GET_IS_LOADING_SCREEN_ACTIVE() && x == 0) {
             x = GRAPHICS::REQUEST_SCALEFORM_MOVIE("minimap");
             HUD::SET_BIGMAP_ACTIVE(true, false);
@@ -76,12 +108,28 @@ void main() {
             GRAPHICS::SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT(0);
             GRAPHICS::END_SCALEFORM_MOVIE_METHOD();
         }
+
         SCRIPT_MGR->Update();
         EHUD->Update();
         THEENDSCRIPT->Update();
-        CTextUI(std::to_string(AUDIO::GET_MUSIC_VOL_SLIDER()), { 0.5,0.5 }, { 255,255,255,255 }).Draw();
-        CTextUI(std::to_string(AUDIO::GET_MUSIC_PLAYTIME()), {0.5,0.55}, {255,255,255,255}).Draw();
+        DBG->Update();
         if (IsKeyJustUp(VK_F15)) {
+            netLogger->LogPrintf("\033[95m" "Fatal" RNorm "\n");
+            netLogger->LogPrintf(RBlue "AUDIO INFO" RNorm "\n");
+            netLogger->LogPrintf(RYellow "Warning" RNorm "\n");
+            netLogger->LogPrintf(RRed "Error" RNorm "\n");
+            netLogger->LogPrintf(RIRed "Fatal" RNorm "\n");
+            netLogger->LogPrintf("\033[95m" "Fatal" RNorm "\n");
+            netLogger->LogPrintf(HIPurple "Fatal" RNorm "\n");
+            netLogger->LogPrintf(HIPurple "Fatal" RNorm "\n");
+            netLogger->LogPrintf(HIPurple "Fatal" RNorm "\n");
+        }
+        if (m_bIsShowing) {
+            headerTest.Draw();
+        }
+        if (IsKeyJustUp(VK_F16)) {
+            m_bIsShowing = !m_bIsShowing;
+#if 0
             int x = INTERIOR::GET_INTERIOR_FROM_ENTITY(PLAYER::PLAYER_PED_ID());
             Vector3 pos = { 0,0,0,0,0,0 };
             Hash hash = 0;
@@ -94,13 +142,8 @@ void main() {
             } else {
                 casino.Trigger();
             }
+#endif
         }
-        if (IsKeyJustUp(VK_F16) && !capture.HasBeenCaptured()) {
-            capture.Capture();
-        } else if (IsKeyJustUp(VK_F14)) {
-            capture.Revert();
-        }
-        
         WAIT(0);
     }
     return;

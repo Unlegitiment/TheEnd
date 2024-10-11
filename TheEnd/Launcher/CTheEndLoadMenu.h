@@ -6,6 +6,10 @@ public:
 	CTheEndLoadMenu();
 	void Init();
 	void Update();
+	static void HandleButton1Press(CLoadButton* load); // oh yeah we could make this an enum or just like void the shit?
+	static void HandleButton2Press(CLoadButton* load);
+	static void HandleButton3Press(CLoadButton* load);
+	CLoadButton* GetButtonAtSelectedIndex(int index);
 private:
 	int m_iSelection = 0;
 	int DX_Texture = 0;
@@ -15,9 +19,7 @@ private:
 private:
 	void HandleLeftPress();
 	void HandleRightPress();
-	static void HandleButton1Press(CLoadButton* load); // oh yeah we could make this an enum or just like void the shit?
-	static void HandleButton2Press(CLoadButton* load);
-	static void HandleButton3Press(CLoadButton* load);
+
 	void DrawFullMenu();
 	void DrawStylizedButton(CLoadButton* loadButton, CVector2<float> position);
 };

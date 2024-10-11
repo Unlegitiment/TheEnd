@@ -6,7 +6,7 @@ CGameInteriorPrologue::CGameInteriorPrologue(CGameInteriorMgr* mymgr) {
 }
 
 void CGameInteriorPrologue::Init() {
-	scriptLogI("called! At: 0x",this);
+	scriptLogI("called! At: 0x%p",this);
 	this->m_vPreloadedIPLs.push_back("plg_01 ");
 	this->m_vPreloadedIPLs.push_back("prologue01 ");
 	this->m_vPreloadedIPLs.push_back("prologue01_lod ");

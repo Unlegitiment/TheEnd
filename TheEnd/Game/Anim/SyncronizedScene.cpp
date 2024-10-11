@@ -6,7 +6,7 @@ std::string& CSynchronizedScene::GetAnimDictionary() {
 }
 void CSynchronizedScene::SetupScene(const char* animdictionary, CVector3<float> pos, CVector3<float> rot) {
 	if (!STREAMING::DOES_ANIM_DICT_EXIST(animdictionary)) {
-		scriptLogW("[SYNCHRONIZED_SCENE] ", animdictionary, " Does not exist!");
+		scriptLogW("[SYNCHRONIZED_SCENE] %s Does not exist!", animdictionary);
 		return;
 	}
 	while (!STREAMING::HAS_ANIM_DICT_LOADED(animdictionary)) {
@@ -37,7 +37,7 @@ void CSynchronizedScene::RunScene() {
 		this->m_bIsSynchronizedSceneSetup = true;
 	}
 	if (this->m_bCanSceneRun && !this->m_bIsSceneRunning) {
-		scriptLogI("[SYNCHRONIZE SCENE] Scene ID: ", this->m_iSceneId, " (AnimDict:", this->m_AnimDictionary, "): can run");
+		scriptLogI("[SYNCHRONIZE SCENE] Scene ID: %i (AnimDict: %s): can run", this->m_iSceneId, this->m_AnimDictionary.c_str());
 		for (int i = 0; i < this->m_Animations.size(); i++) {
 			sAnimationData* curAnim = &this->m_Animations[i];
 			assert(curAnim != nullptr, "Anim is null");
@@ -48,7 +48,7 @@ void CSynchronizedScene::RunScene() {
 	}
 	if (this->m_bIsSceneRunning) {
 		if (this->GetSceneProgression() >= 1.0f) {
-			scriptLogI("[SYNCHRONIZED_SCENE] ", this->m_AnimDictionary, " has finished running.");
+			scriptLogI("[SYNCHRONIZED_SCENE] %s  has finished running.", this->m_AnimDictionary);
 			this->m_bIsSynchronizedSceneDone = true;
 			this->m_bIsSceneRunning = false;
 		}

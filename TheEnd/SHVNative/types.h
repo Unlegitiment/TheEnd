@@ -5,15 +5,24 @@
 */
 
 #pragma once
-
+/*
+		BLACK,
+		RED,
+		GREEN,
+		YELLOW,
+		BLUE,
+		PURPLE,
+		CYAN,
+		WHITE,
+*/
 #include <windows.h>
 #include "../Logger/CLoggerInstances.h"
 #define Logger CLogger::GetInst()
 #define netLogger CLogger::GetInst()->GetNetworkLogger()
-#define scriptLogI(...) netLogger->LogInfo(eLoggerState::INFO, true, __FUNCTION__,": " ,__VA_ARGS__)
-#define scriptLogW(...) netLogger->LogInfo(eLoggerState::WARN, true, __FUNCTION__,": " ,__VA_ARGS__)
-#define scriptLogE(...) netLogger->LogInfo(eLoggerState::ERROR2, true, __FUNCTION__,": " ,__VA_ARGS__)
-#define scriptLogF(...) netLogger->LogInfo(eLoggerState::FATAL, true, __FUNCTION__, ": ", __VA_ARGS__); exit(0)
+#define scriptLogI(fmt, ...) netLogger->LogPrintf(RNorm		"[INFO] " __FUNCTION__ " " fmt RNorm "\n", __VA_ARGS__)
+#define scriptLogW(fmt, ...) netLogger->LogPrintf(RYellow	"[WARN] " __FUNCTION__ " " fmt RNorm "\n", __VA_ARGS__)
+#define scriptLogE(fmt, ...) netLogger->LogPrintf(RRed		"[ERROR] " __FUNCTION__ " " fmt RNorm "\n", __VA_ARGS__)
+#define scriptLogF(fmt, ...) netLogger->LogPrintf(RIRed		"[FATAL] " __FUNCTION__ " " fmt RNorm "\n", __VA_ARGS__)
 typedef DWORD Void;
 typedef DWORD Any;
 typedef DWORD uint;

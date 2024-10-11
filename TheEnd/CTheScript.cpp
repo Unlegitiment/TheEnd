@@ -8,6 +8,7 @@
 #include "./Game/Hud/CGameSpinner.h"
 #include "./Game/Hud/HudInterface.h"
 #include "./TheEnd/Hud.h"
+#include "./MenuAPI/PlayerMenu.h"
 /*
 	TODO -- Write up a quick class to do vehicles and their modifications. 
 	Also cause shop controller is annoying for this we might just have to void the shop controller when we get close and restart it when we are done. Or Leave the area. 
@@ -16,6 +17,20 @@
 	Maybe write up a CTheEndDeluxo that just deals with the respawning and management of the Launcher?
 */
 void CTheScript::OneTime() {
+	if (this->m_bDoesPlayerMenuNeedSetup) {
+		m_PlayerMenu.SetHeader({ PLAYER::GET_PLAYER_NAME(PLAYER::PLAYER_ID()), "INTERACTION MENU", true });
+		m_PlayerMenu.AddMenuItem({ "Escape To Cayo Perico", "", "", [&](CPlayerMenu* player, CPlayerMenu::sMenuItem* headerInfo) {
+			m_BitWarpSet.set(TEST_VAL::DOES_NEED_WARP, 1);
+			m_BitWarpSet.set(TEST_VAL::WARP_CAYO, 1);
+			CurrentLevel = (int)CHECKPOINT::LEAVING_TO_CAYO;
+			m_bIsPlayerMenuShowing = false;
+			} });
+		m_PlayerMenu.AddMenuItem({ "Get Global Water State (DEBUG)", "", "", [&](CPlayerMenu* player, CPlayerMenu::sMenuItem* headerInfo) {
+				STREAMING::LOAD_GLOBAL_WATER_FILE(1);
+				scriptLogI("Loading Global Water Configuration: %i", STREAMING::GET_GLOBAL_WATER_FILE());
+			} });
+		this->m_bDoesPlayerMenuNeedSetup = false;
+	}
 	STREAMING::REQUEST_MODEL(MISC::GET_HASH_KEY("DELUXO"));
 	DELUXO = VEHICLE::CREATE_VEHICLE(MISC::GET_HASH_KEY("DELUXO"), 47.2755f, -862.1296f, 30.05f, 340.8, 1, 0, 1);
 	VEHICLE::SET_VEHICLE_MOD_COLOR_1(DELUXO, 4, 0, 0); 
@@ -39,6 +54,14 @@ bool isWithinCircle(float x, float y, float circleX, float circleY, float radius
 void CTheScript::Update() {
 	CheatHelper();
 	WarpStateManagement();
+	MenuNav();
+	if (IsKeyJustUp(VK_F13)) {
+		m_bIsPlayerMenuShowing = !m_bIsPlayerMenuShowing;
+		scriptLogI("Player Menu Status: %i", m_bIsPlayerMenuShowing);
+	}
+	if (m_bIsPlayerMenuShowing) {
+		m_PlayerMenu.Display();
+	}
 	this->isPlayerInDeluxo = PED::IS_PED_IN_VEHICLE(PLAYER::PLAYER_PED_ID(), DELUXO, 0);
 	if (this->isPlayerInDeluxo) {
 		m_bSetVehicleDensityNow = this->isPlayerInDeluxo;
@@ -73,9 +96,6 @@ void CTheScript::Update() {
 	if (isWithinCircle(pos.x, pos.y, -1725.309, -190.1009, 625) && this->m_CurrentScore.GetMood().first == SUSPENSE) { // suspense
 		this->m_CurrentScore.ChangeMood(ACTION); // action;
 	}
-
-	CTextUI(std::to_string(STREAMING::GET_PLAYER_SWITCH_STATE()), { 0.5,0.525 }, { 255,255,255,255 }).Draw();
-	
 	if (IsKeyJustUp(VK_ADD)) {
 		EHUD->GetFade()->DoFadeWhite(MISC::GET_GAME_TIMER());
 	}
@@ -155,6 +175,7 @@ void CTheScript::Update() {
 	if (this->CurrentLevel == (int)CHECKPOINT::INSIDE_MIL_BASE) { // this entire segment is easy.
 		if (MISC::GET_HASH_KEY(this->GetZoneWherePlayerIs().c_str()) != MISC::GET_HASH_KEY("ARMYB")) {
 			HUD::FLASH_WANTED_DISPLAY(1);
+			this->m_CurrentScore.ChangeMood(VEHICLE_CHASE);
 			this->Blip_MainObj = HUD::ADD_BLIP_FOR_COORD( -1038.108, -2737.415, 20.1693 );
 			if (HUD::DOES_BLIP_EXIST(this->Blip_MainObj)) {
 				HUD::SET_BLIP_ROUTE(this->Blip_MainObj, true);
@@ -186,25 +207,115 @@ void CTheScript::Update() {
 			 21.3634,
 			 150
 		*/
-		static bool isPadDisabled = false;
+
+		static bool hasPedTaskEnabled = false;
 		if(MISC::GET_HASH_KEY(GetZoneWherePlayerIs().c_str()) == MISC::GET_HASH_KEY("AIRP") && !this->m_bHasTextMessageBeenSent) {
 			SendTextMessage();
 			this->m_bHasTextMessageBeenSent = true;
 		}
-		if (WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition.Dist({-1038.108, -2737.415, 20.1693}) <= 5.0f) {
+
+		if (hasPedTaskEnabled) {
+			int TaskId = NULL;
+			TASK::OPEN_SEQUENCE_TASK(&TaskId);
+			TASK::TASK_GO_STRAIGHT_TO_COORD(NULL, -1044.812,
+				-2749.310,
+				21.3634,
+				1, 15000, 150, 0.0f);
+			m_bDoesNeedToGetWeapon = true;
+			TASK::CLOSE_SEQUENCE_TASK(TaskId);
+			TASK::TASK_PERFORM_SEQUENCE(PLAYER::PLAYER_PED_ID(), TaskId);
+			TASK::CLEAR_SEQUENCE_TASK(&TaskId);
+			this->m_CurrentScore.CancelTrack({ CMusicTrack::sMusicCancel::GLOB_KILL_MUSIC, {0} }); // cancel music when we are running scene. 
+			Hash Left = MISC::GET_HASH_KEY("THEEND_DOOR_HASH_LEFT");
+			Hash Right = MISC::GET_HASH_KEY("THEEND_DOOR_HASH_RIGHT");
+			if (OBJECT::IS_DOOR_REGISTERED_WITH_SYSTEM(Right)) {
+				scriptLogI("Door Registered With Sys Already! Weird?");
+				OBJECT::REMOVE_DOOR_FROM_SYSTEM(Right, 0);
+			}
+			if (OBJECT::IS_DOOR_REGISTERED_WITH_SYSTEM(Left)) {
+				scriptLogI("Door Registered With Sys Already! Weird?");
+				OBJECT::REMOVE_DOOR_FROM_SYSTEM(Left, 0);
+			}
+			if (!OBJECT::IS_DOOR_REGISTERED_WITH_SYSTEM(Left)) { // @ this point we know we're close to the door.
+				OBJECT::ADD_DOOR_TO_SYSTEM(Left, 0xDE3A3326, -1041.932, -2748.167, 22.0308, 0, 0, 1);
+				scriptLogI("Door is added: LEFT");
+			}
+			if (!OBJECT::IS_DOOR_REGISTERED_WITH_SYSTEM(Right)) {
+				OBJECT::ADD_DOOR_TO_SYSTEM(Right, 0xdf1f34cc, -1044.840, -2746.488, 22.0308, 0, 0, 1);
+				scriptLogI("Door is added: RIGHT");
+			}
+			OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(Left, 0, 0, 1);
+			OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(Right, 0, 0, 1);
+			hasPedTaskEnabled = false;
+		}
+		if (WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition.Dist({-1038.108, -2737.415, 20.1693}) <= 5.0f && isPadDisabled == false) {
 			// Upon entering doors fade to black. open select menu. handle transfer to cayo or transfer to north yankton. handle cayo because its the easiest. then send. 
-			// 
+			scriptLogI("beginning task scene.");
 			isPadDisabled = true;
+			hasPedTaskEnabled = true;
+		}
+		if (WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition.Dist({ -1044.812, -2749.310, 21.3634 }) <= 0.3f) {
+			this->m_bIsPlayerMenuShowing = true;
+			PAD::DISABLE_ALL_CONTROL_ACTIONS(0);
 		}
 		if (isPadDisabled) {
 			PAD::DISABLE_CONTROL_ACTION(0, 1, 0); // CAM Horizontal Movement
 			PAD::DISABLE_CONTROL_ACTION(0, 2, 0); // CAM vertical movement
 		}
-		if (IsKeyJustUp(VK_ADD)) {
-			isPadDisabled = false;
+	}
+	if (this->CurrentLevel == (int)CHECKPOINT::LEAVING_TO_CAYO) {
+		if (WORLD->GetLocalPlayer()->GetAllInformationAboutPlayer()->m_vPlayerPosition.Dist({ 4700.0, -5145.0, 0.0f }) >= 1200.f) {
+			scriptLogI("Player isn't Playable Area!!");
 		}
 	}
 	LockFirstPerson();
+}
+
+void CTheScript::MenuNav() {
+	m_PlayerMenu.SetSelected(m_iPlayerSelection);
+	if (IsKeyJustUp(VK_UP)) {
+		m_iPlayerSelection--;
+		if (m_iPlayerSelection == -1) {
+			m_iPlayerSelection = m_PlayerMenu.GetSize();
+		}
+	} else if (IsKeyJustUp(VK_DOWN)) {
+		m_iPlayerSelection++;
+		if (m_iPlayerSelection == m_PlayerMenu.GetSize() + 1) {
+			m_iPlayerSelection = 0;
+		}
+	} else if (IsKeyJustUp(VK_RETURN) && m_bIsPlayerMenuShowing) {
+		CPlayerMenu::sMenuItem* curItem = m_PlayerMenu.GetItem(m_iPlayerSelection);
+		curItem->CallBack(&m_PlayerMenu, curItem);
+	}
+	if (m_BitWarpSet.test(TEST_VAL::DOES_NEED_WARP)) {
+		if (m_BitWarpSet.test(TEST_VAL::WARP_CAYO)) {
+			if (WarpPed == 0) {
+				WarpPed = PED::CLONE_PED(PLAYER::PLAYER_PED_ID(), 0, 0, 1);
+				ENTITY::SET_ENTITY_COORDS(WarpPed, 4493.6641, -4525.817, 4.4124, 1, 0, 0, 1);
+			}
+			if (!m_bHasSwitchBeenInit) {
+				STREAMING::START_PLAYER_SWITCH(PLAYER::PLAYER_PED_ID(), WarpPed, 0, 1);
+				STREAMING::LOAD_GLOBAL_WATER_FILE(1);
+				m_bHasSwitchBeenInit = true;
+			}
+			if (STREAMING::GET_PLAYER_SWITCH_STATE() == 7) { // transition
+				WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_LOAD_CAYO, 1);
+			}
+			if (STREAMING::GET_PLAYER_SWITCH_STATE() == 8) {
+
+				ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 4493.6641, -4525.817, 4.4124, 1, 0, 0, 1);
+
+			}
+			if (STREAMING::GET_PLAYER_SWITCH_STATE() == 10) {
+				DLC::ON_ENTER_MP();
+				STREAMING::SET_ISLAND_ENABLED("HeistIsland", 1);
+				ENTITY::DELETE_ENTITY(&WarpPed);
+				m_bHasSwitchBeenInit = false;
+				m_BitWarpSet.reset(WARP_CAYO);
+				m_BitWarpSet.reset(DOES_NEED_WARP);
+			}
+		}
+	}
 }
 
 void CTheScript::TimeCopy(float fLaunch, int targetHours, int targetMinutes, int targetSeconds) {
@@ -321,7 +432,51 @@ void CTheScript::CheatHelper() {
 		UT_3();
 	}
 	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("DO_TEST_WARP"))) {
+		scriptLogI("[CHEAT] DO_TEST_WARP called!");
 		StartWarp();
+	}
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("FIXMINI"))) {
+		scriptLogI("[CHEAT] FIXMINI called!");
+		HUD::SET_BIGMAP_ACTIVE(false, false);
+	}
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("SUMMONCAR"))) {
+		MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("shop_controller");
+		scriptLogI("[CHEAT] SUMMONCAR called!");
+		OneTime();
+		CDisableScripts::RestartScript("shop_controller", CDisableScripts::SHOP_CONTROLLER);
+	}
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("TESTER_RETURN_TO_LS"))) {
+		SCRIPT_MGR->GetScriptDisabler()->RestartAllScripts();
+		Cheat_ResetGlobals();
+		STREAMING::SET_ISLAND_ENABLED("HeistIsland", false);
+		WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_DISABLE_LOS_SANTOS, 0);
+		WORLD->GetGameInteriorInformation()->set(WORLD->eGWBS_WORLD_LOAD_CAYO, 0);
+		STREAMING::SET_MAPDATACULLBOX_ENABLED("HeistIsland", 0);
+		ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 0, 0, 71.f, 1, 0, 0, 1);
+	}
+	if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(MISC::GET_HASH_KEY("DOORTEST"))) {
+		scriptLogI("[CHEAT] DoorTest");
+		Hash Left = MISC::GET_HASH_KEY("THEEND_DOOR_HASH_LEFT");
+		Hash Right = MISC::GET_HASH_KEY("THEEND_DOOR_HASH_RIGHT");
+		if (OBJECT::IS_DOOR_REGISTERED_WITH_SYSTEM(Right)) {
+			scriptLogI("Door Registered With Sys Already! Weird?");
+			OBJECT::REMOVE_DOOR_FROM_SYSTEM(Right, 0);
+		}
+		if (OBJECT::IS_DOOR_REGISTERED_WITH_SYSTEM(Left)) {
+			scriptLogI("Door Registered With Sys Already! Weird?");
+			OBJECT::REMOVE_DOOR_FROM_SYSTEM(Left, 0);
+		}
+		if (!OBJECT::IS_DOOR_REGISTERED_WITH_SYSTEM(Left)) { // @ this point we know we're close to the door.
+			OBJECT::ADD_DOOR_TO_SYSTEM(Left, 0xDE3A3326, -1041.932, -2748.167, 22.0308, 0, 0, 1);
+			scriptLogI("Door is added: LEFT");
+		}
+		if (!OBJECT::IS_DOOR_REGISTERED_WITH_SYSTEM(Right)) {
+			OBJECT::ADD_DOOR_TO_SYSTEM(Right, 0xdf1f34cc, -1044.840, -2746.488, 22.0308, 0, 0, 1);
+			scriptLogI("Door is added: RIGHT");
+		}
+		OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(Left,		0, 0, 1);
+		OBJECT::DOOR_SYSTEM_SET_DOOR_STATE(Right,	0, 0, 1);
+
 	}
 }
 
@@ -407,6 +562,7 @@ void CTheScript::Cheat_ResetGlobals() {
 	}
 	this->isPlayerInDeluxo = false;
 	this->m_bLockFirstPerson = false;
+	this->isPadDisabled = false;
 	this->m_WeaponCapture.Revert();
 	this->m_fStartTime = 0;
 	this->m_bsWarp.reset();

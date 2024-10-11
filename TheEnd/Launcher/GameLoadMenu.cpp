@@ -25,7 +25,7 @@ void CLoadMenu::PushNewButton(CLoadButton* loadBtn) {
         scriptLogI("inserting a nullptr button @ index", this->m_AllButtons.size(), "! (ignoring)");
         return;
     }
-    scriptLogI("Inserting button: 0x", loadBtn, " @ ", this->m_AllButtons.size());
+    scriptLogI("Inserting button: 0x%p@%i", loadBtn, this->m_AllButtons.size());
     this->m_AllButtons.push_back(loadBtn);
     return;
 }

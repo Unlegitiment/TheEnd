@@ -2,8 +2,13 @@
 #include "../Game/Hud/MiniMap.h"
 #include "../SHVNative/types.h"
 #include "../keyboard.h"
+#include "../SHVNative/natives.h"
 CTheEndLoadMenu* CTheEndHud::GetLoadingMenu() {
     return &this->mMenu;
+}
+CTheEndHud::CTheEndHud() :
+    CheatMenu(MISC::GET_HASH_KEY("PAUSE_MENU"))
+{
 }
 CFade* CTheEndHud::GetFade() {
     return &this->m_Fade;
@@ -26,7 +31,7 @@ void CTheEndHud::Update() {
     if (!DoesDisplayMenu && !MINIMAP->IsMiniMapActive()) {
         MINIMAP->SetMinimapActive(true);
     }
-    if (IsKeyJustUp(VK_F13)) {
+    if (MISC::HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED(CheatMenu)) {
         DoesDisplayMenu = !DoesDisplayMenu;
     }
 

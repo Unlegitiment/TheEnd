@@ -30,7 +30,7 @@ void CDisableScripts::RestartAllScripts() {
         ScrInfo* info = &m_AllScriptsToDisable[i];
         int stackSize = m_ScriptMap[info->name];
         int iAttempt = 0;
-        scriptLogI("Current Script Information: \n\tName: ", info->name, " \n\tSize: ", stackSize);
+        scriptLogI("Current Script Information: \n\tName: %s\n\tSize: %i", info->name, stackSize);
         while (!CDisableScripts::RestartScript(info->name, (StackSize)stackSize)) {
             iAttempt++;
             if (iAttempt >= 11) {
@@ -44,7 +44,7 @@ void CDisableScripts::RestartAllScripts() {
 
 void CDisableScripts::StaggeredLoop(int* updateTimer) { // Todo -- Fix this as Update is either not called at all or can't be called.
     if (MISC::GET_GAME_TIMER() > (*updateTimer + 30000)) { // every 10 seconds we run this loop to determine the scripts nature.
-        scriptLogI("called. Called on ", *updateTimer);
+        scriptLogI("called. Called on %i", *updateTimer);
         this->Update();
         *updateTimer = MISC::GET_GAME_TIMER();
     }
@@ -62,9 +62,9 @@ bool CDisableScripts::RestartScript(ScrName name, StackSize stackSize) { // The 
     int iAttempts = 0;
     while (!SCRIPT::HAS_SCRIPT_LOADED(name)) {
         iAttempts += 1;
-        scriptLogI(": Attempting Load. Attempt: ", iAttempts);
+        scriptLogI(": Attempting Load. Attempt: %i", iAttempts);
         if (iAttempts >= 11) {
-            scriptLogE("Error encountered! Script: ", info.name, " could not be loaded in 10 attempts!");
+            scriptLogE("Error encountered! Script: %s could not be loaded in 10 attempts!", info.name);
             return false;
         }
         WAIT(0);
@@ -72,7 +72,7 @@ bool CDisableScripts::RestartScript(ScrName name, StackSize stackSize) { // The 
     SYSTEM::START_NEW_SCRIPT(info.name, stackSize);
     SCRIPT::SET_SCRIPT_AS_NO_LONGER_NEEDED(info.name);
     
-    scriptLogI(info.name, ": Attempt Successful");
+    scriptLogI("%s: Attempt Successful", info.name);
     return true;
 }
 std::string booltostr(bool b) {

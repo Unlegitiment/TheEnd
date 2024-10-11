@@ -60,6 +60,19 @@ void CTheEndLoadMenu::HandleButton2Press(CLoadButton* load) { // THE END OFFLINE
 void CTheEndLoadMenu::HandleButton3Press(CLoadButton* load) { // ONLINE (SEND TO STORY MODE WITH PROMPT) 
 	scriptLogI("Pressed!");
 }
+CLoadButton* CTheEndLoadMenu::GetButtonAtSelectedIndex(int index) {
+	if (index == 0) {
+		return &this->Button1;
+	}
+	if (index == 1) {
+		return &this->Button2;
+	}
+	if (index == 2) {
+		return &this->Button3;
+	} else {
+		return nullptr;
+	}
+}
 void CTheEndLoadMenu::DrawFullMenu() {
 	//Header info
 	MINIMAP->SetMinimapActive(false);

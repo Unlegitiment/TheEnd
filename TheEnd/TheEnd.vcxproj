@@ -15,6 +15,7 @@
     <ClCompile Include="CaptureSys\WeapComponent.h" />
     <ClCompile Include="CaptureSys\WeaponCapture.cpp" />
     <ClCompile Include="CTheScript.cpp" />
+    <ClCompile Include="DebugMenu.cpp" />
     <ClCompile Include="Facility\CFacility.cpp" />
     <ClCompile Include="Game\Anim\SyncronizedScene.cpp" />
     <ClCompile Include="Game\Building\Blackout.cpp" />
@@ -53,6 +54,7 @@
     <ClCompile Include="MarkerLauncher\VisualMarker.cpp" />
     <ClCompile Include="Marker\CMarker.cpp" />
     <ClCompile Include="Marker\CMissionMarker.cpp" />
+    <ClCompile Include="MenuAPI\PlayerMenu.cpp" />
     <ClCompile Include="MissionScript\CMission.cpp" />
     <ClCompile Include="MissionVisuals\MarkerHandler.cpp" />
     <ClCompile Include="MissionVisuals\MarkerInfo.cpp" />
@@ -60,6 +62,8 @@
     <ClCompile Include="PauseMenuItems\Generic\MenuPaginator.cpp" />
     <ClCompile Include="PauseMenuItems\Generic\MenuPaginator.h" />
     <ClCompile Include="PauseMenuItems\Generic\PauseMenuHeader.cpp" />
+    <ClCompile Include="PauseMenuItems\MenuRework\GTAVIM.cpp" />
+    <ClCompile Include="PauseMenuItems\MenuRework\MenuHeader.cpp" />
     <ClCompile Include="PauseMenuItems\PauseInterface.cpp" />
     <ClCompile Include="PauseMenuItems\UIBase.cpp" />
     <ClCompile Include="PauseMenuItems\UIElements\UIList.cpp" />
@@ -93,6 +97,7 @@
     <ClInclude Include="CaptureSys\WeaponCapture.h" />
     <ClInclude Include="CTheScript.h" />
     <ClInclude Include="DataTypes\IndexedUSet.h" />
+    <ClInclude Include="DebugMenu.h" />
     <ClInclude Include="Facility\CFacility.h" />
     <ClInclude Include="Game\Anim\SyncronizedScene.h" />
     <ClInclude Include="Game\Building\Blackout.h" />
@@ -133,6 +138,7 @@
     <ClInclude Include="MarkerLauncher\VisualMarker.h" />
     <ClInclude Include="Marker\CMarker.h" />
     <ClInclude Include="Marker\CMissionMarker.h" />
+    <ClInclude Include="MenuAPI\PlayerMenu.h" />
     <ClInclude Include="MissionScript\CMission.h" />
     <ClInclude Include="MissionScript\TheEnd.h" />
     <ClInclude Include="MissionVisuals\MarkerHandler.h" />
@@ -142,6 +148,10 @@
     <ClInclude Include="PauseMenuItems\Generic\MenuPage.h" />
     <ClInclude Include="PauseMenuItems\Generic\PauseMenu.h" />
     <ClInclude Include="PauseMenuItems\Generic\PauseMenuHeader.h" />
+    <ClInclude Include="PauseMenuItems\MenuRework\GTAVIM.h" />
+    <ClInclude Include="PauseMenuItems\MenuRework\Item.h" />
+    <ClInclude Include="PauseMenuItems\MenuRework\Menu.h" />
+    <ClInclude Include="PauseMenuItems\MenuRework\MenuHeader.h" />
     <ClInclude Include="PauseMenuItems\PauseInterface.h" />
     <ClInclude Include="PauseMenuItems\PauseMenuMgr.h" />
     <ClInclude Include="PauseMenuItems\UIBase.h" />
@@ -165,6 +175,7 @@
     <ClInclude Include="SHVNative\OGnatives.h" />
     <ClInclude Include="SHVNative\types.h" />
     <ClInclude Include="AI\EnemyAI.h" />
+    <ClInclude Include="TerminalColors.h" />
     <ClInclude Include="Textures\CTXD.h" />
     <ClInclude Include="TheEnd\CFadeScreen.h" />
     <ClInclude Include="TheEnd\Hud.h" />
@@ -223,6 +234,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

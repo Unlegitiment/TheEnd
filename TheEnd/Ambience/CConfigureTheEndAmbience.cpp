@@ -97,7 +97,7 @@ bool CConfigureTheEndAmbience::isAllConfigured() {
 void CConfigureTheEndAmbience::DoTimeCycle(float launchTime) {
     this->m_LaunchTime = launchTime;
     if (this->InterpTimeCycleProgress == 0.0f) {
-        scriptLogI("DoTimeCycle Called with params: ", launchTime);
+        scriptLogI("DoTimeCycle Called with params: %f", launchTime);
     }
     const char* timeCycleModifier = "New_sewers";
     float timeCycleStrength = Interpolate(0.0, 0.8, this->m_LaunchTime, 5000, MISC::GET_GAME_TIMER());

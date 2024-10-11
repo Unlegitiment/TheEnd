@@ -15,7 +15,7 @@ CGameInteriorMgr::CGameInteriorMgr() {
 }
 
 void CGameInteriorMgr::Init() {
-	Logger->GetNetworkLogger()->LogInfo(INFO, true, __FUNCTION__, ": called! 0x", this);
+	scriptLogI("%s: called! 0x%p", this);
 	//SOUTH
 #pragma region SOUTH_CARRIER
 	m_Map[S_AIRCRAFT_CARRIER].push_back({ "hei_carrier" , false });

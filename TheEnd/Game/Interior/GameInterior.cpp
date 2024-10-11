@@ -15,12 +15,12 @@ CGameInteriorMgr* CInterior::GetInteriorManager() {
 
 void CInterior::AddEntry(IPL entry) {
 	this->m_vIPLsAssociated.push_back(entry);
-	scriptLogI("Called with param: ", entry, " \n\tUpdating m_vIPLsAssociated");
+	scriptLogI("Called with param: %p\n\tUpdating m_vIPLsAssociated", entry);
 }
 
 void CInterior::Delete() {
 	for (IPL i : m_vIPLsAssociated) {
-		scriptLogI("called! \n\t", i);
+		scriptLogI("called! \n\t%i", i);
 		STREAMING::REMOVE_IPL(i);  // I guess the Ipl isn't active?
 	}
 	m_bIsInteriorActive = false;

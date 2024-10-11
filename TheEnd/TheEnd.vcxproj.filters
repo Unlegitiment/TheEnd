@@ -77,6 +77,10 @@
     <ClCompile Include="CaptureSys\CStat.cpp" />
     <ClCompile Include="CaptureSys\CStatsCapture.cpp" />
     <ClCompile Include="AI\EnemyAI.cpp" />
+    <ClCompile Include="MenuAPI\PlayerMenu.cpp" />
+    <ClCompile Include="DebugMenu.cpp" />
+    <ClCompile Include="PauseMenuItems\MenuRework\GTAVIM.cpp" />
+    <ClCompile Include="PauseMenuItems\MenuRework\MenuHeader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="script.h" />
@@ -169,6 +173,13 @@
     <ClInclude Include="CaptureSys\CStatsCapture.h" />
     <ClInclude Include="CaptureSys\CStat.h" />
     <ClInclude Include="AI\EnemyAI.h" />
+    <ClInclude Include="MenuAPI\PlayerMenu.h" />
+    <ClInclude Include="DebugMenu.h" />
+    <ClInclude Include="PauseMenuItems\MenuRework\Item.h" />
+    <ClInclude Include="PauseMenuItems\MenuRework\Menu.h" />
+    <ClInclude Include="PauseMenuItems\MenuRework\GTAVIM.h" />
+    <ClInclude Include="PauseMenuItems\MenuRework\MenuHeader.h" />
+    <ClInclude Include="TerminalColors.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">

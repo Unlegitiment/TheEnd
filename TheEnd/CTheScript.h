@@ -6,11 +6,21 @@
 #include "CaptureSys/include.h"
 #include "./Game/Music/MusicInterface.h"
 #include "./AI//EnemyAI.h"
+#include "./MenuAPI/PlayerMenu.h"
 class CTheScript {
+private:
+	enum TEST_VAL {
+		DOES_NEED_WARP,
+		WARP_CAYO,
+		TEST_VAL_MAX
+	};
+	bool m_bIsPlayerMenuShowing = false;
+	std::bitset<TEST_VAL_MAX> m_BitWarpSet; // For a Later script.
 public:
 	void OneTime();
 	void Update();
 private:
+	void MenuNav();
 	void TimeCopy(float fLaunch, int targetHours, int targetMinutes, int targetSeconds); // FROM CConfigureTheEndAmbience;
 	void SendTextMessage();
 	std::string GetZoneWherePlayerIs();
@@ -35,7 +45,8 @@ private: // used for like one second of the mission. when the player gets outsid
 	int iFrameCountdown = 50;
 	int iFrameStart = 0;
 	bool AreIFramesActive = false;
-private:
+private: // Mission Later component based stuff.
+	bool isPadDisabled = false;
 	bool m_bHasTextMessageBeenSent = false;
 private:
 	enum class CHECKPOINT {
@@ -72,6 +83,11 @@ private: // Music
 		});
 	bool m_bIsMusicActive = false;
 	bool m_bCanMusicPlay = true;
+private: // Player Interactable
+	CPlayerMenu m_PlayerMenu = CPlayerMenu();
+	bool m_bDoesPlayerMenuNeedSetup = true;
+	int m_iPlayerSelection = 0;
+	bool m_bHasSwitchBeenInit = false;
 private: // Enemy AI Move to Seperate Class
 	CMilitaryAI AI = CMilitaryAI();
 private: // Objects
@@ -87,7 +103,7 @@ private://AMBIENCE
 private: // Defined Box Coordinates/State Control
 	CBoundingBox box = CBoundingBox({ 51.2319, -872.6470, 60.71 }, { 47,1,100 }, { 1,0.5,0,0 });
 private: //MISSION BLIP
-	Blip Blip_MainObj;
+	Blip Blip_MainObj; // CBlip::AddBlipForCoord(); || CBlipMgr::AddBlipForCoord(CVector3); // this would add it to an vector of all blips.
 	Blip Blip_SecondaryObj;
 private: //STATE
 	bool isPlayerAwake = false;
@@ -95,8 +111,8 @@ private: //STATE
 	int CurrentLevel = -1; // -1 is freeroam because enums start at 0;
 	int CurStateOfPlayer = -1; // -1 means idle/freeroam etcc
 	int FAIL_CONDITION = 0; // fail condition
-	bool m_bLockFirstPerson;
-	CWeaponCapture m_WeaponCapture = *WEAP_CAP;
+	bool m_bLockFirstPerson; // GameInterface::GetGlobals()->AddGlobal<bool, MyFPLock>();// what type is it? and what Function is it calling.
+	CWeaponCapture m_WeaponCapture = *WEAP_CAP; // CaptureInterface::GetWeaponCapture()->Capture();  CaptureInterface::GetStatCapture()->Capture(); 
 private: // GLOBAL_DATA
 	bool m_bDoesNeedToGetWeapon = false; // move to class
 	bool m_bDoesHaveWeapon = false;

@@ -8084,7 +8084,7 @@ namespace OBJECT
 	NATIVE_DECL void PLAY_OBJECT_AUTO_START_ANIM(Any p0) { invoke<Void>(0x006E4B040ED37EC3, p0); } // 0x006E4B040ED37EC3 b1868
 	// doorHash has to be unique. scriptDoor false; relies upon getNetworkGameScriptHandler. isLocal On true disables the creation CRequestDoorEvent's in DOOR_SYSTEM_SET_DOOR_STATE.
 	// p5 only set to true in single player native scripts.
-	// If scriptDoor is true, register the door on the script handler host (note: there's a hardcap on the number of script IDs that can be added to the system at a given time). If scriptDoor and isLocal are both false, the door is considered to be in a "Persists w/OBJ_UFO netobj" state.
+	// If scriptDoor is true, register the door on the script handler host (note: there's a hardcap on the number of script IDs that can be added to the system at a given time). If scriptDoor and isLocal are both false, the door is considered to be in a "Persists w/o netobj" state.
 	// 
 	// door hashes normally look like PROP_[int]_DOOR_[int] for interior doors and PROP_BUILDING_[int]_DOOR_[int] exterior doors but you can just make up your own hash if you want
 	// All doors need to be registered with ADD_DOOR_TO_SYSTEM before they can be manipulated with the door natives and the easiest way to get door models is just find the door in codewalker.
@@ -8095,7 +8095,7 @@ namespace OBJECT
 	// Only its NetObj removed and flag ``*(v2 + 192) |= 8u`` (1604 retail) toggled.
 	NATIVE_DECL void REMOVE_DOOR_FROM_SYSTEM(Hash doorHash, Any p1) { invoke<Void>(0x464D8E1427156FE4, doorHash, p1); } // 0x464D8E1427156FE4 0x00253286 b323
 	// Lockstates not applied and CNetObjDoor's not created until DOOR_SYSTEM_GET_IS_PHYSICS_LOADED returns true.
-	// `requestDoor` on true, and when door system is configured to, i.e., "persists w/OBJ_UFO netobj", generate a CRequestDoorEvent.
+	// `requestDoor` on true, and when door system is configured to, i.e., "persists w/o netobj", generate a CRequestDoorEvent.
 	// `forceUpdate` on true, forces an update on the door system (same path as netObjDoor_applyDoorStuff)
 	// Door lock states:
 	// 0: UNLOCKED

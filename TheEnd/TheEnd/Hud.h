@@ -6,7 +6,9 @@ private:
 	CTheEndLoadMenu mMenu = CTheEndLoadMenu();
 	CFade m_Fade = CFade();
 	bool DoesDisplayMenu = false;
+	Hash CheatMenu;
 public:
+	CTheEndHud();
 	CTheEndLoadMenu* GetLoadingMenu();
 	CFade* GetFade();
 	bool IsLoadingMenuActive();

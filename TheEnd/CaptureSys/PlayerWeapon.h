@@ -21,10 +21,9 @@ public:
 	std::string GetAllWeaponComponents();
 	std::vector<WeaponComponent>* GetAllWeaponComponentVec();
 private:
-	int m_iAmmoInClip;
-	int m_iAmmo;
-	Hash m_u64ModelHash;
-	Hash m_u64WeapHash;
+	int m_iAmmoInClip = 0;
+	int m_iAmmo = 0;
+	Hash m_u64ModelHash = 0;
+	Hash m_u64WeapHash = 0;
 	std::vector<WeaponComponent> m_ComponentsOnGun;
-	
 };

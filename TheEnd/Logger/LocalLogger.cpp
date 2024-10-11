@@ -8,27 +8,34 @@ LocalLogger::LocalLogger() :
 {
 }
 using Clock = std::chrono::high_resolution_clock;
-static std::string timePointToString(const Clock::time_point& tp, const std::string& format, bool withMs = true, bool utc = true) {
-    const Clock::time_point::duration tt = tp.time_since_epoch();
-    const time_t durS = std::chrono::duration_cast<std::chrono::seconds>(tt).count();
-    std::ostringstream ss;
-    if (const std::tm* tm = (utc ? std::gmtime(&durS) : std::localtime(&durS))) {
-        ss << std::put_time(tm, format.c_str());
-        if (withMs) {
-            const long long durMs = std::chrono::duration_cast<std::chrono::milliseconds>(tt).count();
-            ss << std::setw(3) << std::setfill('0') << int(durMs - durS * 1000);
-        }
-    }
-    // gmtime/localtime() returned null ?
-    else {
-        ss << "<FORMAT ERROR>";
-    }
-    return ss.str();
+static std::string timePointToString() {
+    // Get current time point
+    auto now = std::chrono::system_clock::now();
+
+    // Get the time as time_t for basic hour, min, sec
+    std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);
+
+    // Break it into hours, minutes, and seconds
+    std::tm* now_tm = std::localtime(&now_time_t);
+
+    // Extract milliseconds
+    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+
+    // Create stringstream to format time
+    std::ostringstream oss;
+    oss << '['
+        << std::setw(2) << std::setfill('0') << now_tm->tm_hour << ':'
+        << std::setw(2) << std::setfill('0') << now_tm->tm_min << ':'
+        << std::setw(2) << std::setfill('0') << now_tm->tm_sec << ':'
+        << std::setw(3) << std::setfill('0') << milliseconds.count() // Milliseconds
+        << ']';
+
+    return oss.str();
 }
 void LocalLogger::Log(eLoggerState logState, std::string loggerMessage, bool formatTime = true) {
 	std::string curTime = "";
 	if (formatTime) {
-        curTime.append(timePointToString(Clock::now(), "[%H:%M:%S]",false,true));
+        curTime.append(timePointToString());
 	}
     if (!this->file.is_open()) {
         this->file.open(LOGGER_NAME);
@@ -45,13 +52,13 @@ void LocalLogger::InfoLog(std::string& message) {
 
 std::string LocalLogger::GetLogLevelToStr(eLoggerState loggerState) {
     switch (loggerState) {
-        case WARN:
+    case eLoggerState::WARN:
             return "[WARN]"; // format yellow
-        case FATAL:
+    case eLoggerState::FATAL:
             return "[FATAL]"; // format for dark red
-        case INFO:
+    case eLoggerState::INFO:
             return "[INFO]"; // format dark blue
-        case ERROR2:
+    case eLoggerState::ERROR2:
             return "[ERROR]"; // format for red characters
         default:
             return "[INFO]";
@@ -59,6 +66,7 @@ std::string LocalLogger::GetLogLevelToStr(eLoggerState loggerState) {
 }
 
 std::string LocalLogger::GetLogMessage(eLoggerState logState, std::string loggerMessage, bool formatTime) {
-    std::string finalizedLoggerMessage = timePointToString(Clock::now(), "[%H:%M:%S]", false, true) + " " + GetLogLevelToStr(logState) + " " + loggerMessage;
+    
+    std::string finalizedLoggerMessage = timePointToString() + " " + GetLogLevelToStr(logState) + " " + loggerMessage;
     return finalizedLoggerMessage;
 }

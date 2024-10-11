@@ -23,7 +23,7 @@ void baseInterior::Trigger() {
 	scriptLogI("called");
 	for (int i = 0; i < this->m_IPLS.GetVector().size(); i++) {
 		auto* x = &this->m_IPLS[i];
-		scriptLogI("[INTERIOR] Requesting IPL: ", x->ipl); // this is kinda annoying
+		scriptLogI("[INTERIOR] Requesting IPL: %s", x->ipl); // this is kinda annoying
 		STREAMING::REQUEST_IPL(x->ipl);
 		x->isIPLActive = true;
 	}
@@ -36,7 +36,7 @@ void baseInterior::Despawn() {
 		auto* x = &this->m_IPLS[i];
 		STREAMING::REMOVE_IPL(x->ipl);
 		x->isIPLActive = false;
-		scriptLogI("[INTERIOR] Removing IPL: ", x->ipl); // this is kinda annoying
+		scriptLogI("[INTERIOR] Removing IPL: %s", x->ipl); // this is kinda annoying
 	}
 	UpdateMgr();
 }
